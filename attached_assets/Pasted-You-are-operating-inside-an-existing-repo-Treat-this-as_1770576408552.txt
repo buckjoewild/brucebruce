@@ -1,0 +1,156 @@
+You are operating inside an existing repo. Treat this as a SPEC + BUILD TASK with strict evidence discipline.
+
+GOAL
+Turn Bruce from “random wander + occasional sayings” into a verifiable, regularly-logging observer with:
+- A heartbeat at 15 minutes (configurable)
+- Structured observation logs (where he is, what he sees, what changed)
+- Light “plan/notes” output (not execution), written to append-only evidence
+- Minimal risk: no auto-patching, no auto-builds, no tool escalation
+
+CURRENT STATE (as reported)
+- replit.md is the best overview; root README mostly empty
+- Bruce currently auto-runs on server boot (“autopilot”)
+- Every ~10–20 seconds Bruce randomly does ONE action: look/move/say/spawn attempt
+- Only “say” is logged to bruce_memory.jsonl; look/move/spawn are NOT logged
+- No heartbeat, no structured notes/plans, no verifiable “alive signal”
+
+DEFINITION OF DONE (DoD)
+1) There exists an append-only heartbeat log file (JSONL) with:
+   - timestamp (ISO8601 w/ timezone if available)
+   - tick_id
+   - bruce location (room id/name)
+   - observation summary (exits, NPC count, player count, item count)
+   - delta summary since last tick (optional, best-effort)
+   - sha256 of the entry (or transcript file)
+2) Heartbeat runs on a schedule:
+   - default every 15 minutes
+   - configurable via env var (e.g., BRUCE_HEARTBEAT_MINUTES)
+3) Bruce “activity log” is expanded:
+   - look/move/say/spawn attempts each write a small structured entry to evidence
+4) There is a command to prove it from inside the MUD:
+   - `dev heartbeat` -> prints last 1–3 heartbeat entries (or tail summary)
+   - `dev bruce tail <n>` -> tail of bruce activity log
+5) No new behavior crosses the consent boundary:
+   - heartbeat and notes are READ/OBSERVE/LOG only
+   - build/patch actions still require /build on + /consent yes
+
+CONSTRAINTS / SAFETY
+- Logs MUST be append-only (jsonl). Never rewrite history.
+- No speculative claims. If data isn’t available, record null/unknown.
+- Keep entries small; add simple size caps and rotation if needed.
+- Do not introduce network calls. Do not introduce privileged filesystem access outside repo.
+- Do not change build loop security gates.
+
+IMPLEMENTATION PLAN (do this in order)
+
+PHASE 1 — INVENTORY + TRUTHFUL STATUS
+A) Open and summarize:
+   - replit.md (what it says exists)
+   - the main MUD server entry file(s)
+   - any existing bruce_memory.jsonl format and where it’s written
+B) Produce a short status recap in replit.md (or a new docs/STATUS.md) that:
+   - accurately describes what exists NOW
+   - lists commands that work NOW
+   - lists what is missing (heartbeat, action logs, notes)
+
+PHASE 2 — EVIDENCE LOGS (NEW FILES)
+Create under repo:
+- evidence/heartbeat.jsonl
+- evidence/bruce_activity.jsonl
+If evidence/ already exists, reuse it. Ensure directories exist.
+
+Define schemas:
+Heartbeat entry fields (minimum):
+{
+  "ts": "...",
+  "tick_id": "hb_<id>",
+  "player_id": "Bruce",
+  "room": {"id": "...", "name": "..."},
+  "snapshot": {"exits": [...], "npcs": <int>, "players": <int>, "items": <int>},
+  "delta": {"rooms_changed": false, "npcs_changed": false, "notes": "..."},
+  "sha256": "..."
+}
+
+Activity entry fields (minimum):
+{
+  "ts": "...",
+  "event_id": "ba_<id>",
+  "action": "look|move|say|spawn_attempt",
+  "room": {"id":"...", "name":"..."},
+  "detail": {...},
+  "sha256": "..."
+}
+
+PHASE 3 — HEARTBEAT ENGINE (NO SCHEDULER DEPENDENCY FIRST)
+Implement a small module, e.g.:
+- orchestrator/heartbeat.py  OR  mud/heartbeat.py (choose a consistent place)
+that exposes:
+- run_heartbeat_tick(world_state, bruce_player) -> writes one entry to evidence/heartbeat.jsonl
+- tail_heartbeat(n) -> returns last n parsed entries safely
+
+IMPORTANT:
+- Derive observations from existing world/player objects; if unavailable, record unknown.
+- Compute sha256 for each JSON line string.
+
+PHASE 4 — SCHEDULING (REPLIT-FRIENDLY)
+Implement heartbeat scheduling in a way that works reliably on Replit.
+
+Preferred options (choose ONE, explain why):
+Option A) In-process scheduler (recommended):
+- Use a lightweight loop or scheduler inside the server runtime:
+  - store last_heartbeat_ts
+  - every server “tick” or main loop iteration: if now-last >= interval -> heartbeat tick
+- Pros: no external cron needed; works as long as server runs.
+- Cons: heartbeat pauses if server stops.
+
+Option B) External scheduled job (only if Replit environment supports it):
+- If Replit Deployments has scheduled tasks/cron equivalent, wire it.
+- Otherwise avoid pretending it exists.
+
+Use env var:
+- BRUCE_HEARTBEAT_MINUTES default 15
+
+PHASE 5 — LOG ALL BRUCE ACTIONS
+Where Bruce currently randomly acts every 10–20 seconds:
+- After each action, write a bruce_activity.jsonl entry:
+  - include action type + minimal details (direction moved, phrase said, spawn attempted yes/no)
+- Keep this very cheap and small.
+
+PHASE 6 — MUD COMMANDS FOR PROOF
+Add commands (matching your existing command router style):
+- `dev heartbeat`:
+  - prints last 1–3 heartbeat entries: ts, room, npc/player/item counts
+- `dev bruce tail <n>`:
+  - prints last n bruce activity entries summary
+- Optional: `dev logsizes`:
+  - shows file sizes for heartbeat/activity/event logs to monitor growth
+
+PHASE 7 — DOCUMENTATION UPDATE (TRUTHFUL)
+Update replit.md:
+- Add “Bruce Observability” section:
+  - where logs live
+  - env vars (BRUCE_HEARTBEAT_MINUTES)
+  - what’s logged and what isn’t
+  - how to verify quickly (dev heartbeat)
+
+PHASE 8 — TEST / VERIFY
+Add minimal tests if a test framework exists:
+- unit test for sha256 generation consistency
+- test that heartbeat writes valid JSONL line
+- test tail parser handles empty file gracefully
+
+Manual verification (required):
+1) Boot server
+2) Force-run a heartbeat tick once on startup (optional) so you see an entry quickly
+3) Trigger Bruce actions and confirm bruce_activity.jsonl grows
+4) Confirm dev heartbeat prints latest entry
+
+OUTPUT REQUIRED
+- A brief change summary (files changed, what they do)
+- Exact commands to run to verify on Replit
+- Confirm DoD checklist results with evidence paths
+
+DO NOT
+- Add auto-build, auto-apply patches, or anything that bypasses consent gates
+- Invent “Replit cron” features if not confirmed by the environment
+- Log huge blobs (cap entry size; keep concise)
