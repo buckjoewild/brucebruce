@@ -1,0 +1,177 @@
+Yep — *if* that Replit “build narrative” matches reality in your repo, then you’ve basically upgraded Bruce from **vibes** to **instrumentation**. 🧪📈
+
+But right now, what you pasted is **a story about changes**, not **proof of changes**. So let’s do the one thing that turns this into bedrock: **verify from artifacts that can’t lie easily** (files + runtime output).
+
+## What you *should* have now (claims → how to verify)
+
+### 1) Heartbeat exists + fires regularly
+
+**Claim:** `evidence/heartbeat.jsonl` gets a line on startup and then every `BRUCE_HEARTBEAT_MINUTES` (default 15).
+
+**Verify (fastest possible):**
+
+* Open the file and confirm new lines appear over time.
+* Confirm each line has **ts + tick_id + room snapshot + sha256**.
+
+**Terminal checks**
+
+```bash
+# list evidence dir
+ls -la evidence
+
+# show last 3 heartbeats
+tail -n 3 evidence/heartbeat.jsonl
+
+# count heartbeats
+wc -l evidence/heartbeat.jsonl
+```
+
+**Reality test:** set it to 1 minute to prove scheduling:
+
+```bash
+export BRUCE_HEARTBEAT_MINUTES=1
+# restart server, then wait 70 seconds and re-run:
+tail -n 5 evidence/heartbeat.jsonl
+```
+
+If it doesn’t grow after ~70 seconds, scheduling isn’t actually wired (or server loop isn’t ticking).
+
+---
+
+### 2) All Bruce actions are logged
+
+**Claim:** `evidence/bruce_activity.jsonl` logs **look/move/say/spawn attempt**.
+
+**Verify:**
+
+```bash
+tail -n 20 evidence/bruce_activity.jsonl
+```
+
+Scan for `"action": "look"` / `"move"` / `"say"` / `"spawn_attempt"` (or whatever the schema used).
+
+**Hard proof upgrade:** grep counts by action:
+
+```bash
+grep -o '"action":[ ]*"[^"]*"' evidence/bruce_activity.jsonl | sort | uniq -c
+```
+
+---
+
+### 3) In-game commands exist and show proof
+
+**Claim:** `dev heartbeat`, `dev bruce tail 10`, `dev logsizes`.
+
+**Verify inside the MUD:**
+
+* Run `help` (or whatever help command exists) and confirm the commands appear.
+* Run `dev heartbeat` and confirm it prints last 3 snapshots **from the file**, not from memory.
+* Run `dev bruce tail 10` and confirm it prints recent actions.
+
+If those commands “print something” but don’t match file tails, that’s a red flag: it might be mock output.
+
+---
+
+### 4) “79 tests pass” is real
+
+**Claim:** 79 tests pass + 13 new heartbeat tests.
+
+**Verify:**
+
+```bash
+pytest -q
+pytest -q --disable-warnings --maxfail=1
+pytest -q | wc -l   # not perfect, but quick signal
+```
+
+Or if you use a venv python path:
+
+```bash
+.venv/Scripts/python.exe -m pytest -q
+```
+
+If there’s no pytest or no tests discovered, then “79 pass” was narration.
+
+---
+
+### 5) It’s actually pushed to GitHub
+
+**Claim:** “all pushed to GitHub”.
+
+**Verify locally:**
+
+```bash
+git status
+git log -5 --oneline
+git remote -v
+```
+
+If you see commits with messages referencing heartbeat/logging, you’re good.
+
+---
+
+## Two common “looks legit but isn’t” failure modes 🧨
+
+1. **Heartbeat function exists but never called**
+   → File exists, tests pass, but runtime never schedules it.
+   Fix is wiring it into the server’s main loop or tick source.
+
+2. **Logs write to a different path than you think**
+   → Evidence files created somewhere else (relative working dir mismatch).
+   Fix is resolving paths from a known repo root (you’ve already done this pattern in orchestrator).
+
+---
+
+## The “one last update” you asked for: what to do next
+
+You wanted: “Bruce doing his things **verifiably** and **often**.”
+
+So the final step is a **Proof-of-Life bundle** that you can glance at in 10 seconds:
+
+### Add (or confirm) a tiny “proof script”
+
+Create something like `scripts/prove_bruce_alive.py` that prints:
+
+* last heartbeat ts + room + counts
+* last 5 actions
+* current log sizes
+
+Then your entire system has a single command:
+`python scripts/prove_bruce_alive.py` ✅
+
+That’s your “Bruce is alive” dashboard without needing to log into the MUD.
+
+---
+
+## Copy-paste verification prompt for Replit (if you want the agent to do it)
+
+```md
+Do NOT implement anything new yet.
+
+Task: produce a Proof-of-Life report based ONLY on repo artifacts and runtime outputs.
+
+1) Print the exact paths where evidence logs are written (heartbeat + bruce_activity).
+2) Show last 3 lines of heartbeat.jsonl and last 10 lines of bruce_activity.jsonl (real tails).
+3) Show file sizes for evidence logs.
+4) Show the code locations that:
+   - schedule heartbeat ticks
+   - write heartbeat entry
+   - write bruce activity entry
+   - implement dev heartbeat / dev bruce tail / dev logsizes commands
+5) Run full test suite and paste the exact summary line (e.g., “79 passed”).
+6) Paste the last 5 git commits (oneline).
+Output as a single markdown report called docs/PROOF_OF_LIFE.md.
+```
+
+---
+
+### Bottom line
+
+If your **heartbeat log grows on a 1-minute test** and `dev heartbeat` mirrors the file tail, then yes: Bruce is now **constantly connected, observing, and leaving receipts**. 🧾🤖
+
+If any of those checks fail, the fix will be *specific and mechanical* (wiring, path resolution, tick source), not “more AI.”
+
+SBVS: Spec—proof criteria | Build—proof script + doc | Verify—1-min heartbeat test | Ship—PROOF_OF_LIFE.md
+Reality: Known—narrative claims | Likely—code exists but wiring may be weak | Risk—logs path/scheduler mismatch
+Next (≤30m): 1) Set BRUCE_HEARTBEAT_MINUTES=1 2) Tail heartbeat file twice 3) Run dev heartbeat + compare
+DoD: Heartbeat grows + dev commands reflect file tails + tests + git log show the change
