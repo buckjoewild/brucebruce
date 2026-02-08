@@ -77,6 +77,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - Edit `RUN_TESTS=0` in RUN_MUD.bat to skip tests for faster boot
 
 ## Recent Changes
+- 2026-02-08: docs: Freeze→Measure spec (UPDATE_FREEZE_TO_MEASURE_v1.md) — evidence-driven hardening template with filled evidence pack (timestamp map, log analysis, session gaps, denial coverage, known pain points)
 - 2026-02-08: refactor: single source of truth for bot security — extracted authorize/denylist/interlock into bot_security.py, tests import real production code, added IDLE_MODE safety interlock (bots blocked when builds active), 66 tests pass
 - 2026-02-08: feat: AI Integration Phase 1 — external AI player with token auth, permission gate (authorize choke point), rate limiting (5/10s), provenance audit log (bot_audit.jsonl), ai_player.py stub client with --test-deny mode, 62 tests pass
 - 2026-02-08: feat: Windows .bat launchers (RUN_MUD.bat + RUN_MUD_UNSAFE_BUILD.bat) + requirements.txt
