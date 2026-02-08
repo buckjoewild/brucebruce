@@ -13,7 +13,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - **Language**: Python 3.12 with websockets library
 
 ## Key Files
-- `server.py` — Main server (HTTP + WebSocket MUD + orchestrator + bot auth/gate/rate-limit)
+- `server.py` — Main server (HTTP + WebSocket MUD + orchestrator + bot auth/gate/rate-limit + Bruce autopilot with heartbeat)
 - `ai_player.py` — External AI player client (stub brain, token auth, --test-deny mode)
 - `requirements.txt` — Python dependencies (websockets, pytest)
 - `RUN_MUD.bat` — Windows one-click launcher (venv, deps, tests, server) with IDLE_MODE=1 safe default
@@ -21,25 +21,52 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `Dockerfile` — Docker escape pod (python:3.12-slim, websockets only)
 - `docker-compose.yml` — Single-service compose with full env passthrough
 - `docs/hosting.md` — Caddy/Nginx reverse proxy configs, DNS notes, production checklist
+- `docs/UPDATE_FREEZE_TO_MEASURE_v1.md` — Evidence-driven hardening spec (Freeze→Measure)
 - `07_HARRIS_WILDLANDS/orchestrator/mode_state.py` — ModeStateManager (PLAN/BUILD modes, arm/consent flow)
 - `07_HARRIS_WILDLANDS/orchestrator/build_loop.py` — BuildOrchestrator (execute builds with gates)
 - `07_HARRIS_WILDLANDS/orchestrator/bot_security.py` — Single source of truth: authorize(), deny sets, check_bot_interlock(), constants
 - `07_HARRIS_WILDLANDS/orchestrator/bot_audit.py` — BotAuditLogger + RateLimiter (append-only JSONL provenance)
+- `07_HARRIS_WILDLANDS/orchestrator/heartbeat.py` — HeartbeatLogger + ActivityLogger (sha256-signed JSONL, periodic snapshots)
 - `07_HARRIS_WILDLANDS/orchestrator/codex_adapter.py` — Codex patch generator (stub/real modes)
 - `07_HARRIS_WILDLANDS/orchestrator/patch_apply.py` — PatchApplier for applying diffs
+- `07_HARRIS_WILDLANDS/orchestrator/bruce_memory.py` — BruceMemory (append-only JSONL, fact readback from event_log.jsonl)
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/rooms.json` — Room definitions
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/npcs.json` — NPC definitions
-- `07_HARRIS_WILDLANDS/orchestrator/bruce_memory.py` — BruceMemory (append-only JSONL, fact readback from event_log.jsonl)
-- `07_HARRIS_WILDLANDS/orchestrator/tests/test_build_loop.py` — 15 orchestrator tests
-- `07_HARRIS_WILDLANDS/orchestrator/tests/test_bruce_memory.py` — 14 Bruce memory tests
-- `07_HARRIS_WILDLANDS/orchestrator/tests/test_banner.py` — 6 banner content tests
-- `07_HARRIS_WILDLANDS/orchestrator/tests/test_ai_player.py` — 27 AI player tests (auth, gate, rate limit, audit)
+
+## Bruce Observability
+Bruce is an always-on NPC steward who wanders the world, observes, speaks, and logs everything he does.
+
+### What Bruce Does
+- **Autopilot**: Runs as an async task inside the server process (starts on boot)
+- **Actions** (every 10-20 seconds): look (45%), move (35%), say a phrase (15%), spawn attempt (5%)
+- **Heartbeat**: Every 15 minutes (configurable), writes a structured world-state snapshot
+- **First heartbeat fires on startup** for immediate verification
+
+### What Gets Logged (all append-only JSONL with sha256 signatures)
+| File | Contents | Written When |
+|------|----------|------|
+| `evidence/heartbeat.jsonl` | World-state snapshots: room, exits, NPC/player/item counts, total world stats | Every BRUCE_HEARTBEAT_MINUTES (default 15) + once on startup |
+| `evidence/bruce_activity.jsonl` | Per-action log: look/move/say/spawn_attempt with room and detail | Every Bruce action (every 10-20s) |
+| `evidence/bruce_memory.jsonl` | Bruce sayings + player chat (source-validated) | On "say" actions and player chat |
+| `evidence/event_log.jsonl` | Build events (single source of truth for confirmed builds) | On build executions |
+| `evidence/bot_audit.jsonl` | Bot command audit trail (allowed/denied/rate_limited) | On bot commands |
+
+### Verification Commands (in-game)
+- `dev heartbeat` — Show last 3 heartbeat entries (timestamp, room, snapshot)
+- `dev bruce tail <n>` — Show last N Bruce activity entries
+- `dev logsizes` — Show file sizes for all evidence logs
+
+### What Is NOT Logged
+- Bruce's `look` command output text (only metadata: exits, NPC count, player count)
+- Exact world state diffs between heartbeats (delta is best-effort)
+- Player session lifecycle events (no session_id, no created_at on Player)
 
 ## MUD Commands
 - Movement: `north/south/east/west/up/down` (or `n/s/e/w/u/d`)
 - World: `look`, `say <msg>`, `who`, `inventory`, `status`, `help`
 - Build System: `/plan <text>`, `/build on|off`, `/consent yes`
 - Dev Tools: `dev status`, `dev buildstub`, `dev log tail <n>`
+- Bruce Observability: `dev heartbeat`, `dev bruce tail <n>`, `dev logsizes`
 
 ## AI Player System
 - **Auth**: Bot must send `{"type":"auth","token":"...","name":"..."}` as first message
@@ -51,11 +78,28 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - **Stub Client**: `python ai_player.py --host ws://localhost:5000`
 - **Deny Test**: `python ai_player.py --test-deny` — proves bots can't build
 
+## Evidence Files
+All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
+- `heartbeat.jsonl` — Bruce heartbeat snapshots (sha256-signed, every 15min)
+- `bruce_activity.jsonl` — Bruce per-action log (sha256-signed, every 10-20s)
+- `bruce_memory.jsonl` — Bruce sayings + player chat (UTC timestamps)
+- `event_log.jsonl` — Build event log (UTC timestamps)
+- `bot_audit.jsonl` — Bot command audit trail (UTC timestamps)
+- `patches/` — Applied patch files
+
+## Tests
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_build_loop.py` — 15 orchestrator tests
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_bruce_memory.py` — 14 Bruce memory tests
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_banner.py` — 6 banner content tests
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_ai_player.py` — 27 AI player tests (auth, gate, rate limit, audit)
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_heartbeat.py` — 13 heartbeat tests (sha256 consistency, JSONL write, tail parser, activity logging)
+- **Total: 79 tests, all passing**
+
 ## Scripts
 - `python server.py` — Start the MUD server
 - `python ai_player.py` — Run AI player client (requires BOT_AUTH_TOKEN env)
 - `python ai_player.py --test-deny` — Run denial tests against live server
-- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (66 total)
+- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (79 total)
 
 ## Deployment
 - Target: VM (persistent WebSocket connections)
@@ -67,6 +111,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `PORT` — Listen port (default: `5000`)
 - `IDLE_MODE` — Set to `1` to block all build operations (safe unattended mode)
 - `MUD_BRUCE_AUTOPILOT` — Set to `false` to disable Bruce NPC (default: `true`)
+- `BRUCE_HEARTBEAT_MINUTES` — Heartbeat interval in minutes (default: `15`)
 - `BOT_AUTH_TOKEN` — Secret token for AI player authentication (required for bot connections)
 - `MUD_BOT_ENABLED` — Set to `false` to disable all bot connections (default: `true`)
 - `MUD_BOT_ALLOW_WHEN_ACTIVE` — Set to `1` to allow bots when IDLE_MODE=0 (default: `0`, bots blocked during active builds)
@@ -77,6 +122,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - Edit `RUN_TESTS=0` in RUN_MUD.bat to skip tests for faster boot
 
 ## Recent Changes
+- 2026-02-08: feat: Bruce observability — heartbeat every 15min (configurable via BRUCE_HEARTBEAT_MINUTES), per-action activity log, sha256-signed JSONL entries, dev commands (heartbeat/bruce tail/logsizes), 79 tests pass
 - 2026-02-08: docs: Freeze→Measure spec (UPDATE_FREEZE_TO_MEASURE_v1.md) — evidence-driven hardening template with filled evidence pack (timestamp map, log analysis, session gaps, denial coverage, known pain points)
 - 2026-02-08: refactor: single source of truth for bot security — extracted authorize/denylist/interlock into bot_security.py, tests import real production code, added IDLE_MODE safety interlock (bots blocked when builds active), 66 tests pass
 - 2026-02-08: feat: AI Integration Phase 1 — external AI player with token auth, permission gate (authorize choke point), rate limiting (5/10s), provenance audit log (bot_audit.jsonl), ai_player.py stub client with --test-deny mode, 62 tests pass

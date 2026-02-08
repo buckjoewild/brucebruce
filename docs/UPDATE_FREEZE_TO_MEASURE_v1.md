@@ -334,6 +334,8 @@ A safe read-only command returns:
 
 ## 12) Evidence Pack (Paste-in Section)
 
+> All facts in this section are observational. Absence of evidence must not be treated as evidence of absence.
+
 ### 12.1 Environment flags (from `env | grep` on running instance, 2026-02-08)
 - **IDLE_MODE:** not set in env (code default: `"0"` in `bot_security.py:56`)
 - **MUD_BRUCE_AUTOPILOT:** not set in env (code default: `"true"` in `server.py:888`)

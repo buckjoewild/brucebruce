@@ -20,6 +20,7 @@ from orchestrator.build_loop import BuildOrchestrator
 from orchestrator.bruce_memory import BruceMemory, format_build_fact_response
 from orchestrator.bot_audit import BotAuditLogger
 from orchestrator.bot_security import authorize, check_bot_interlock, DENIED_BOT_COMMANDS, DENIED_BOT_SUBCOMMANDS
+from orchestrator.heartbeat import HeartbeatLogger, ActivityLogger, get_evidence_sizes, HEARTBEAT_INTERVAL_MINUTES
 
 import websockets
 from websockets.http11 import Response
@@ -137,6 +138,8 @@ class MUDWorld:
         self.orchestrator = orchestrator
         self.bruce_memory = BruceMemory(str(EVIDENCE_DIR))
         self.bot_audit = BotAuditLogger(str(EVIDENCE_DIR))
+        self.heartbeat_logger = HeartbeatLogger(str(EVIDENCE_DIR))
+        self.activity_logger = ActivityLogger(str(EVIDENCE_DIR))
         if not self.load_world():
             self.init_world()
 
@@ -250,7 +253,7 @@ class MUDWorld:
 
     async def handle_dev_command(self, player: Player, args: List[str]) -> str:
         if not args:
-            return "Dev commands: status, buildstub, log tail <n>"
+            return "Dev commands: status, buildstub, log tail <n>, heartbeat, bruce tail <n>, logsizes"
 
         sub = args[0].lower()
 
@@ -279,8 +282,67 @@ class MUDWorld:
             for evt in events:
                 lines.append(f"  [{evt.get('ts', '?')}] {evt.get('id', '?')} {evt.get('verb', '?')} -> {evt.get('result', '?')}")
             return "Recent build events:\n" + "\n".join(lines)
+        elif sub == "heartbeat":
+            entries = self.heartbeat_logger.tail(3)
+            if not entries:
+                return "No heartbeat entries yet."
+            lines = [f"Last {len(entries)} heartbeat(s) (interval: {HEARTBEAT_INTERVAL_MINUTES}m):"]
+            for e in entries:
+                rm = e.get("room", {})
+                snap = e.get("snapshot", {})
+                ws = e.get("world_summary", {})
+                lines.append(
+                    f"  [{e.get('ts', '?')}] {e.get('tick_id', '?')}"
+                    f" | room: {rm.get('name', '?')} ({rm.get('id', '?')})"
+                    f" | exits: {len(snap.get('exits', []))}"
+                    f" npcs: {snap.get('npcs', '?')}"
+                    f" players: {snap.get('players', '?')}"
+                    f" items: {snap.get('items', '?')}"
+                    f" | world: {ws.get('total_rooms', '?')}R/{ws.get('total_npcs', '?')}N/{ws.get('total_players', '?')}P"
+                )
+            return "\n".join(lines)
+        elif sub == "bruce" and len(args) >= 2 and args[1].lower() == "tail":
+            n = 10
+            if len(args) >= 3:
+                try:
+                    n = int(args[2])
+                except ValueError:
+                    pass
+            entries = self.activity_logger.tail(n)
+            if not entries:
+                return "No Bruce activity entries yet."
+            lines = [f"Last {len(entries)} Bruce action(s):"]
+            for e in entries:
+                rm = e.get("room", {})
+                detail = e.get("detail", {})
+                detail_str = ""
+                if e.get("action") == "say":
+                    detail_str = f' "{detail.get("phrase", "")}"'
+                elif e.get("action") == "move":
+                    detail_str = f' -> {detail.get("direction", "?")} ({detail.get("result", "?")})'
+                elif e.get("action") == "look":
+                    detail_str = f' exits={detail.get("exits", "?")}'
+                elif e.get("action") == "spawn_attempt":
+                    detail_str = f' npc={detail.get("npc_name", "?")}'
+                lines.append(
+                    f"  [{e.get('ts', '?')}] {e.get('action', '?')}"
+                    f" @ {rm.get('name', '?')}{detail_str}"
+                )
+            return "\n".join(lines)
+        elif sub == "logsizes":
+            sizes = get_evidence_sizes(str(EVIDENCE_DIR))
+            lines = ["Evidence log sizes:"]
+            for name, size in sizes.items():
+                if size is not None:
+                    if size < 1024:
+                        lines.append(f"  {name}: {size} bytes")
+                    else:
+                        lines.append(f"  {name}: {size / 1024:.1f} KB")
+                else:
+                    lines.append(f"  {name}: (not created yet)")
+            return "\n".join(lines)
         else:
-            return "Dev commands: status, buildstub, log tail <n>"
+            return "Dev commands: status, buildstub, log tail <n>, heartbeat, bruce tail <n>, logsizes"
 
     async def cmd_look(self, player: Player) -> str:
         room = self.rooms.get(player.room_id)
@@ -411,6 +473,12 @@ Build System:
 dev status     - Show mode state
 dev buildstub  - Execute a build
 dev log tail <n> - View recent events
+
+Bruce Observability:
+------------------
+dev heartbeat    - Show last 3 heartbeat entries
+dev bruce tail <n> - Show last N Bruce activity entries
+dev logsizes     - Show evidence log file sizes
         """
 
     async def cmd_status(self, player: Player) -> str:
@@ -563,6 +631,7 @@ class MUDServer:
                 print(f"Player disconnected: {name}")
 
     async def bruce_autopilot(self):
+        import time as _time
         await asyncio.sleep(3)
         name = "Bruce"
         player = self.world.players.get(name)
@@ -572,6 +641,11 @@ class MUDServer:
             if player.room_id in self.world.rooms:
                 self.world.rooms[player.room_id].players.add(name)
             print(f"Bruce autopilot online")
+
+        hb_entry = self.world.heartbeat_logger.run_heartbeat_tick(self.world, player)
+        print(f"Bruce heartbeat #1 (startup): {hb_entry.get('tick_id')} @ {hb_entry.get('ts')}")
+        last_heartbeat = _time.monotonic()
+        heartbeat_interval_s = HEARTBEAT_INTERVAL_MINUTES * 60
 
         sayings = [
             "The forest remembers.",
@@ -583,25 +657,58 @@ class MUDServer:
 
         while True:
             try:
+                room = self.world.rooms.get(player.room_id)
+                room_name = room.name if room else "unknown"
+
                 roll = random.random()
                 if roll < 0.45:
                     cmd = "look"
+                    result = await self.world.handle_command(player, cmd)
+                    exits = list(room.exits.keys()) if room else []
+                    self.world.activity_logger.log_action(
+                        "look", player.room_id, room_name,
+                        {"exits": exits, "npcs": len(room.npcs) if room else 0, "players": len(room.players) if room else 0},
+                    )
                 elif roll < 0.8:
-                    cmd = random.choice(directions)
+                    direction = random.choice(directions)
+                    old_room = player.room_id
+                    result = await self.world.handle_command(player, direction)
+                    moved = player.room_id != old_room
+                    new_room = self.world.rooms.get(player.room_id)
+                    self.world.activity_logger.log_action(
+                        "move", player.room_id, new_room.name if new_room else "unknown",
+                        {"direction": direction, "result": "moved" if moved else "blocked", "from_room": old_room},
+                    )
                 elif roll < 0.95:
                     saying = random.choice(sayings)
                     cmd = f"say {saying}"
+                    result = await self.world.handle_command(player, cmd)
                     self.world.bruce_memory.append_entry(
                         "bruce_observation",
                         saying,
                         player="Bruce",
                         room=player.room_id,
                     )
+                    self.world.activity_logger.log_action(
+                        "say", player.room_id, room_name,
+                        {"phrase": saying},
+                    )
                 else:
                     cmd = "spawn Mysterious Wanderer"
-                await self.world.handle_command(player, cmd)
-            except Exception:
-                pass
+                    result = await self.world.handle_command(player, cmd)
+                    self.world.activity_logger.log_action(
+                        "spawn_attempt", player.room_id, room_name,
+                        {"npc_name": "Mysterious Wanderer"},
+                    )
+
+                now = _time.monotonic()
+                if now - last_heartbeat >= heartbeat_interval_s:
+                    hb_entry = self.world.heartbeat_logger.run_heartbeat_tick(self.world, player)
+                    print(f"Bruce heartbeat: {hb_entry.get('tick_id')} @ {hb_entry.get('ts')}")
+                    last_heartbeat = now
+
+            except Exception as e:
+                print(f"Bruce autopilot error: {e}")
             await asyncio.sleep(random.randint(10, 20))
 
 
