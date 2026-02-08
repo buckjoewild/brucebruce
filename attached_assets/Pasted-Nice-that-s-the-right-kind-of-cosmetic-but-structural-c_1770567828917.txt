@@ -1,0 +1,89 @@
+Nice — that’s the right kind of “cosmetic but structural” change: first outbound message, no gameplay/governance edits, tests prove it, and it’s protocol-correct ({"type":"system"}) ✅🧰
+
+A few practical next moves so this doesn’t stay “cool in Replit” and becomes the front door at harriswildlands.com:
+
+1) Lock the unattended safety posture (do this now) 🔒
+
+In Replit Deployment env vars set:
+
+IDLE_MODE=1 ✅ (blocks builds)
+
+MUD_BRUCE_AUTOPILOT=true (optional, if you want him roaming)
+
+HOST=0.0.0.0
+
+PORT leave default unless Replit requires it
+
+Quick validation in terminal:
+
+/plan hello ✅
+
+/build on ❌
+
+/consent yes ❌
+
+That’s your “clean-the-house” guarantee.
+
+2) Make the MUD the actual landing page (domain wiring) 🌐
+
+Since you want the MUD as the landing page, you have two clean patterns:
+
+Pattern A (recommended): root domain stays landing, MUD is root
+
+harriswildlands.com → MUD terminal
+
+Pattern B (safer long-term): root domain landing page + MUD subdomain
+
+harriswildlands.com → simple homepage (later)
+
+mud.harriswildlands.com → MUD
+
+If you truly want the MUD to be the landing right now, do Pattern A and you can always move it to /mud or a subdomain later.
+
+Replit steps:
+
+Replit → Deployment → Custom Domains
+
+Add harriswildlands.com (or mud.harriswildlands.com)
+
+Copy the exact DNS records Replit provides (often A + TXT) into GoDaddy
+
+Verify TLS + confirm WebSocket connects
+
+3) Verify WebSocket over the domain (the only real gotcha) 🧪
+
+Once the domain is live, test in-browser:
+
+Page loads banner ✅
+
+Console shows WebSocket connected ✅
+
+Name prompt appears ✅
+
+If banner loads but WS fails, it’s almost always proxy headers / SSL mode / wrong ws URL. Your docs/hosting.md should already describe the correct reverse proxy settings if you later move to VPS.
+
+4) Make banner editing painless (small improvement idea) ✍️
+
+Right now it’s in server.py as a constant. That’s okay.
+
+When you feel like it, a clean upgrade is:
+
+move banner text into 07_HARRIS_WILDLANDS/evidence/banner.txt or docs/banner.txt
+
+load at startup
+
+tests assert markers still present
+
+Not urgent, just keeps you from editing code for art tweaks.
+
+5) One note on process: your “/build on consent yes” shortcut ⚠️
+
+It worked here, but it’s a habit that can bite you later. The whole point of OFFER → CONSENT is to keep humans from rubber-stamping scope creep.
+
+Practical rule:
+
+Never combine /build on and /consent yes in one paste.
+
+Always wait for OFFER summary first.
+
+That preserves the “physics.”
