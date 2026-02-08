@@ -1,0 +1,89 @@
+=== MUD PATCH.md Full Execution - 2026-02-07 ===
+
+PART 1: MUD Wiring (COMPLETE)
+=============================
+- Added /plan, /build on|off, /consent yes commands
+- Added dev status, dev buildstub, dev log tail commands
+- Wired into harriswildlands_ai.py process_command()
+
+PART 2: Codex 5.2 Integration (COMPLETE)
+========================================
+Updated orchestrator/codex_adapter.py with:
+
+Environment Variables:
+  USE_CODEX=1      - Enable real Codex (default: stub mode)
+  CODEX_CLI=<path> - Path to Codex CLI (default: 'codex' on PATH)
+  CODEX_DRYRUN=1   - Log transcript but return no diff
+
+Features:
+  - Structured prompt with repo_root, intent, verb, args, context
+  - Extracts unified diff from Codex output (rejects non-diff output)
+  - Saves transcripts to evidence/transcripts/codex_<timestamp>_<eventid>.txt
+  - Stores sha256 in PatchProposal metadata
+  - Default test: python -m pytest orchestrator/tests/test_build_loop.py -v
+
+PART 3: Security Validations (COMPLETE)
+=======================================
+Updated orchestrator/build_loop.py with _validate_diff():
+
+  - Rejects diffs touching files outside repo_root
+  - Rejects diffs larger than 200KB
+  - Rejects path traversal attempts (.., absolute paths)
+
+
+RUNBOOK: How to use Codex integration in-game
+=============================================
+
+1. Set environment variables (before starting server):
+
+   # Windows CMD:
+   set USE_CODEX=1
+   set CODEX_CLI=C:\path\to\codex.exe
+
+   # Windows PowerShell:
+   $env:USE_CODEX = "1"
+   $env:CODEX_CLI = "C:\path\to\codex.exe"
+
+   # For dry-run mode (log only, no apply):
+   set CODEX_DRYRUN=1
+
+2. Start the MUD server:
+   cd C:\GRAVITY\HW_ENV\repo\structure\01_MUD_SERVER_CODE
+   python harriswildlands_ai.py
+
+3. Connect via telnet:
+   telnet localhost 4000
+
+4. In-game commands:
+
+   /plan add a new room called Cabin    <- Log intent (PLAN mode)
+   /build on                            <- Enter BUILD mode + arm
+   /consent yes                         <- Confirm consent
+   dev buildstub                        <- Execute build (calls Codex if USE_CODEX=1)
+
+5. Check results:
+
+   dev status                           <- Should be PLAN mode after build
+   dev log tail 5                       <- View recent build events
+
+6. Transcripts saved to:
+   C:\GRAVITY\HW_ENV\repo\structure\evidence\transcripts\codex_*.txt
+
+
+STUB MODE (default, no Codex needed):
+=====================================
+Without USE_CODEX=1, the system uses stub diffs for testing:
+  - "build room" verb -> creates test room in world_data.json
+  - Other verbs -> creates test_file.txt with stub content
+
+
+FILES MODIFIED:
+===============
+orchestrator/codex_adapter.py  - Real Codex integration + feature flags
+orchestrator/build_loop.py     - Security validations + event_id passing
+orchestrator/tests/test_build_loop.py - Updated imports
+
+
+TESTS: 13 passed
+================
+All orchestrator tests pass with venv Python.

@@ -1,0 +1,19 @@
+﻿{
+    "mcpServers":  {
+                       "filesystem":  {
+                                          "command":  "--command"
+                                      },
+                       "github":  {
+                                      "command":  "--command",
+                                      "env":  {
+                                                  "GITHUB_PERSONAL_ACCESS_TOKEN":  "\u003cREDACTED\u003e"
+                                              }
+                                  },
+                       "fetch":  {
+                                     "command":  "--command"
+                                 }
+                   },
+    "imports":  [
+
+                ]
+}

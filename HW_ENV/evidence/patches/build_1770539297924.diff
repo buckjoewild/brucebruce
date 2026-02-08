@@ -1,0 +1,4 @@
+--- a/structure_stub.txt
++++ b/structure_stub.txt
+@@ -0,0 +1 @@
++Build: room "Cabin" :: "A cozy cabin in the woods"

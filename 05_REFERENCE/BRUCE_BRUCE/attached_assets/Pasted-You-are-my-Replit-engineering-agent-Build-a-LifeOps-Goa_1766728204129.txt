@@ -1,0 +1,60 @@
+You are my Replit engineering agent. Build a LifeOps “Goal Tracking” MVP inside the existing HarrisWildlands/LifeOps app.
+
+NON-NEGOTIABLES
+- Private by default. Everything behind login/auth. No public access to any user data.
+- No coaching, no therapy tone, no motivational speeches. Just tracking + factual summaries.
+- Drift flags are observation-only, single sentence, include timeframe, no advice.
+- Fast check-in: a user must be able to check in on today’s goals in < 60 seconds.
+
+MVP FEATURES
+1) Auth (use existing auth if present; otherwise implement email+password auth with hashed passwords).
+2) Data Models (DB tables):
+   - users: id, email, name, password_hash, created_at
+   - domains: id, name (Faith, Family, Work, Health, Logistics, Property, Ideas, Discipline)
+   - goals: id, user_id, domain_id, title, description, target_type (binary|count|duration), weekly_minimum INT, start_date, due_date, status (active|paused|archived), priority (1-3), created_at
+   - checkins: id, goal_id, user_id, date (YYYY-MM-DD), done BOOLEAN, score_1_10 INT NULL, note TEXT NULL, created_at
+   - drift_flags: id, user_id, type, timeframe_start, timeframe_end, sentence, created_at
+
+3) UI
+- /dashboard (auth required)
+  - “Today” section: list active goals with 1-tap done/not done
+  - Optional: score 1-10 + one-sentence note
+- /goals
+  - create/edit/archive goals
+- /review/weekly
+  - shows completion % by goal and by domain for last 7 days
+  - shows drift flags (see rules)
+
+4) Drift Rules (generate weekly, last 7 days)
+- Check-in Dropoff: if missed checkins on 4+ days this week → “Goal check-ins were missed on 4+ days over the past week.”
+- Consistency Drift: if completion rate < 40% → “Completion rate was below 40% over the past week.”
+- Overload: if active goals > 7 and completion < 60% → “More than 7 active goals with reduced completion over the past week.”
+- Domain Neglect: if a domain has goals but zero checkins → “No goal check-ins occurred for the <domain> domain over the past week.”
+All drift flags must be ONE sentence, factual, include timeframe.
+
+5) PDF Export
+- Add “Export Weekly PDF” button on weekly review.
+- PDF includes: week range, goals list, completion %, domain coverage, drift flags.
+Keep it clean and structured.
+
+TECH REQUIREMENTS
+- Choose the simplest stack consistent with the existing project (Next.js/React preferred).
+- Use a single DB (SQLite acceptable for MVP, Postgres if already configured).
+- REST or Next API routes:
+  - GET/POST /api/goals
+  - PUT/DELETE /api/goals/:id
+  - POST /api/checkins (bulk allowed)
+  - GET /api/review/weekly
+  - GET /api/export/weekly.pdf
+- Add basic validation and error handling.
+- Add a seeded “demo user” if requested and safe; never expose demo credentials publicly.
+
+DELIVERABLES
+- Working UI + DB migrations/seed
+- README with: how to run, env vars, how to create demo user, how to export PDF
+- Acceptance checklist:
+  - create goal ✅
+  - check in today ✅
+  - weekly review + drift flags ✅
+  - weekly PDF export ✅
+  - incognito shows no data without login ✅

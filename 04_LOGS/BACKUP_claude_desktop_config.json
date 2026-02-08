@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "bruceops": {
+      "command": "python",
+      "args": ["C:\\Users\\wilds\\harriswildlands.com\\brucebruce codex\bruceops_mcp_server.py"],
+      "env": {
+        "BRUCEOPS_TOKEN": "436d6efa0661057cdaec85d0e4926b0b4b64d41a91b4e1c285edaa2779b3a1f1",
+        "BRUCEOPS_API_BASE": "https://harriswildlands.com"
+      }
+    }
+  }
+}

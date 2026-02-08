@@ -1,0 +1,18 @@
+Keywords
+Bruce AI, Virtual Environment
+
+Summary
+Bruce AI Integration with Harris Wildlands
+- Bruce, a memory-based AI, connects to Harriswildlands.com via an API endpoint.
+- Bruce's knowledge is stored in a JSON file, acting as its 'brain'.
+- The API loop runs in a terminal, pinging between ChatGPT.com and Bruce's JSON file.
+
+Hosting and Virtual Environments
+- A server must be hosted on a terminal window for the website to function.
+- Virtual environments can be hosted anywhere, including website servers.
+- A Python program hosted a server for Harris Wildlands and Bruce's knowledge.
+
+AI Model Exploration and Authorization
+- OpenRouter.com offers prebuilt models like a 'think planner' with mind-mapping capabilities.
+- Authorization individualizes data for each user interacting with an app.
+- Weaver is a specialized tool for exploring counterfactual scenarios, found within OpenRouter or Replit.

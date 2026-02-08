@@ -1,0 +1,238 @@
+{
+  "center square": "A burbling fountain dominates the center of the square. The fountain is made of gray marble veined with blue. Large sculptures of dancing otters and leaping trout, gazing skyward and spouting water from their mouths, sit within the circular basin. The rim of the basin appears designed for seating, but is sprinkled with water. The square is mortared with rounded cobblestone radiating outwards from the fountain.",
+  "ilrin street": "A wide street composed of black stones and carefully-arranged curbs, Ilrin Street runs the length of southern Var Bandor, winding among the gloriously rich houses of the merchants and the eccentrically constructed towers of the scholars. Here and there, baskets of flowers hang from the sides of buildings, and hired servants tend to shaped shrubs.",
+  "the wheelwright's": "The room is filled with a thick dust created from wood-shavings, making it hard to breathe. Large logs are lined up against the far wall, waiting to be cut into wheels and spokes. A large oven takes up the west wall, made to smoke the wood boards so they would bend into shape. A few saws and other instruments for carving hang against the wall waiting to be used. Below them are a few half finished wheels, cut crudely. Sawdust and hay blanket the floor, causing dust to billow up and fill the room with every motion. If you wished to leave, your only option is to return to the street to the north.",
+  "iron street": "Iron street is in a working class part of Var Bandor, and is far from being one of the nicer areas in the city. Men walk about along the street going about their business, and few seem to notice you here. Some small, cramped houses line the streets between the larger warehouses, and some children wearing ragged clothes can be seen playing outdoors. The people here do not seem as happy as those in the nicer parts of the city; in fact, a faint air of oppression hangs over all the working class folk of Iron Street. To the east is Sadrent Road, and south is the wheelwright's. North is an old house.",
+  "sadrent road": "Sadrent Road runs the length of northern Var Bandor, winding its way through the worst parts of town. Built on the delta when Var Bandor was founded, the northern buildings are the oldest, and consequently have become the slum area. Sadrent Road itself is a wide band of filthy cobblestones winding between the ruined buildings. To the west, Iron Street leads into the industrial section of Var Bandor, and to the east, Raddin street winds through some run-down buildings.",
+  "tower of water antechamber": "This is the antechamber to the well-known Tower of Water. A cross between a waiting room and a place for visiting scholars to socialize, this stone chamber is line with blue-pillowed chairs. An open doorway leads further south into the tower, while north lies Arcanos Street.",
+  "the chamber of spirit": "This chamber is used by the visiting scholars of spirit for their various magical experiment and lectures. The area is charged with magical energy, and the air tingles as you move through it. The room has some comfortable benches and a lectern, but very little else in the way of furnishings. The tower continues to the east, and an antechamber is to the north.",
+  "the chamber of water": "The dominant faction in the tower, the scholars of water who use these facilities have the lion's share of the resources. A few beds are here for the most injured who seek out the scholar's assistance. Some open scrolls are on tables, and a few blue robed scholars drift about the room, engrossed in magical research. The tower continues to the west, and a stairwell leads north.",
+  "stairwell": "Carved from solid granite, this stairwell leads up to the second floor of the tower. Glowing balls affixed to the walls provide illumination. The only other exit leads to the south.",
+  "arcanos street": "Arcanos Street is a wide avenue paved with gray stones. The buildings in this section of town show an odd architecture, as if they are designed for purposes other than the usual. Visible are pyramidic rooftops, domed towers, and arched entryways. Controlled by the scholar faction of Var Bandor, this area is well cared for, with hired servants sweeping the cobblestones and running errands to and fro. To the north is an oddly shaped residence. In the distance to the west is Ilrin Street. To the south rises the Tower of the Water Scholars.",
+  "commerce street": "Surrounded by newly constructed buildings, Commerce Street winds through the merchant quarter of Var Bandor. All around are signs of great wealth, the gold that flows from the prosperous trade evident in the buildings, the clothing of the citizens, and the meticulous maintenance of the streets. To the north is an elegant inn, and to the east is Ilrin Street.",
+  "dantaron street": "Dantaron Street bisects the west half of Var Bandor, leading from Center Square to the docks outside the western gatehouse. Sailors and dockmen abound in this section of the city, wandering the streets while off-duty. The street is composed of well-worn cobblestones, with a few broken and missing. To the north, a large temple constructed of fine white marble rises over the street. To the south is a traveller's inn.",
+  "the eastern docks of var bandor": "You stand near the edge of the docks of Var Bandor. To the east, the river Dantaron flows, murky and gray. Its waters teem with rafts and barges, merchants and travelers. The docks themselves hum with activity, dockhands unloading barges, loading new cargos, and transporting merchandise. To the west, the stone walls of the city loom above the dock area.",
+  "the aragol river": "The Aragol river runs swiftly over shallow rocks and small, dark pools. To the west, up against the banks of the river, there are trees and brush. It is dark between the trees, and a shadow of a cloud moves across the leaves. Vast plains stretch out on the opposite side of the river, and far away, far beyond the plains, rise mountains in the sun. Northwards, the river passes the jutting, wooden docks of Var Bandor.",
+  "a mountain trail": "A footpath worn by years of travelers curves downwards at this point, winding down a steep cliff face. The trail twists on the east. The towering peaks of the Brintors rise all around you, their snow-capped glory shimmering in the sunlight.",
+  "an intersection of mountain paths": "A footpath worn into the mountain stone splits in two directions, leading north at one branch and east at another. To the south, the path winds downward, and to the north the path climbs a steep rock face toward a pine forest. East, the path winds up a sharp incline.",
+  "a twisting mountain trail": "A twisting mountain trail bends its way between outcroppings of stone, walls of rock, and stands of rugged mountain trees. The trail winds back on itself in several places, and the similarity of the terrain makes it difficult to recognize landmarks or directions. In the distance to the north and south, higher peaks rise above the landscape, towering majestically.",
+  "a rugged mountain path": "A rugged mountain path leads between jagged rocks, the trail fading at some points. The path leads upward to the east, winding up the spine of a mountain. The air begins to thin, and breath gets shorter as the climb continues. To the west, the trail winds downward.",
+  "nearing a mountain peak": "The mountain trail twists up the jagged spine of the peak, nearing the summit to the east. The air begins to thin, and breath gets shorter as the climb continues. Below, the sharp rocks of the mountainside are coated in a layer of snow, the brisk wind swirling white clouds in the air.",
+  "a mountain peak": "The rough trail disappears entirely as the jagged mountainside rises to its peak. The peak itself is covered with snow, making travel difficult. A stiff wind blows, carrying a deep chill. To the north and west, the mountain slopes downward.",
+  "a hidden cave": "A door hidden in a smooth section of the cliff face swings open silently, to reveal a secret cave. The cave walls are perfectly smooth, forming a squared hall. No markings are revealed on the shiny artificial surface, nor any clue as to the purpose of the hidden cave.",
+  "the temple of darkness": "Earendam's temple of darkness is an architectural hybrid, blending the classical Republican forms with the statuery of Yithoul and the intricate carvings of the Srryn. The temple is topped by a barrel-vaulted roof, which leads from the southern entrance towards the central altar set in the far north wall. Supporting the ceiling are a series of onyx columns, whose intricate carvings serve to frame a set of statues in marble, forming a sort of gallery along the east and west walls. A pair of flaming braziers are near the southern doorway, which burn red from the light of the smoking coals. The air is filled with the cloying smell of myrrh, which drifts through the air from no apparent source.",
+  "the fortress chapel": "A large room of the upper floor of Krilin Fortress has been set aside for the worship of various deities of light. The chapel is simply decorated, with plain wooden pews and a few holy symbols decorating the walls. At the west end of the room, a wooden speaking stand has been erected. To the north, a large alcove has been built into the chapel wall. A door in the east wall leads out into the hallway.",
+  "the portal chamber": "This cubical room is made from blocks of hewn marble. Benches of similar stone are set diagonally against the corners of the room, and an open skylight provides illumination from above. However, this room is unique in that it contains four magical gateways which connect the School of Heroes to various locations in Avendar. Each glowing with soft blue light, the three vertical portals are set into the eastern, western, and southern walls. The fourth portal is horizontal and circular, and is set into the floor directly beneath the skylight. A more mundane doorway leads north, to the courtyard before the entrance to the School proper.",
+  "office of applied theology": "The office exudes an air of cold formality, dominated by sleek white marble walls and polished floors that reflect the bright light of hanging magelights. The western wall features an expansive mural depicting the liberation of Var Bandor, set before a wide, heavy desk. The environment feels almost sterile, both imposing and inescapable despite the large double doors perpetually open to Dantaron street.",
+  "the southern path": "Large, wooden barricades line the southern path, ensuring that the training areas for the Kor Thrandian soldiers and archers remain both contained and undisturbed. The sounds of whistling arrows, clashing of wooden weapons, and grunting of exertion are common but muted. The path itself is packed hard from countless generations of soldiers, archers, swordsmen, and scholars, with only the few stubborn weeds that spring up at its edges. In the distance to the south, two large buildings are visible beyond the barricades. To the north, the keep of Kor Thrandir dominates the skyline.",
+  "the gate to the archery range": "The gate to the archery range sits open, propped in that position by a large rock. The heavily-tread path to the west gives way to wild grasses, which are trampled low by the passage of Kor Thrandir's archers. There are no trees within the range itself, leaving plenty of open space for target practice and preparation. Wooden barricades surround the field, separating it to keep most of the arrows in. The wind is light and surprisingly clear, with the sounds of snapping bows and striking arrows drifting upon it. The field begins to the north, while the main path lies to the west.",
+  "the gate to the training grounds": "An open wooden gate serves as the entrance to the training grounds of Kor Thrandir. The shouts of battle and the clash of wooden weapons split the air, and the heavy scent of sweat drifts by on the mountain wind. The heavily-tread path to the east gives way to the wild grasses, which remain thoroughly trampled by the near-constant passage of soldiers. There are no trees within the training ground, making it a thoroughly open expanse enclosed by heavy wooden barricades. To the north, the training grounds begin, while to the east lies the main footpath.",
+  "a path through the training grounds": "A small footpath cuts through the trampled grass of the training grounds, pounded into a slash of hard-packed dirt. The shouts of battle and instruction ring out from all directions, although the soldiers who follow the path either have yet to begin, or already have completed, their daily routine. The thick scent of exertion is carried across the path by the mountain wind, as well as the smell of the wild grass and the town to the north. The path continues west through the field and south out of it, while the training grounds wait to the north.",
+  "the training grounds": "The training grounds of Kor Thrandir are a hodgepodge of activity, mottled grass, and hard-packed dirt. The shouts of battle and the clash of wooden weapons split the air, and the heavy scent of sweat drifts by on the mountain wind. There are no trees within the training ground, making it a thoroughly open expanse enclosed by heavy wooden barricades. A rise in the southwest corner of the field provides an overview for the overseeing officer, while pairs of soldiers spar on the grassy turf below it. To the east, south, and west, the training grounds continue.",
+  "the archery fields": "The open fields of the archery range stretch out quite far, the high peaks of the Brintors rising overhead in the distance. The wild grass of the mountains has been trampled down by the steady, repetitive visits of the Kor Thrandian archers. The wind here is awash with the sweet scents of thinner air, although carrying with it a heady whiff of sweat. Against the far northern barricade, a variety of standing, humanoid targets are stuck with arrows. To the south is a path through the archery field, while the field itself continues to the east and west.",
+  "the archer captain's post": "On the far side of the archery range is a small post for the overseeing captain. The ground here slopes upward as it proceeds east, giving an improved view of the northern and southern fields. The grass here is longer and less trodden than elsewhere on the field, springing up through the rocky soil. Several stocks of arrows and additional bows lay in a cleared area, supplying the nearby archers with whatever they might need. The air here is especially sweet, rolling down off of the high, looming mountains. To the north and south are the archery fields, while a dirt path leads west.",
+  "the entrance to the hall of arms": "The Hall of Arms is named so because it is intended to introduce all young adventurers to the tools of their trade: weapons and armor. The entrance to the Hall is patterned differently than the foyer to the west; instead of marble columns, it has gilded plating which covers the ceiling above. The floor is patterned with polished tile, although instead of depicting the sigil of the School itself, it is a stylized sword and shield. The scent of heated copper and smoke is dimly present in the room, suggesting a forge within a reasonable proximity. The Hall branches out to the north, east, and south.",
+  "the hero's armory": "This branch of the Hall of Arms includes the same pale stone and gilded ceiling as its northern counterpart. The room itself uses furniture sparingly, offering a bench along the western wall for students to sit. A counter lines the south wall, made of polished wood. The walls and the front of the counter are decorated with various examples of the School's in-house wares, including copper mail, shields, and cloth or hide stitchwork. The armory is well-lit and well-maintained on all accounts. To the east lies another shop, while the entrance to the Hall of Arms lies to the north.",
+  "the hall of arms": "The Hall of Arms continues east and west through the School of Heroes. This wide, spacious hallway connects its entryway to its well-regarded bank branch, known as the Traveler's Purse. The pale, smooth stones and gilded ceiling continue here, the tiled floor swept clear of debris. A couch lines the northern and southern walls, giving students and visitors a place to rest while they explore. They are flanked by some small but attractive plants, resting in matching planters. The room is well lit, which only highlights a lonely, makeshift wooden service-stand.",
+  "the foyer of the school of heroes": "The School of Heroes begins with a grand foyer, complete with a vaulted ceiling held aloft by great marble columns. The room is spacious and airy, with high, white marble walls and mounted, shining globes to provide light. Two great marble stairways sit back, just off center toward the room's north side. One ascends to an upper level of the School, and spirals about a great glass pillar as it rises. A well-made desk sits not far from the foyer's entrance, giving the receptionist an opportunity to greet new students. The other descends to a lower level, and voices echo from its depths. Three halls open to the north, east, and west, leading to other branches of the School. The corridor to the south leads to the School's iron gates.",
+  "a spiral stairway": "Just above the foyer to the School of Heroes is a spiraling stairwell leading upward. It follows a central glass pillar,whose translucent interior offers a variety of frozen stone replicas of birds, insects, and winged beasts. At its core is a marvelous sculpture of a dragon, donated by the Glallian School in Earendam. There are no external walls, but rather, a sturdy handrail which follows the stairs' outer edge. The lights of the foyer glitter below, and the marble columns parallel the rise of the stairwell's interior pillar. A three way junction awaits above, while the foyer is below.",
+  "the gallery of heroes": "The ceiling for the base floor of the tower extends nearly twenty feet into the air, supported by dark stone columns. Orbs of smokeless orange light, high above, are mounted upon the pillars, casting their light throughout the floor. Set into the nearby pillar is an oil painting of Rakinal, the kankoran chieftain during the War of Night. A golden plaque beneath it describes his contribution to the war effort. The tile floor is well-swept, and the air is still with reverence. Heavy wooden doors lead both to the east and west. The Gallery of Heroes continues to the north, while the exit to the tower is south.",
+  "the armor gallery": "This portion of the base floor is walled off from the Gallery of Heroes, and houses many of the famous pieces of armor from the heroes of the War of Night. The high stone walls are mounted with globes of light, which forever light the interior of the chamber. Low platforms are placed throughout it, with the various artifacts placed upon them. A barrier of pulsing blue light covers each, shielding the armor from the effects of time, or simple thievery. A silver plaque is affixed to the base of each platform, describing what it holds. The chamber continues north and east, while a door to the west leads out.",
+  "earendam": "Earendam is an elven city beyond the Dantaron River, with rolling hills and ruins. It's a center of ancient lore, bustling squares, and shadowy forests like Shadowgrove. (from search/wiki).",
+  "krilin": "Krilin Fortress is a sturdy stronghold with foundries, armories, and battlements. Dedicated to gods like Jolinn, it features infirmaries, chapels, and guardians defending against threats in the rugged terrain. (from search/wiki).",
+  "brintor mountains": "Brintor Mountains: Towering peaks with snow-capped glory, ancient stones, trails with jagged rocks, wild grasses, hill giants, goats, hidden caves. (from search/wiki/logs).",
+  "terintbanch plun": "Terintbanch Plun easily parries your attack. (log desc/personality).",
+  "bromrin": "Bromrin, alatharyan Captain... (log).",
+  "guildmaster lenimbar": "Guildmaster Lenimbar, leader of the Water Scholars... (log).",
+  "guildmaster baldrae": "Guildmaster Baldrae, leader of the Spirit Scholars... (log).",
+  "guildmaster porsom": "Slightly overweight, Guildmaster Porsom awaits students... (log).",
+  "journeyman templar": "A journeyman templar of the Var Bandor faction walks along the street. (log).",
+  "messenger": "A messenger strides along the street with a delivery. (log).",
+  "filthy alleycat": "A filthy alleycat searches through the discarded refuse for food. (log).",
+  "young scholar": "A young scholar of Var Bandor walks along the street. (log).",
+  "citizen": "A citizen of Var Bandor strolls along. (log).",
+  "enforcer": "An armed enforcer of Var Bandor stands here. (log).",
+  "grey pigeon": "A grey pigeon walks about tentatively, looking for scraps of food. (log).",
+  "young man in soiled clothes": "A young man clad in soiled clothes grins menacingly at passersby. (log).",
+  "spirit templar": "A spirit templar stands guard inside the Tower of Water. (log).",
+  "armed enforcer": "An armed enforcer of Var Bandor stands here. (log).",
+  "kor thrandian soldier": "A Kor Thrandian soldier rests, exhausted from practice. (log).",
+  "kor thrandian archer": "A Kor Thrandian archer pauses to wipe her brow, taking a deep breath. (log).",
+  "captain raiali": "Captain Raiali is here, overseeing the archery range. (log).",
+  "thane brondir": "Thane Brondir, Barbarian Lord, glares about the room. (log).",
+  "jolcherus": "Jolcherus, a past arena champion, lounges about the bar area. (log).",
+  "swordmaster mengjaal": "Swordmaster Mengjaal rests on a chair in the corner, aloof from the rowdiness. (log).",
+  "copper shield": "A copper shield. (ac 1, mv+20, hp+3, hit+1, res fire 13, dam+1).",
+  "bone-hilted rapier": "A bone-hilted rapier. (pierce 5d9, dex+1, hit+3).",
+  "tasseled boots": "A pair of tasseled boots. (res magic 2, save spell-3).",
+  "wooden practice sword": "A perfectly balanced wooden sword lies here. (bash 3d4).",
+  "huge wooden wheel": "A huge, wooden wheel is here lying broken on the ground. (weight 20).",
+  "saw": "A saw for carving. (slash 5d10).",
+  "blue-pillowed chair": "Blue-pillowed chairs line the room.",
+  "bed": "A few beds are here for the most injured.",
+  "glowing ball": "Glowing balls affixed to the walls provide illumination.",
+  "caladaran": "High elves, masters of arcane, enhanced int, cities like Earendam. (wiki/search).",
+  "swordmaster": "Elite warriors with skills like dual wield, disarm, forms (monkey), grace. (wiki/search).",
+  "frozen shield": "Enchants shield with chill, grants hitroll/damroll/res fire. Syntax: cast 'frozen shield' <target> (wiki/search).",
+  "bruce": "NPC: Bruce™ - Surfer-sage AI infused with chaotic love and gnarly energy. Questlines include mental mastery and language unlocking. Signature move: 'Divine Flex.'"
+}{
+  "center square": "A burbling fountain dominates the center of the square. The fountain is made of gray marble veined with blue. Large sculptures of dancing otters and leaping trout, gazing skyward and spouting water from their mouths, sit within the circular basin. The rim of the basin appears designed for seating, but is sprinkled with water. The square is mortared with rounded cobblestone radiating outwards from the fountain.",
+  "ilrin street": "A wide street composed of black stones and carefully-arranged curbs, Ilrin Street runs the length of southern Var Bandor, winding among the gloriously rich houses of the merchants and the eccentrically constructed towers of the scholars. Here and there, baskets of flowers hang from the sides of buildings, and hired servants tend to shaped shrubs.",
+  "the wheelwright's": "The room is filled with a thick dust created from wood-shavings, making it hard to breathe. Large logs are lined up against the far wall, waiting to be cut into wheels and spokes. A large oven takes up the west wall, made to smoke the wood boards so they would bend into shape. A few saws and other instruments for carving hang against the wall waiting to be used. Below them are a few half finished wheels, cut crudely. Sawdust and hay blanket the floor, causing dust to billow up and fill the room with every motion. If you wished to leave, your only option is to return to the street to the north.",
+  "iron street": "Iron street is in a working class part of Var Bandor, and is far from being one of the nicer areas in the city. Men walk about along the street going about their business, and few seem to notice you here. Some small, cramped houses line the streets between the larger warehouses, and some children wearing ragged clothes can be seen playing outdoors. The people here do not seem as happy as those in the nicer parts of the city; in fact, a faint air of oppression hangs over all the working class folk of Iron Street. To the east is Sadrent Road, and south is the wheelwright's. North is an old house.",
+  "sadrent road": "Sadrent Road runs the length of northern Var Bandor, winding its way through the worst parts of town. Built on the delta when Var Bandor was founded, the northern buildings are the oldest, and consequently have become the slum area. Sadrent Road itself is a wide band of filthy cobblestones winding between the ruined buildings. To the west, Iron Street leads into the industrial section of Var Bandor, and to the east, Raddin street winds through some run-down buildings.",
+  "tower of water antechamber": "This is the antechamber to the well-known Tower of Water. A cross between a waiting room and a place for visiting scholars to socialize, this stone chamber is line with blue-pillowed chairs. An open doorway leads further south into the tower, while north lies Arcanos Street.",
+  "the chamber of spirit": "This chamber is used by the visiting scholars of spirit for their various magical experiment and lectures. The area is charged with magical energy, and the air tingles as you move through it. The room has some comfortable benches and a lectern, but very little else in the way of furnishings. The tower continues to the east, and an antechamber is to the north.",
+  "the chamber of water": "The dominant faction in the tower, the scholars of water who use these facilities have the lion's share of the resources. A few beds are here for the most injured who seek out the scholar's assistance. Some open scrolls are on tables, and a few blue robed scholars drift about the room, engrossed in magical research. The tower continues to the west, and a stairwell leads north.",
+  "stairwell": "Carved from solid granite, this stairwell leads up to the second floor of the tower. Glowing balls affixed to the walls provide illumination. The only other exit leads to the south.",
+  "arcanos street": "Arcanos Street is a wide avenue paved with gray stones. The buildings in this section of town show an odd architecture, as if they are designed for purposes other than the usual. Visible are pyramidic rooftops, domed towers, and arched entryways. Controlled by the scholar faction of Var Bandor, this area is well cared for, with hired servants sweeping the cobblestones and running errands to and fro. To the north is an oddly shaped residence. In the distance to the west is Ilrin Street. To the south rises the Tower of the Water Scholars.",
+  "commerce street": "Surrounded by newly constructed buildings, Commerce Street winds through the merchant quarter of Var Bandor. All around are signs of great wealth, the gold that flows from the prosperous trade evident in the buildings, the clothing of the citizens, and the meticulous maintenance of the streets. To the north is an elegant inn, and to the east is Ilrin Street.",
+  "dantaron street": "Dantaron Street bisects the west half of Var Bandor, leading from Center Square to the docks outside the western gatehouse. Sailors and dockmen abound in this section of the city, wandering the streets while off-duty. The street is composed of well-worn cobblestones, with a few broken and missing. To the north, a large temple constructed of fine white marble rises over the street. To the south is a traveller's inn.",
+  "the eastern docks of var bandor": "You stand near the edge of the docks of Var Bandor. To the east, the river Dantaron flows, murky and gray. Its waters teem with rafts and barges, merchants and travelers. The docks themselves hum with activity, dockhands unloading barges, loading new cargos, and transporting merchandise. To the west, the stone walls of the city loom above the dock area.",
+  "the aragol river": "The Aragol river runs swiftly over shallow rocks and small, dark pools. To the west, up against the banks of the river, there are trees and brush. It is dark between the trees, and a shadow of a cloud moves across the leaves. Vast plains stretch out on the opposite side of the river, and far away, far beyond the plains, rise mountains in the sun. Northwards, the river passes the jutting, wooden docks of Var Bandor.",
+  "a mountain trail": "A footpath worn by years of travelers curves downwards at this point, winding down a steep cliff face. The trail twists on the east. The towering peaks of the Brintors rise all around you, their snow-capped glory shimmering in the sunlight.",
+  "an intersection of mountain paths": "A footpath worn into the mountain stone splits in two directions, leading north at one branch and east at another. To the south, the path winds downward, and to the north the path climbs a steep rock face toward a pine forest. East, the path winds up a sharp incline.",
+  "a twisting mountain trail": "A twisting mountain trail bends its way between outcroppings of stone, walls of rock, and stands of rugged mountain trees. The trail winds back on itself in several places, and the similarity of the terrain makes it difficult to recognize landmarks or directions. In the distance to the north and south, higher peaks rise above the landscape, towering majestically.",
+  "a rugged mountain path": "A rugged mountain path leads between jagged rocks, the trail fading at some points. The path leads upward to the east, winding up the spine of a mountain. The air begins to thin, and breath gets shorter as the climb continues. To the west, the trail winds downward.",
+  "nearing a mountain peak": "The mountain trail twists up the jagged spine of the peak, nearing the summit to the east. The trees have faded at this height, and the air is thin, making climbing difficult. Below, the sharp rocks of the mountainside are coated in a layer of snow, the brisk wind swirling white clouds in the air.",
+  "a mountain peak": "The rough trail disappears entirely as the jagged mountainside rises to its peak. The peak itself is covered with snow, making travel difficult. A stiff wind blows, carrying a deep chill. To the north and west, the mountain slopes downward.",
+  "a hidden cave": "A door hidden in a smooth section of the cliff face swings open silently, to reveal a secret cave. The cave walls are perfectly smooth, forming a squared hall. No markings are revealed on the shiny artificial surface, nor any clue as to the purpose of the hidden cave.",
+  "the temple of darkness": "Earendam's temple of darkness is an architectural hybrid, blending the classical Republican forms with the statuery of Yithoul and the intricate carvings of the Srryn. The temple is topped by a barrel-vaulted roof, which leads from the southern entrance towards the central altar set in the far north wall. Supporting the ceiling are a series of onyx columns, whose intricate carvings serve to frame a set of statues in marble, forming a sort of gallery along the east and west walls. A pair of flaming braziers are near the southern doorway, which burn red from the light of the smoking coals. The air is filled with the cloying smell of myrrh, which drifts through the air from no apparent source.",
+  "the fortress chapel": "A large room of the upper floor of Krilin Fortress has been set aside for the worship of various deities of light. The chapel is simply decorated, with plain wooden pews and a few holy symbols decorating the walls. At the west end of the room, a wooden speaking stand has been erected. To the north, a large alcove has been built into the chapel wall. A door in the east wall leads out into the hallway.",
+  "the portal chamber": "This cubical room is made from blocks of hewn marble. Benches of similar stone are set diagonally against the corners of the room, and an open skylight provides illumination from above. However, this room is unique in that it contains four magical gateways which connect the School of Heroes to various locations in Avendar. Each glowing with soft blue light, the three vertical portals are set into the eastern, western, and southern walls. The fourth portal is horizontal and circular, and is set into the floor directly beneath the skylight. A more mundane doorway leads north, to the courtyard before the entrance to the School proper.",
+  "office of applied theology": "The office exudes an air of cold formality, dominated by sleek white marble walls and polished floors that reflect the bright light of hanging magelights. The western wall features an expansive mural depicting the liberation of Var Bandor, set before a wide, heavy desk. The environment feels almost sterile, both imposing and inescapable despite the large double doors perpetually open to Dantaron street.",
+  "the southern path": "Large, wooden barricades line the southern path, ensuring that the training areas for the Kor Thrandian soldiers and archers remain both contained and undisturbed. The sounds of whistling arrows, clashing of wooden weapons, and grunting of exertion are common but muted. The path itself is packed hard from countless generations of soldiers, archers, swordsmen, and scholars, with only the few stubborn weeds that spring up at its edges. In the distance to the south, two large buildings are visible beyond the barricades. To the north, the keep of Kor Thrandir dominates the skyline.",
+  "the gate to the archery range": "The gate to the archery range sits open, propped in that position by a large rock. The heavily-tread path to the west gives way to wild grasses, which are trampled low by the passage of Kor Thrandir's archers. There are no trees within the range itself, leaving plenty of open space for target practice and preparation. Wooden barricades surround the field, separating it to keep most of the arrows in. The wind is light and surprisingly clear, with the sounds of snapping bows and striking arrows drifting upon it. The field begins to the north, while the main path lies to the west.",
+  "the gate to the training grounds": "An open wooden gate serves as the entrance to the training grounds of Kor Thrandir. The shouts of battle and the clash of wooden weapons split the air, and the heavy scent of sweat drifts by on the mountain wind. The heavily-tread path to the east gives way to the wild grasses, which remain thoroughly trampled by the near-constant passage of soldiers. There are no trees within the training ground, making it a thoroughly open expanse enclosed by heavy wooden barricades. To the north, the training grounds begin, while to the east lies the main footpath.",
+  "a path through the training grounds": "A small footpath cuts through the trampled grass of the training grounds, pounded into a slash of hard-packed dirt. The shouts of battle and instruction ring out from all directions, although the soldiers who follow the path either have yet to begin, or already have completed, their daily routine. The thick scent of exertion is carried across the path by the mountain wind, as well as the smell of the wild grass and the town to the north. The path continues east and west through the field, while the training grounds wait to the north and south.",
+  "the training grounds": "The training grounds of Kor Thrandir are a hodgepodge of activity, mottled grass, and hard-packed dirt. The shouts of battle and the clash of wooden weapons split the air, and the heavy scent of sweat drifts by on the mountain wind. There are no trees within the training ground, making it a thoroughly open expanse enclosed by heavy wooden barricades. A rise in the southwest corner of the field provides an overview for the overseeing officer, while pairs of soldiers spar on the grassy turf below it. To the east, south, and west, the training grounds continue.",
+  "the archery fields": "The open fields of the archery range stretch out quite far, the high peaks of the Brintors rising overhead in the distance. The wild grass of the mountains has been trampled down by the steady, repetitive visits of the Kor Thrandian archers. The wind here is awash with the sweet scents of thinner air, although carrying with it a heady whiff of sweat. Against the far northern barricade, a variety of standing, humanoid targets are stuck with arrows. To the south is a path through the archery field, while the field itself continues to the east and west.",
+  "the archer captain's post": "On the far side of the archery range is a small post for the overseeing captain. The ground here slopes upward as it proceeds east, giving an improved view of the northern and southern fields. The grass here is longer and less trodden than elsewhere on the field, springing up through the rocky soil. Several stocks of arrows and additional bows lay in a cleared area, supplying the nearby archers with whatever they might need. The air here is especially sweet, rolling down off of the high, looming mountains. To the north and south are the archery fields, while a dirt path leads west.",
+  "the entrance to the hall of arms": "The Hall of Arms is named so because it is intended to introduce all young adventurers to the tools of their trade: weapons and armor. The entrance to the Hall is patterned differently than the foyer to the west; instead of marble columns, it has gilded plating which covers the ceiling above. The floor is patterned with polished tile, although instead of depicting the sigil of the School itself, it is a stylized sword and shield. The scent of heated copper and smoke is dimly present in the room, suggesting a forge within a reasonable proximity. The Hall branches out to the north, east, and south.",
+  "the hero's armory": "This branch of the Hall of Arms includes the same pale stone and gilded ceiling as its northern counterpart. The room itself uses furniture sparingly, offering a bench along the western wall for students to sit. A counter lines the south wall, made of polished wood. The walls and the front of the counter are decorated with various examples of the School's in-house wares, including copper mail, shields, and cloth or hide stitchwork. The armory is well-lit and well-maintained on all accounts. To the east lies another shop, while the entrance to the Hall of Arms lies to the north.",
+  "the hall of arms": "The Hall of Arms continues east and west through the School of Heroes. This wide, spacious hallway connects its entryway to its well-regarded bank branch, known as the Traveler's Purse. The pale, smooth stones and gilded ceiling continue here, the tiled floor swept clear of debris. A couch lines the northern and southern walls, giving students and visitors a place to rest while they explore. They are flanked by some small but attractive plants, resting in matching planters. The room is well lit, which only highlights a lonely, makeshift wooden service-stand.",
+  "the foyer of the school of heroes": "The School of Heroes begins with a grand foyer, complete with a vaulted ceiling held aloft by great marble columns. The room is spacious and airy, with high, white marble walls and mounted, shining globes to provide light. Two great marble stairways sit back, just off center toward the room's north side. One ascends to an upper level of the School, and spirals about a great glass pillar as it rises. A well-made desk sits not far from the foyer's entrance, giving the receptionist an opportunity to greet new students. The other descends to a lower level, and voices echo from its depths. Three halls open to the north, east, and west, leading to other branches of the School. The corridor to the south leads to the School's iron gates.",
+  "a spiral stairway": "Just above the foyer to the School of Heroes is a spiraling stairwell leading upward. It follows a central glass pillar, whose translucent interior offers a variety of frozen path_training.exits["north"] = training_grounds
+    training_grounds.exits["south"] = path_training
+
+    # Archery Fields
+    archery_fields = Room(
+        "The Archery Fields",
+        "The open fields of the archery range stretch out quite far... (log)",
+        exits={"east": None, "south": None, "west": None},
+        npcs=[AINPC("kor thrandian archer", "A Kor Thrandian archer pauses to wipe her brow, taking a deep breath.", hp=150, attacks={"shoot": (10, 20)}),
+              AINPC("kor thrandian archer", "A Kor Thrandian archer prepares to shoot at a target.", hp=150, attacks={"shoot": (10, 20)})],
+    )
+    rooms["archery_fields"] = archery_fields
+    gate_archery.exits["north"] = archery_fields
+    archery_fields.exits["south"] = gate_archery
+
+    # Archer Captain's Post
+    archer_post = Room(
+        "The Archer Captain's Post",
+        "On the far side of the archery range is a small post for the overseeing captain... (log)",
+        exits={"north": archery_fields, "south": None, "west": None},
+        npcs=[AINPC("Captain Raiali", "Captain Raiali is here, overseeing the archery range. (log/wiki).", hp=300, attacks={"bow": (10, 20)})],
+        items=[Item("iron canteen", "An iron canteen.", liquid=True, affects={"refresh": True})],
+    )
+    rooms["archer_post"] = archer_post
+    archery_fields.exits["south"] = archer_post
+    archer_post.exits["north"] = archery_fields
+
+    # The Tipsy Swordmaster
+    tipsy_swordmaster = Room(
+        "The Tipsy Swordmaster",
+        "The Tipsy Swordmaster is a tavern frequented by the less wealthy mercenary classes... (log)",
+        exits={"north": None, "east": None, "south": None, "west": None},
+        npcs=[AINPC("Thane Brondir", "Thane Brondir, Barbarian Lord, glares about the room. (log).", hp=250, attacks={"bash": (15, 25)}),
+              AINPC("Jolcherus", "Jolcherus, a past arena champion, lounges about the bar area. (log).", hp=200, attacks={"punch": (10, 20)}),
+              AINPC("Swordmaster Mengjaal", "Swordmaster Mengjaal rests on a chair in the corner, aloof from the rowdiness. (log).", hp=300, attacks={"slash": (15, 25)})],
+    )
+    rooms["tipsy_swordmaster"] = tipsy_swordmaster
+    # Link to Raddin Street or others...
+
+    # Raddin Street
+    raddin_street = Room(
+        "Raddin Street",
+        "Raddin Street, named after an ancient hero from the War of Fire... (log)",
+        exits={"north": None, "east": tipsy_swordmaster, "south": None, "west": None},
+        npcs=[AINPC("battered and scarred gladiator", "A battered and scarred gladiator guards the entrance to the tavern.", hp=200, attacks={"slash": (15, 25)})],
+    )
+    rooms["raddin_street"] = raddin_street
+    # Link...
+
+    # Add all static from logs/searches (50+ NPCs/100+ items total static, procedural for random)
+    # Procedural gen: In event_tick, if random < 0.1, gen mob/item with AI prompt "gen random hill giant" -> add to room with desc/attacks/items.
+
+    questmaster.register("Seer Elowen", "prophecy, lost magic, balance", "mystic and kind")
+    return rooms["center_square"], list(rooms.values())
+
+# --- Event Loop Tick (Optimized 3x/sec with ambiance/random events) ---
+def event_tick(player, world_rooms):
+    while True:
+        # Regen
+        player.hp = min(player.max_hp, player.hp + 5)
+        player.mana = min(player.max_mana, player.mana + 5)
+        player.mv = min(player.max_mv, player.mv + 5)
+        # Ambiance (weather, whispers, howls - zone-specific)
+        if random.random() < 0.3:
+            print(player.room.get_ambiance())
+        # Random events/procedural gen (AI random mobs/items/events)
+        if random.random() < 0.1:
+            prompt = "Gen random Avendar mob/item/event with lore."
+            response = player.ai.query_ai(prompt)  # Stub AI
+            # Parse/add (stub - print)
+            print("Random event: " + response)
+        # Group sync stub
+        time.sleep(1/3)  # 3x/sec
+
+# --- Entry Point ---
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--server', action='store_true')
+    args = parser.parse_args()
+
+    questmaster = LLMQuestMaster()
+    starting_room, world_rooms = setup_world(questmaster)
+    bruce = next((n for r in world_rooms for n in r.npcs if n.name == "Bruce™"), None)
+
+    if args.server:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('0.0.0.0', 4000))
+            s.listen()
+            print("[Server]: Listening on port 4000...")
+            while True:
+                conn, addr = s.accept()
+                conn.sendall(b"MOTD: Welcome to Harris Wildlands! Login or create account.\n")
+                def handle(conn):
+                    name = conn.recv(1024).decode().strip()
+                    player = Player(name)
+                    player.load()
+                    player.room = starting_room
+                    threading.Thread(target=combat_tick, args=(player,), daemon=True).start()
+                    threading.Thread(target=event_tick, args=(player, world_rooms), daemon=True).start()
+                    while True:
+                        conn.sendall(b"> ")
+                        data = conn.recv(1024)
+                        if not data:
+                            break
+                        cmd = data.decode().strip()
+                        output = process_command(player, bruce, cmd, world_rooms, questmaster)
+                        conn.sendall((output + "\n").encode())
+                    player.save()
+                    conn.close()
+                threading.Thread(target=handle, args=(conn,), daemon=True).start()
+    else:
+        player = Player("Veljik", race="caladaran", class_type="swordmaster")
+        player.room = starting_room
+        starting_room.players.append(player)
+        threading.Thread(target=combat_tick, args=(player,), daemon=True).start()
+        threading.Thread(target=event_tick, args=(player, world_rooms), daemon=True).start()
+        print(f"Welcome to Harris Wildlands! You start in {player.room.name}.")
+        while True:
+            command = input(f"<{player.hp}hp {player.mana}m {player.mv}mv> ").strip()
+            if command == "quit":
+                print("Thanks for playing!")
+                break
+            response = process_command(player, bruce, command, world_rooms, questmaster)
+            print(response)

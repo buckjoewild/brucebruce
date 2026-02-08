@@ -1,0 +1,133 @@
+Absolutely — here is your **final refined asset integration + visual polish spec** with **SVG overlay cues added**, MS-DOS tone retained, and ready for Replit to implement cleanly and beautifully.
+
+---
+
+## ✅ **HARRISWILDLANDS — FINAL VISUAL SYSTEM HANDOFF**
+
+**Purpose**: Full integration spec for Replit.
+**Theme**: Botanical computation meets terminal clarity.
+**Tone**: Worn, embedded, sacred — no gloss, no float.
+**Assets**: WebP backgrounds (10 total), SVG overlays, MS-DOS-styled UI.
+
+---
+
+## 🔧 GLOBAL UI STYLE
+
+| Layer            | Style                                                            |
+| ---------------- | ---------------------------------------------------------------- |
+| **Font**         | Monospace (`IBM Plex Mono`, `Courier`, `VT323`)                  |
+| **Cursor**       | `▍`, `>`, `_` — soft blink                                       |
+| **Text Color**   | Off-white `#f5f5f5` — never pure white                           |
+| **Glow Accents** | Cyan (Core), Amber (Roots), Violet (Canopy)                      |
+| **Backgrounds**  | DALL·E images @ 30–40% opacity, masked by CSS                    |
+| **UI Motion**    | Subtle (sap flows, pulses, node glows)                           |
+| **Mode**         | **Dark mode primary**. Light mode optional, botanical tone only. |
+
+✅ **Rule**: Images live *beneath* — terminal overlays always readable.
+
+---
+
+## 📦 IMAGE ASSET MAP
+
+| Lane                   | Role                         | Background Image(s)                             | Overlay / Animation                                                 |
+| ---------------------- | ---------------------------- | ----------------------------------------------- | ------------------------------------------------------------------- |
+| **BruceOps**           | Entry Gateway                | `forest-root-interface.webp`                    | Glowing "Enter the Wildlands" button (`svg_enter.svg`) + root pulse |
+| **LifeOps**            | Grounding, Daily Calibration | `root.webp`, `root2.webp`                       | Sensor pod HUD (`svg_sensors.svg`) + soil flicker                   |
+| **ThinkOps**           | Idea Flow, Hypothesis Lab    | `canopy.webp`, `canopy2.webp`                   | Hoverable idea map (`svg_idea_cloud.svg`) + light orbit             |
+| **Core (was Trunk)**   | Command System, Protocols    | `systems.webp`, `systems2.webp`                 | Terminal-only + sapflow divider animation                           |
+| **Teaching Assistant** | Learning Deck, Tools         | `trunk.webp`                                    | Observation schematic (`svg_observe.svg`) + blinking markers        |
+| **Global**             | Hero + Archive               | `harriswildlands.webp`, `harriswildlands2.webp` | No overlay — use masked texture only                                |
+
+---
+
+## 🧬 SVG OVERLAY COMPONENTS
+
+Embed these as **SVG or inline React components**, styled to match terminal UI.
+
+| Component            | Use                          | Style Notes                                                  |
+| -------------------- | ---------------------------- | ------------------------------------------------------------ |
+| `svg_enter.svg`      | “Enter the Wildlands” button | Root-shaped border, amber pulse edge, engraved text          |
+| `svg_sensors.svg`    | LifeOps Sensor HUD           | Root + hex shape, tiny labels: Moisture, Flowrate, Integrity |
+| `svg_idea_cloud.svg` | ThinkOps thought map         | Floating leaf pods with node lines, hover reveals tags       |
+| `svg_observe.svg`    | Lab tool schematic           | Clean overlays with tiny glyphs, slow blink tooltips         |
+| `svg_cursor.svg`     | Terminal cursor              | Classic DOS-style, optional glyph mod: 🌱, 🧠                |
+
+All overlays should:
+
+* Be **embedded**, not floating
+* Use **low-opacity strokes**, no hard borders
+* Glow softly on interaction (CSS `:hover` or animation)
+
+---
+
+## 🖥️ EXAMPLE TERMINAL TEXT PER LANE
+
+```bash
+bruce@wildlands:~$ init
+```
+
+```bash
+lifeops@root:~$ check_calibration
+> Moisture: 82% | Flowrate: optimal
+```
+
+```bash
+thinkops@canopy:~$ open_hypothesis "Emergence from constraint"
+```
+
+```bash
+core@wildlands:~$ run protocol:stewardship
+```
+
+```bash
+lab@wildlands:~$ assist --mode=learning
+```
+
+---
+
+## 📱 MOBILE RESPONSIVENESS
+
+* Use **cropped panels** per lane (one per screen)
+* Images should stack vertically
+* Text should always lead — images only **suggest mood**
+* Optionally use **SVG-only mode** on mobile with dark botanical backdrops
+
+---
+
+## 🗂️ FINAL FILES TO HAND TO REPLIT
+
+```
+/assets/
+  - root.webp
+  - root2.webp
+  - canopy.webp
+  - canopy2.webp
+  - trunk.webp
+  - systems.webp
+  - systems2.webp
+  - forest-root-interface.webp
+  - harriswildlands.webp
+  - harriswildlands2.webp
+
+/svg/
+  - svg_enter.svg
+  - svg_sensors.svg
+  - svg_idea_cloud.svg
+  - svg_observe.svg
+  - svg_cursor.svg
+```
+
+> Optional: Add Figma / CSS variable tokens or React component wrappers for SVG overlays.
+
+---
+
+## 🌲 FINAL INSTRUCTION TO REPLIT
+
+Use this structure exactly.
+Keep the art **subtle and sacred**.
+Make it feel **rooted, living, and intelligent**.
+The visuals should **breathe** beneath the text — like a forest watching back.
+
+Let me know if you’d like the `.svg` files generated directly next, or a bundled ZIP for asset handoff.
+
+We’re ready to plant this thing deep. 🌱💻

@@ -1,0 +1,18 @@
+
+========== GRAVITY HASH VERIFY V1 ==========
+Timestamp: Thu 01/29/2026 14:53:01.84
+Hash Reference: C:\GRAVITY\00_INDEX\INTEGRITY_HASHES_2026-01-29.txt
+
+Verification Results:
+=====================
+
+[FAIL] MISMATCH: "C:\GRAVITY\00_INDEX\INTEGRITY_HASHES_2026-01-29.txt"
+       Expected: 
+       Actual:   SHA256
+
+========== VERIFICATION SUMMARY ==========
+Files Verified: 0
+Mismatches Found: 1
+Missing Files: 0
+
+[FAIL] Integrity compromised

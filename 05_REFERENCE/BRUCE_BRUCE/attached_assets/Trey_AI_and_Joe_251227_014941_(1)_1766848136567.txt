@@ -1,0 +1,23 @@
+Keywords
+Study Data, Data Storage, Automation, Project Development, Collaboration
+
+Summary
+AI-Powered Study Data Analysis System
+- AI provides JSON output on study retention and strategy effectiveness.
+- Python program extracts data, adds it to a database, and displays it on a website.
+- Website shows study completion percentage, method ranking, strengths, and weaknesses.
+
+Data Storage and Processing
+- Files are stored in Google Drive and hosted on a Replit server.
+- Daily logs capture both quantitative and qualitative data.
+- LLMs are needed to process typed qualitative input.
+
+System Integration and Automation
+- Zapier could connect the app to a large language model via free API calls.
+- Synthesized data from API calls would be stored on the hard drive and app.
+- The system aims for self-authoring and gamified goal tracking.
+
+Project Development and Collaboration
+- The project has been a significant time and money investment.
+- Collaboration helps clarify understanding and identify missing links.
+- The system is designed to evolve with user input and AI integration.

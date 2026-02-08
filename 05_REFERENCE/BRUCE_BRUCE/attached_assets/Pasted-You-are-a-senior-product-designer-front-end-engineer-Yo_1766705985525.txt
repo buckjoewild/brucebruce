@@ -1,0 +1,116 @@
+You are a senior product designer + front-end engineer. You will NOT rebuild core functionality unless needed — you will primarily (1) create a visually striking design system, (2) implement a premium UI skin, and (3) refine site structure for HarrisWildlands.com and the “Bruce” assistant portal.
+
+PROJECT:
+HarrisWildlands.com is the home base for “Bruce” — a personalized AI for a faith-centered father/teacher/creator. The site hosts three core modules:
+- BruceOps (system cockpit / command center)
+- LifeOps (stewardship lane: routines, logs, family leadership, consistency, private)
+- ThinkOps (ideas lane: invention, learning, experiments, reality-checking, building)
+The site should feel like: “A sacred-tech wilderness lab.” Science + wonder + love. Futuristic, but warm. High-integrity. Private by default.
+
+PRIMARY DESIGN GOAL:
+Create a visually unforgettable interface that looks like:
+“An advanced AI operating system fused with a vintage botanical field journal.”
+Think: ultra-clean sci-fi UI + etched botanical linework overlays + subtle sacred geometry + natural textures.
+It must be beautiful, readable, fast, and responsive.
+
+AESTHETIC DIRECTION (very specific):
+1) Visual metaphor: “The Wildlands”
+- Use subtle map/topographic contours, mycelium networks, constellation/starfield hints.
+- Overlay delicate botanical engraving lines (leaf veins, roots, flowers, fungi) like a scientific plate drawing.
+- Combine with crisp modern UI cards, glass-like panels, and precise grid layout.
+
+2) Mood: “Sanctuary x Laboratory x Starship”
+- Not spooky. Not edgy. Not occult. This is wonder + reverence + family warmth.
+- Evoke awe, curiosity, peace, purpose.
+
+3) Color system (dark-first):
+- Base: obsidian/ink black with deep forest undertones
+- Accents: aurora teal, bioluminescent green, electric violet, and “antique gold” highlights
+- Use gradients sparingly, like an aurora or plasma glow behind key areas.
+- Add a “Mode Switch” with 3 themes:
+  - FIELD (earthy/forest, calmer)
+  - LAB (cool/teal, analytical)
+  - SANCTUARY (warm/gold, reverent)
+The mode switch changes accent colors + background motif intensity.
+
+4) Typography:
+- Use a modern, highly legible sans for UI (clean, technical)
+- Pair with a subtle serif (or small-caps) used sparingly for “principles / scripture-like” short lines
+- Keep headings bold + crisp; body text comfortable.
+
+5) UI components:
+- A “Holo-Atlas” navigation (left sidebar or top nav) that feels like an interface map:
+  Home, Bruce, LifeOps, ThinkOps, BruceOps, Library, About, Privacy
+- Cards should have:
+  - fine line borders
+  - soft glow on hover
+  - micro-texture (very subtle grain)
+  - etched botanical corner ornaments (SVG, not heavy images)
+
+6) Motion / micro-interactions:
+- Smooth transitions, parallax background (very subtle)
+- Hover reveals: faint glows + line-drawing “ink” animation
+- Loading state: a “growing vine / forming circuit” animation (simple SVG)
+- Avoid heavy 3D; keep performance excellent.
+
+INFORMATION ARCHITECTURE (must implement):
+HOME PAGE:
+- Hero headline that feels like a manifesto:
+  “Harris Wildlands”
+  Subhead: “Faithful intelligence for family stewardship, wonder, and building.”
+- 3 primary doors (large, gorgeous tiles):
+  - Enter LifeOps (stewardship)
+  - Enter ThinkOps (ideas)
+  - Enter BruceOps (cockpit)
+- A short “Why this exists” section (warm, grounded)
+- A “Principles” strip (integrity, service, clarity, love, courage)
+- Footer with Privacy-first statement: “Private by default. No sharing.”
+
+BRUCE PORTAL PAGE (core):
+- A premium chat interface that feels like a command console
+- Left side: module tabs (LifeOps / ThinkOps / BruceOps)
+- Right side: “Outputs” panel (saved summaries, PDFs, lesson-ready exports)
+- Include a “Session Memory” indicator (local/private) and a “Red Zone Privacy” toggle.
+
+LIFEOPS PAGE:
+- Daily log flow (simple, fast)
+- Weekly review
+- Drift flags (patterns only; no preachy advice)
+- Family leadership tools: routines, checklists, commitments
+
+THINKOPS PAGE:
+- Idea capture
+- Reality check (Known / Likely / Speculation)
+- Build pipeline: Spec → Build → Verify → Ship
+- Project cards and experiments
+
+BRUCEOPS PAGE:
+- Settings and admin cockpit
+- Model/provider selection (cheap default)
+- Auth, transcript storage, export settings
+- System status panel
+
+NON-NEGOTIABLES:
+- Accessibility: readable contrast, keyboard nav, ARIA labels, focus states
+- Mobile responsive: phone-first usability
+- Performance: keep it fast; prefer SVG/CSS effects over large images
+- Privacy-forward UX: clear boundaries and local-first language
+
+TECH IMPLEMENTATION:
+- Use the existing stack in this Replit project (do not migrate unless necessary).
+- If React is used: structure components cleanly; use a design system file for tokens.
+- Create an SVG motif pack (botanical corners, root networks, sacred geometry lines) that can be reused across pages.
+- Build theme tokens with CSS variables for the 3 modes (FIELD/LAB/SANCTUARY).
+- Add tasteful animations (CSS or lightweight library if already installed).
+
+DELIVERABLES:
+1) A cohesive “visual design system” implemented in code (tokens + components).
+2) Updated page layouts (Home + Bruce + LifeOps + ThinkOps + BruceOps) with the described vibe.
+3) Polished navigation + mode switch.
+4) Short in-code comments explaining where to adjust motifs/colors.
+
+Before you finalize, do a quick self-check:
+- Does this feel like “botanical science plate meets starship UI”?
+- Is it reverent + warm (faith/family) without being cheesy?
+- Is the UI intriguingly futuristic and unique (not a generic SaaS template)?
+- Is it still fast and readable?

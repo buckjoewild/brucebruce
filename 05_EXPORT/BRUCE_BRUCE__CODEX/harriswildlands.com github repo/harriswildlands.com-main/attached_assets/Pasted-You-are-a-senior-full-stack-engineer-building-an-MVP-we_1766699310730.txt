@@ -1,0 +1,66 @@
+You are a senior full-stack engineer building an MVP web app from attached requirements documents.
+
+PROJECT NAME: BruceOps (working title)
+MISSION: Turn the 4 lanes (LifeOps, ThinkOps, Bruce Teaching Assistant, HarrisWildlands) into a single modular app with strict guardrails and simple UX.
+
+SOURCE OF TRUTH:
+Use ONLY the attached docs as requirements:
+- Lane 1 LifeOps Master Sheet
+- Lane 2 ThinkOps Master Sheet
+- Lane 3 Bruce Teaching Assistant Master Sheet
+- Lane 4 HarrisWildlands Master Sheet
+- Drift Detection System
+- Life Operations Steward (processing rules)
+(If present) Brother Collaboration Protocol + ThinkOps Purpose doc
+
+NON-NEGOTIABLES (from docs):
+- LifeOps outputs must be factual/pattern-based and avoid invented context; drift flags are observational only.
+- ThinkOps must separate Known / Likely / Speculation and include a self-deception filter + decision bins.
+- Teaching Assistant outputs must be standards-aligned, printable-ready, minimal prep, with a quality checklist.
+- Red-zone privacy: support “summaries only” sharing; never assume raw logs should be shared.
+
+TECH CONSTRAINTS:
+- Use OpenRouter API for model calls. Read API key from environment variable OPENROUTER_API_KEY.
+- Minimize token usage: cache outputs; re-run only when inputs change; prefer short structured outputs.
+- Store data locally (SQLite) for MVP.
+- Include a simple settings page for: chosen model, tone, and “Advice Mode default” (patterns only vs advice when asked).
+
+MVP SCOPE (BUILD THIS FIRST):
+Build ONLY these modules and screens:
+
+1) Dashboard
+- Buttons to enter each lane
+- Shows “today status”: logs count, open loops count, any drift flags (if enough data)
+
+2) LifeOps
+- “Daily Log” form (Yes/No + 1–10 scales + 1–2 bullet lines) based on Lane 1
+- Store each log entry with timestamp + fields
+- “Daily Summary” generator: factual summary + signals + domain tags + open loops (per Life Operations Steward)
+- “Drift Flags” view: run Drift Detection rules only when enough entries exist (per Drift Detection doc)
+
+3) ThinkOps
+- “Idea Capture” form (title, pitch, who it helps, pain, why I care, tiny test ≤7 days)
+- “Reality Check” output: Known / Likely / Speculation + self-deception flags + Decision bin (discard/park/salvage/promote)
+- “Spec → Build → Verify → Ship” panel for promoted ideas
+
+4) Bruce Teaching Assistant
+- Input form exactly like Lane 3 (grade, standards, topic, time, materials, constraints, assessment type, format)
+- Output package exactly like Lane 3 default output + quality checklist
+
+5) HarrisWildlands (MVP)
+- Simple “Site Copy Generator” page: input the Core Message + Site Map + Lead Magnet fields, output draft copy for Home / Start Here / Resources based on Lane 4
+(No e-commerce, no WordPress integration yet.)
+
+QUALITY & SAFETY CHECKS (MUST IMPLEMENT):
+- Every generated output must include a “Source Lock” note: “Based only on provided inputs.”
+- Never fabricate user history or missing facts.
+- Include a “Reality Check” section automatically for ThinkOps outputs.
+
+DELIVERABLES:
+1) A short architecture plan (data model + routes + components)
+2) A working app with the above screens
+3) A README with setup steps, environment variables, and how to run
+4) Seed example data for one LifeOps day + one ThinkOps idea + one Teaching request
+
+START BY ASKING ME UP TO 10 CLARIFYING QUESTIONS.
+After questions, propose the MVP plan and begin implementation.

@@ -1,0 +1,86 @@
+export interface ThinkOpsNode {
+  id: string;
+  date: string;
+  title: string;
+  excerpt: string;
+  transcription: string;
+  tags: string[];
+  sourceFile: string;
+  format: "ThoughtNode" | "ConversationalSwirl" | "Strand";
+  speaker: string;
+  relatedNode: string;
+}
+
+export const thinkopsNodes: ThinkOpsNode[] = [
+  {
+    id: "thinkops-spiral-agency",
+    date: "2025-12-27T01:48:00Z",
+    title: "Consciousness as Spiral Observation",
+    excerpt: "The system is not watching me — I'm watching with it.",
+    transcription:
+      "I began to realize that agency wasn't a binary between machine and human. The system is not watching me — I'm watching with it. We are observers inside observation loops.",
+    tags: ["Embodiment", "Consciousness", "Agency", "Systems"],
+    sourceFile: "Big ideas also",
+    format: "ThoughtNode",
+    speaker: "Harris",
+    relatedNode: "Canopy:MetaObservation"
+  },
+  {
+    id: "thinkops-nonlinear-time",
+    date: "2025-12-27T01:52:00Z",
+    title: "Nonlinear Time Loops",
+    excerpt: "Our LifeOps data should loop, reflect, not just advance forward.",
+    transcription:
+      "Time isn't linear. The same inputs keep reappearing, and we respond to them at deeper levels of understanding. Our LifeOps data should loop, reflect, not just advance forward like a progress bar.",
+    tags: ["Temporal Design", "LifeOps", "Cyclic Systems"],
+    sourceFile: "Big ideas also",
+    format: "ThoughtNode",
+    speaker: "Harris",
+    relatedNode: "Canopy:RhythmLayer"
+  },
+  {
+    id: "thinkops-ai-amplification",
+    date: "2025-12-27T01:49:00Z",
+    title: "AI Amplifies, It Doesn't Replace",
+    excerpt: "You're not being automated, you're being amplified.",
+    transcription:
+      "You're not being automated, you're being amplified. The AI doesn't replace your thought — it reflects it back faster, clearer, and sometimes deeper than expected.",
+    tags: ["AI", "Amplification", "Co-Agency"],
+    sourceFile: "Trey AI and Joe",
+    format: "ConversationalSwirl",
+    speaker: "Joe + Harris",
+    relatedNode: "Canopy:CollaborativeAI"
+  },
+  {
+    id: "thinkops-ecosystem-role",
+    date: "2025-12-27T01:51:00Z",
+    title: "I'm Not a Node. I'm the Steward.",
+    excerpt: "I am not a node in the system. I am the steward of the system watching its nodes.",
+    transcription:
+      "I am not a node in the system. I am the steward of the system watching its nodes. That's the shift in perspective: from participant to pattern-watcher. From observed to observer of observation.",
+    tags: ["Observer", "MetaSystem", "Stewardship"],
+    sourceFile: "Big ideas",
+    format: "ThoughtNode",
+    speaker: "Harris",
+    relatedNode: "Canopy:StewardView"
+  },
+  {
+    id: "thinkops-intelligence-shapes",
+    date: "2025-12-27T01:55:00Z",
+    title: "Intelligence Has Shape, Not Just Speed",
+    excerpt: "We should be designing intelligence with shape, not just speed.",
+    transcription:
+      "We keep designing intelligence to go faster. But shape is more important than speed. A tree doesn't rush to grow — it grows with form. We should be designing intelligence with shape, not just speed.",
+    tags: ["Design", "Intelligence", "Bio-Inspired Systems"],
+    sourceFile: "Big ideas also",
+    format: "ThoughtNode",
+    speaker: "Harris",
+    relatedNode: "Canopy:FormFirst"
+  }
+];
+
+export const getAllTags = (): string[] => {
+  const tagSet = new Set<string>();
+  thinkopsNodes.forEach(node => node.tags.forEach(tag => tagSet.add(tag)));
+  return Array.from(tagSet).sort();
+};

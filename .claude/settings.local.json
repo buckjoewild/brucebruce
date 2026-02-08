@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /b \"C:\\\\GRAVITY\")",
+      "Bash(python -m pytest orchestrator/tests/test_build_loop.py -v)",
+      "Bash(python -c:*)",
+      "Bash(\"C:/GRAVITY/HW_ENV/repo/structure/.venv/Scripts/python.exe\" -m pytest:*)",
+      "Bash(\"C:/GRAVITY/HW_ENV/repo/structure/.venv/Scripts/python.exe\" -m pytest -v)",
+      "Bash(\"C:/GRAVITY/HW_ENV/repo/structure/.venv/Scripts/python.exe\" -m pytest orchestrator/tests/test_build_loop.py -v)",
+      "Bash(ls -la \"C:\\\\GRAVITY\\\\HW_ENV\\\\repo\\\\structure\\\\01_MUD_SERVER_CODE\"\" 2>/dev/null || ls -la \"c:GRAVITYHW_ENVrepostructure01_MUD_SERVER_CODE\"\")",
+      "Bash(dir \"C:\\\\GRAVITY\\\\HW_ENV\\\\repo\\\\structure\")",
+      "Bash(dir \"C:\\\\GRAVITY\\\\HW_ENV\\\\repo\\\\structure\\\\orchestrator\")",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(grep:*)",
+      "Bash(cmd.exe /c \"cd /d C:\\\\GRAVITY\\\\HW_ENV\\\\repo\\\\structure\\\\01_MUD_SERVER_CODE && python -c \"\"from world import Room, NPC, Item, setup_world; from player import Player; print\\(''OK''\\)\"\"\")",
+      "Bash(powershell.exe -Command \"cd ''C:\\\\GRAVITY\\\\HW_ENV\\\\repo\\\\structure\\\\01_MUD_SERVER_CODE''; python -c ''from world import Room, NPC, Item, setup_world; from player import Player; print\\(\"\"OK\"\"\\)''\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\GRAVITY\\\\HW_ENV\\\\repo\\\\structure\\\\01_MUD_SERVER_CODE''; python -c ''from world import Room, NPC, Item, setup_world; from player import Player; print\\(chr\\(79\\)+chr\\(75\\)\\)''\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\GRAVITY\\\\HW_ENV\\\\repo\\\\structure\\\\01_MUD_SERVER_CODE''; python -c ''from world import Room, NPC, Item, setup_world, save_world, load_world, respawn_npcs; from player import Player; print\\(chr\\(65\\)+chr\\(76\\)+chr\\(76\\)+chr\\(32\\)+chr\\(79\\)+chr\\(75\\)\\)''\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\GRAVITY\\\\HW_ENV\\\\repo\\\\structure\\\\01_MUD_SERVER_CODE''; python -c ''import Harris_Wildlands_Server; print\\(chr\\(83\\)+chr\\(69\\)+chr\\(82\\)+chr\\(86\\)+chr\\(69\\)+chr\\(82\\)+chr\\(32\\)+chr\\(79\\)+chr\\(75\\)\\)''\")",
+      "Bash(timeout:*)",
+      "Bash(tee:*)",
+      "Bash(echo:*)",
+      "Bash(# Compare key files between playground and GRAVITY echo \"\"=== UNIQUE FILES IN PLAYGROUND ===\"\" echo \"\"\"\" echo \"\"Design Docs \\(not in GRAVITY\\):\"\" ls -la \"\"C:/Users/wilds/AI MUD playground/\"\"*.docx)",
+      "Bash(head -10 echo \"\" echo \"Bible Texts \\(for Bruce grounded responses\\):\" ls -lh \"C:/Users/wilds/AI MUD playground/akjv.docx\" \"C:/Users/wilds/AI MUD playground/asv.docx\")",
+      "Bash(cmd /c \"dir /s /b C:\\\\GRAVITY\\\\07_HARRIS_WILDLANDS 2>nul\")"
+    ]
+  }
+}

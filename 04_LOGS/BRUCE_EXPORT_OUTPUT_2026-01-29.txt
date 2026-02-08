@@ -1,0 +1,5 @@
+========== BRUCE EXPORT SITE V1 ==========
+Timestamp: Thu 01/29/2026 20:37:13.46
+[INFO] REL_SITE: "brucebruce codex"
+[INFO] SRC:      "C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex"
+[INFO] DST:      "C:\GRAVITY\05_EXPORT\BRUCE_BRUCE__CODEX"

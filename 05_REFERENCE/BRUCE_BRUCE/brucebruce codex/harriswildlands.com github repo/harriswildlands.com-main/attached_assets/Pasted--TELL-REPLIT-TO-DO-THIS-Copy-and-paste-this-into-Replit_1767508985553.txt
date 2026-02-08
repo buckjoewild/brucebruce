@@ -1,0 +1,74 @@
+🚀 TELL REPLIT TO DO THIS:
+Copy and paste this into Replit Agent:
+Perfect! Please add the missing cache clear endpoint.
+
+Add this code inside registerRoutes, near the other AI endpoints (around line 1380):
+
+app.post("/api/test/ai/cache/clear", isAuthenticated, (req, res) => {
+  const sizeBefore = aiResponseCache.size;
+  aiResponseCache.clear();
+  
+  console.log(`🗑️ Cache cleared by user ${getUserId(req)}: ${sizeBefore} entries removed`);
+  
+  res.json({
+    message: `Cache cleared successfully. Removed ${sizeBefore} cached responses.`,
+    before: sizeBefore,
+    after: aiResponseCache.size
+  });
+});
+
+Then test all endpoints:
+1. curl http://localhost:5000/api/ai/quota
+2. curl -X POST http://localhost:5000/api/ai/search -H "Content-Type: application/json" -d '{"query": "energy"}'
+
+Report the results!
+
+✅ AFTER REPLIT ADDS CACHE ENDPOINT:
+Your backend will be 100% COMPLETE!
+Then you can:
+Test Each Endpoint:
+bash# 1. Check quota
+curl http://localhost:5000/api/ai/quota
+
+# 2. Smart search
+curl -X POST http://localhost:5000/api/ai/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "energy", "limit": 5}'
+
+# 3. Weekly synthesis
+curl -X POST http://localhost:5000/api/ai/weekly-synthesis \
+  -H "Content-Type: application/json"
+
+# 4. Correlations
+curl -X POST http://localhost:5000/api/ai/correlations \
+  -H "Content-Type: application/json" \
+  -d '{"days": 30}'
+
+# 5. AI Squad
+curl -X POST http://localhost:5000/api/ai/squad \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What should I focus on today?"}'
+
+# 6. Clear cache
+curl -X POST http://localhost:5000/api/test/ai/cache/clear \
+  -H "Content-Type: application/json"
+
+🎯 NEXT STEPS (IN ORDER):
+Step 1: Add Cache Endpoint (1 minute)
+
+Paste the prompt above into Replit Agent
+Wait for it to add the endpoint
+Verify it works
+
+Step 2: Test All Endpoints (2 minutes)
+
+Run the curl commands above
+Verify they all return JSON
+Check console for AI messages
+
+Step 3: Install MCP Server (5 minutes)
+
+Go to parent folder: C:\Users\wilds\brucebruce codex\
+Open SETUP_INSTRUCTIONS.md
+Follow the MCP server setup
+Configure Claude Desktop

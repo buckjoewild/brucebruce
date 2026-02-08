@@ -1,0 +1,250 @@
+Got it ⚙️ — **here’s the refined ThinkOps spec** with your **“Triggers & Signals”** system integrated exactly as the document defines (measurable, non-speculative, evidence-backed). 
+
+---
+
+## ThinkOps v1.1 (Refined): What Think *is* now 🎛️
+
+ThinkOps = **Transcript Vault + Search + Highlights + Analytics (Triggers & Signals)**
+
+### Core pages (ship these)
+
+1. **/think/inbox** — paste/upload transcript dumps → creates a Session
+2. **/think/sessions** — list + filters + bulk select
+3. **/think/session/:id** — transcript reader + manual highlights/tags
+4. **/think/analytics/triggers-signals** — *the StarCraft-style metrics tab* ✅ 
+5. **/think/reports** — weekly/monthly exports (initially deterministic)
+
+---
+
+## The Triggers & Signals Tab (exact doc behavior) 🧾
+
+### Purpose
+
+Compute **language metrics** (counts, ratios, per-1,000 words) + show **recurring trigger words/phrases** with **KWIC evidence snippets**.
+🚫 No personality typing. No diagnosis. No speculative inference. 
+
+### Concept model (the StarCraft analogs)
+
+* **Economy (Capacity & Waste)**: constraints + regret/inaction + life-input events
+* **Output (Built/Completed)**: completion language + sequencing clarity + tool adoption
+* **Trades (Wins/Losses)**: positive vs negative outcome language (purely textual)
+* **APM (Action Density)**: action-verb density + hedge/uncertainty
+* **Supply Blocks (Bottlenecks)**: blocker words + loop/retry + contexts before blocks 
+
+---
+
+## Analytics Data Flow (how it works) 🔁
+
+For a selection of **1–10 transcripts**:
+
+1. **Normalize**
+
+   * word count
+   * repeated phrases (2–5 word n-grams)
+   * KWIC (keyword-in-context) windows
+2. **Score**
+
+   * compute metrics per transcript + aggregate (rates per 1,000 words)
+3. **Explain**
+
+   * store **3–8 evidence snippets per metric per transcript**
+4. **Surface**
+
+   * trigger leaderboard + compact scoreboard
+   * click metric → evidence drawer
+5. **Export**
+
+   * JSON download of metrics + triggers + evidence 
+
+---
+
+## Metric set (v1.2 list) 📈
+
+All are **per 1,000 words** unless stated; missing data → **N/A**. 
+
+### 1) Triggers
+
+* Top Trigger Words (count + per_1000)
+* Top Trigger Phrases (top 2–5 word n-grams)
+* Spike Terms (spike vs baseline average) 
+
+### 2) Topic vs State
+
+* AI/Tool Topic Density
+* Life/Family/Work Density
+* State Signal Density 
+
+### 3) Economy (Capacity & Waste)
+
+* Capacity Mentions Rate
+* Unspent Capacity Rate (regret/inaction proxy)
+* Collection Rate Proxy (life-input events) 
+
+### 4) Output (Built/Completed)
+
+* Ship Count (Completion)
+* Build Order Clarity
+* Tech Unlock Rate (tool/system adoption) 
+
+### 5) Trades (Wins/Losses)
+
+* Positive Trade Rate
+* Negative Trade Rate
+* Trade Ratio = (pos + 0.01)/(neg + 0.01) 
+
+### 6) APM (Action Density)
+
+* Action Verb Density
+* Hedge/Uncertainty Rate 
+
+### 7) Supply Blocks (Bottlenecks)
+
+* Blocker Rate
+* Loop/Retry Rate
+* Block Context Tags (KWIC clustering of 5–12 words before blocker) 
+
+---
+
+## Minimal UI Spec (refined into your “command center”) 🕹️
+
+**Filters bar**
+
+* transcript multi-select
+* optional date range
+* toggle “Topic vs State” 
+
+**Panel A — Trigger Leaderboard**
+
+* top words + top phrases
+* raw count + per-1,000 
+
+**Panel B — Signals Scoreboard**
+
+* compact metric list + values
+* optional trend arrows if multi-transcript 
+
+**Panel C — Evidence Drawer**
+
+* click metric → show 3–8 KWIC snippets per selected transcript 
+
+**Export button**
+
+* downloads JSON schema payload 
+
+---
+
+## Backend contracts (you can hand directly to Replit) 🔌
+
+Required endpoints: 
+
+* `GET /api/analytics/triggers?transcriptIds=...&range=...`
+* `GET /api/analytics/signals?transcriptIds=...&range=...`
+* `GET /api/analytics/lexicons` (include lexicon sets + version)
+
+### JSON shape (tab data)
+
+Implement the selection/per_transcript/aggregate structure as written. 
+
+---
+
+## Lexicons + versioning (non-negotiable for “pattern recognition”) 🧠
+
+This is what keeps the system **measurable and honest**:
+
+* A1 triggers (user-configurable)
+* A4 AI/tool tokens
+* A5 life/family/work tokens
+* A6 state tokens
+* A7 capacity tokens
+* A8 regret/inaction tokens
+* A10 completion markers
+* A12 tool adoption
+* A13 positive tokens / A14 negative tokens
+* A15 action verbs / A16 hedges
+* A17 block words / A18 loop tokens
+* A19 context seed tags 
+
+Also: **recompute when lexicon version changes** + caching per transcript. 
+
+---
+
+## Engineering notes (so it doesn’t get “fancy but fake”) 🧪
+
+From the doc’s testing checklist:
+
+* tokenization: casing/punctuation/contractions
+* per-1,000 scaling math + safe handling for short transcripts
+* KWIC windowing: no empties, de-dupe near-identical snippets
+* avoid double counting across lexicons unless intended 
+
+---
+
+## Updated “Replit build prompt” (paste this) ✅
+
+```text
+Implement ThinkOps analytics: “Triggers & Signals” tab (StarCraft-inspired language metrics, non-speculative).
+
+REQUIREMENTS (must match spec):
+- Compute measurable language metrics using counts, ratios, and per-1,000-word rates.
+- Show trigger words + trigger phrases (2–5 word n-grams) and spike terms vs baseline.
+- Provide KWIC evidence snippets (3–8 per metric per transcript).
+- No personality typing, no diagnosis, no speculative inference.
+
+DATA FLOW:
+Input: 1–10 transcripts. Normalize: word count, n-grams, KWIC. Score: metrics per transcript + aggregate. Explain: store evidence snippets. Surface: leaderboard + scoreboard + evidence drawer. Export: JSON.
+
+METRICS:
+Implement categories: Triggers; Topic vs State; Economy; Output; Trades; APM; Supply Blocks.
+
+UI:
+Route: /think/analytics/triggers-signals
+Filters: transcript multi-select + date range + toggle topic vs state
+Panels:
+A) Trigger Leaderboard (top words + phrases; show raw count + per-1000)
+B) Signals Scoreboard (compact metrics list; optional trend arrows if multi-transcript)
+C) Evidence Drawer (click metric -> show 3–8 KWIC snippets per selected transcript)
+Export JSON button.
+
+BACKEND:
+- GET /api/analytics/triggers?transcriptIds=...&range=...
+- GET /api/analytics/signals?transcriptIds=...&range=...
+- GET /api/analytics/lexicons (returns lexicon sets + version)
+
+IMPLEMENTATION NOTES:
+- Dictionary + regex matching + case-fold + punctuation stripping
+- N-grams 2–5 words; exclude stopwords + filler blocklist
+- KWIC windows around matches; de-dupe near-identical snippets
+- Cache computed analytics per transcript; recompute when lexicon_version changes
+- Handle contractions (can’t vs cant), scaling for short transcripts, and N/A if not computable
+
+LEXICONS:
+Implement lexicon sets per spec with version string (v1).
+```
+
+---
+
+## Reality Check 🧯
+
+**Known**
+
+* This turns “pattern recognition” into **auditable metrics + evidence**, not vibes. 
+
+**Likely**
+
+* You’ll get huge value without embeddings. Full-text + lexicons + KWIC is already a serious intel system.
+
+**Speculation**
+
+* Semantic clustering can come later, but only after lexicon-based analytics is stable (otherwise you’ll drown in “smart” noise).
+
+---
+
+## 3 next actions (≤30 min) ⏱️
+
+1. **Customize A1 Trigger list** (10–30 words you care about: vape/sleep/wife/conflict/etc.) and send it to Replit. 
+2. **Pick 5 transcripts** you’ll use as the first analytics test set (real messy ones).
+3. Paste the **Replit build prompt** above and tell it: “Ship this tab first; no AI keys required.”
+
+**Definition of Done**
+
+* You can select transcripts → see leaderboard + scoreboard → click metrics for KWIC evidence → export JSON. 

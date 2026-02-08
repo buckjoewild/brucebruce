@@ -1,0 +1,1181 @@
+[Download the docs skeleton ZIP](sandbox:/mnt/data/harriswildlands_docs_skeleton.zip)
+
+These Markdown skeletons are aligned to the behaviors/claims present in your **Quick Start Guide** (standalone Docker flow, localhost:5000, `/weekly.pdf`, export)  and your **Keystone Report** (dual-lane model, `/api/health`, `/export`, auth modes, AI provider ladder, acceptance checklist PASS vs PENDING) . Where either document is non-specific or inconsistent (notably demo-mode behavior and Docker verification), the skeletons explicitly use **TBD/PENDING** language rather than inventing details.
+
+---
+
+## Directory tree (what’s in the ZIP)
+
+```text
+docs/
+  README.md
+
+  00-start-here/
+    00-overview-and-reading-paths.md
+    01-glossary.md
+
+  10-user-guide/
+    10-quickstart-standalone-docker.md
+    11-first-run-demo-mode.md
+    12-lifeops-daily-logging.md
+    13-thinkops-ideas-pipeline.md
+    14-weekly-review.md
+    15-export-and-personal-backups.md
+    16-troubleshooting.md
+
+  20-operator-guide/
+    20-standalone-deployment-docker-compose.md
+    21-configuration-env.md
+    22-data-storage-and-persistence.md
+    23-updates-and-upgrades.md
+    24-security-local-lan-and-auth-modes.md
+    25-healthchecks-and-basic-monitoring.md
+    26-disaster-recovery.md
+
+  30-developer-reference/
+    30-architecture-overview.md
+    31-repo-layout.md
+    32-api-routes-reference.md
+    33-database-schema-reference.md
+    34-auth-replit-oidc-and-fallbacks.md
+    35-ai-provider-ladder.md
+    36-validation-and-testing-checklist.md
+
+  40-protocols-and-governance/
+    40-lifeops-thinkops-separation.md
+    41-drift-detection-signals.md
+    42-privacy-red-zones-and-sharing-boundaries.md
+    43-non-goals-and-safety-constraints.md
+
+  50-releases-and-evidence/
+    50-keystone-v1.0-2025-12-27.md
+    51-acceptance-test-checklist.md
+    52-changelog.md
+```
+
+---
+
+# File-by-file Markdown skeletons
+
+## `docs/README.md`
+
+```md
+# Documentation
+
+**Last updated:** 2025-12-27
+
+This folder contains the official documentation set for HarrisWildlands / “Bruce Bruce”.
+
+## How to use these docs
+
+### Reading paths
+- **New user (standalone):** `00-start-here/00-overview-and-reading-paths.md` → `10-user-guide/10-quickstart-standalone-docker.md`
+- **Operator (self-host / standalone):** `00-start-here/00-overview-and-reading-paths.md` → `20-operator-guide/20-standalone-deployment-docker-compose.md`
+- **Developer / maintainer:** `30-developer-reference/30-architecture-overview.md`
+
+### Verification status legend
+- **VERIFIED:** Confirmed via acceptance checklist in `50-releases-and-evidence/51-acceptance-test-checklist.md`
+- **PENDING:** Listed in checklist but not yet marked PASS
+- **TBD:** Not implemented or not documented yet
+
+## Quick links
+- Start here: `00-start-here/00-overview-and-reading-paths.md`
+- Standalone quickstart: `10-user-guide/10-quickstart-standalone-docker.md`
+- Security (local vs LAN, auth modes): `20-operator-guide/24-security-local-lan-and-auth-modes.md`
+- Keystone reference (v1.0): `50-releases-and-evidence/50-keystone-v1.0-2025-12-27.md`
+- Acceptance checklist: `50-releases-and-evidence/51-acceptance-test-checklist.md`
+- Change log: `50-releases-and-evidence/52-changelog.md`
+```
+
+---
+
+## `docs/00-start-here/00-overview-and-reading-paths.md`
+
+```md
+# Start here
+
+**Last updated:** 2025-12-27
+
+This is the minimum context needed to use, operate, or extend the system without reading the full keystone.
+
+## System summary (conceptual)
+
+- **LifeOps:** minimal-input daily ledger (yes/no + 1–10 scales + optional reflection)
+- **ThinkOps:** idea pipeline kept separate from operations
+- **Weekly review:** computes basic stats (e.g., completion rate) and emits **drift flags** as factual signals
+- **Exports:** download a JSON bundle of user data for personal backup
+- **Authentication modes:** Replit OIDC when configured; demo/standalone fallback when not
+- **AI is optional:** “provider ladder” can fall back to OFF when keys are missing
+
+## Reading paths
+
+### 1) New user (standalone)
+1. `10-user-guide/10-quickstart-standalone-docker.md`
+2. `10-user-guide/11-first-run-demo-mode.md`
+3. `10-user-guide/12-lifeops-daily-logging.md`
+4. `10-user-guide/13-thinkops-ideas-pipeline.md`
+5. `10-user-guide/14-weekly-review.md`
+6. `10-user-guide/15-export-and-personal-backups.md`
+
+### 2) Operator (self-host / standalone)
+1. `20-operator-guide/20-standalone-deployment-docker-compose.md`
+2. `20-operator-guide/21-configuration-env.md`
+3. `20-operator-guide/22-data-storage-and-persistence.md`
+4. `20-operator-guide/23-updates-and-upgrades.md`
+5. `20-operator-guide/24-security-local-lan-and-auth-modes.md`
+6. `20-operator-guide/25-healthchecks-and-basic-monitoring.md`
+7. `20-operator-guide/26-disaster-recovery.md`
+
+### 3) Developer / maintainer
+1. `30-developer-reference/30-architecture-overview.md`
+2. `30-developer-reference/31-repo-layout.md`
+3. `30-developer-reference/33-database-schema-reference.md`
+4. `30-developer-reference/32-api-routes-reference.md`
+5. `30-developer-reference/34-auth-replit-oidc-and-fallbacks.md`
+6. `30-developer-reference/35-ai-provider-ladder.md`
+7. `30-developer-reference/36-validation-and-testing-checklist.md`
+
+## Terminology
+See: `00-start-here/01-glossary.md`
+```
+
+---
+
+## `docs/00-start-here/01-glossary.md`
+
+```md
+# Glossary
+
+**Last updated:** 2025-12-27
+
+Use this glossary to keep terms consistent across user docs, operator docs, and the keystone.
+
+## Core concepts
+- **LifeOps:** Daily reality capture / ledger (minimal input).
+- **ThinkOps:** Idea capture and development lane (kept separate from LifeOps).
+- **Drift flag:** A factual signal derived from patterns (not a judgment).
+- **Red-zone:** A category of information that is not shared/exported by default without explicit opt-in.
+- **Faith boundary:** Constraint that sacred/private content is not interpreted or redistributed by default.
+
+## Modes
+- **Standalone mode:** Running locally (typically via Docker Compose).
+- **Demo mode:** A non-authenticated or sample-data mode intended for evaluation.
+- **Replit OIDC:** Authentication path when Replit environment variables and OIDC are configured.
+
+## Outputs
+- **Weekly review:** Endpoint/output that summarizes stats and drift flags for a time window.
+- **Export:** JSON bundle download of stored entities.
+
+## AI
+- **AI provider ladder:** Strategy to use Gemini → OpenRouter → OFF depending on configuration.
+- **OFF:** AI features disabled; core logging/tracking should still function.
+
+## Metrics (examples; confirm in schema reference)
+- **Completion rate:** Percentage of check-ins/logs completed over a window.
+- **Missed days:** Count of days without expected entries.
+
+> TBD: Add precise definitions once the final UI wording and drift heuristics are locked.
+```
+
+---
+
+# User guide
+
+## `docs/10-user-guide/10-quickstart-standalone-docker.md`
+
+```md
+# Standalone quickstart (Docker)
+
+**Audience:** End users (beginner-friendly)  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Get the app running on your own machine using Docker (no Replit required).
+
+## Prerequisites
+- Internet access (setup/download only)
+- Docker Desktop installed
+- Git installed
+
+## Steps (high-level)
+1. Install Docker Desktop
+2. Verify Docker works:
+   - `docker --version`
+3. Clone the repository:
+   - `git clone <REPO_URL>`
+   - `cd <REPO_FOLDER>`
+4. Create your `.env`:
+   - Copy `.env.example` → `.env`
+5. Start:
+   - `docker compose up`
+6. Open the app:
+   - `http://localhost:5000`
+
+## Stop / restart
+- Stop: `Ctrl+C`
+- Restart: `docker compose up`
+
+## Updating
+- `git pull`
+- `docker compose up --build`
+
+## Verification
+- You can load the UI at `http://localhost:5000`
+- (If prompted to login) See: `11-first-run-demo-mode.md`
+
+## References
+- Demo / first-run: `11-first-run-demo-mode.md`
+- Troubleshooting: `16-troubleshooting.md`
+```
+
+## `docs/10-user-guide/11-first-run-demo-mode.md`
+
+```md
+# First run: demo mode vs login
+
+**Audience:** End users  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Avoid “it’s broken” confusion by documenting the expected first-run behavior.
+
+## What you might see
+- **Demo mode** (no login): intended for local evaluation and basic use
+- **Login screen:** can appear depending on environment/auth configuration
+
+## If you see a login screen
+Try demo mode explicitly:
+- Open: `http://localhost:5000?demo=true`
+
+## How to confirm you are in demo mode
+- Look for a “demo” banner/indicator in the UI (exact wording may vary)
+- Confirm you can create a log/idea without authenticating
+
+## Notes
+- Demo mode is meant to prevent hard dependency on Replit OIDC for local use.
+- If demo mode does not work, see: `16-troubleshooting.md`
+
+## References
+- Quickstart: `10-quickstart-standalone-docker.md`
+```
+
+## `docs/10-user-guide/12-lifeops-daily-logging.md`
+
+```md
+# LifeOps: daily logging
+
+**Audience:** End users  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Explain how to use the daily ledger with minimal effort.
+
+## What LifeOps is
+- A **truth-first** daily record using mostly:
+  - yes/no toggles
+  - 1–10 scales
+  - optional short text reflections
+
+## Typical workflow (daily)
+1. Open the app
+2. Go to the LifeOps logging screen
+3. Enter quick checks (binary/scales)
+4. Add optional reflection (if needed)
+5. Save
+
+## Time target
+- Core entry should be doable in ~2–5 minutes.
+
+## How LifeOps connects to weekly review
+- Weekly review aggregates patterns (completion rates, missed days, basic stats)
+- Drift flags are **signals**; you decide what to change (if anything)
+
+## Best practices
+- Keep inputs factual (what happened, not what “should have happened”)
+- Use optional text only when it adds clarity
+- If you missed a day, log the next day—don’t backfill fiction
+
+## References
+- Weekly review: `14-weekly-review.md`
+- Drift flags: `40-protocols-and-governance/41-drift-detection-signals.md`
+```
+
+## `docs/10-user-guide/13-thinkops-ideas-pipeline.md`
+
+```md
+# ThinkOps: ideas pipeline
+
+**Audience:** End users  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Explain the “idea lane” and how it stays separate from LifeOps.
+
+## What ThinkOps is
+- A contained pipeline for ideas, drafts, and concepts
+- The goal is to prevent ideation from contaminating operations
+
+## Typical workflow
+1. Capture an idea (title + short pitch)
+2. Assign or update a status (e.g., draft → promoted)
+3. Add supporting details only if needed
+4. Optionally run an AI-assisted “reality check” (if configured)
+5. Decide next actions outside the tool (human agency)
+
+## Statuses
+- Draft (example)
+- Promoted (example)
+> TBD: Document the final status enum used by the app.
+
+## AI notes
+- AI is optional; when OFF, ThinkOps should still store and track ideas.
+
+## References
+- Lane separation: `40-protocols-and-governance/40-lifeops-thinkops-separation.md`
+- AI ladder: `30-developer-reference/35-ai-provider-ladder.md`
+```
+
+## `docs/10-user-guide/14-weekly-review.md`
+
+```md
+# Weekly review
+
+**Audience:** End users  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Explain what the weekly review output is and how to use it.
+
+## How to generate the weekly review
+- Open: `http://localhost:5000/weekly.pdf`
+
+## Current behavior
+- The weekly endpoint currently produces a **text-based** synthesis.
+- “PDF” may be a stub/placeholder name in the route.
+- Output includes:
+  - completion rates (where applicable)
+  - basic domain stats (where applicable)
+  - drift flags (signals, not judgments)
+
+## How to interpret drift flags
+- Treat flags as “pay attention here” signals.
+- Do not treat them as moral judgment or prescriptions.
+
+## Troubleshooting
+- If the endpoint errors: see `16-troubleshooting.md`
+
+## References
+- Drift: `40-protocols-and-governance/41-drift-detection-signals.md`
+```
+
+## `docs/10-user-guide/15-export-and-personal-backups.md`
+
+```md
+# Export and personal backups
+
+**Audience:** End users  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Explain the export feature and a simple backup habit.
+
+## What export does
+- Produces a JSON bundle of your stored entities (logs, ideas, goals, etc.).
+
+## How to export
+- Use the in-app export action (UI location may vary)
+- Save the JSON file somewhere safe (e.g., encrypted drive, password manager attachment, private cloud folder)
+
+## Recommended backup cadence
+- Minimum: weekly (after weekly review)
+- Best: before updates/upgrades
+
+## Limitations (important)
+- Restore/import from export may be **TBD** depending on current implementation.
+- Export is still valuable as a portable archive.
+
+## References
+- Operator upgrades: `20-operator-guide/23-updates-and-upgrades.md`
+- Disaster recovery: `20-operator-guide/26-disaster-recovery.md`
+```
+
+## `docs/10-user-guide/16-troubleshooting.md`
+
+```md
+# Troubleshooting (standalone)
+
+**Audience:** End users  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Fast fixes for the most common standalone issues.
+
+## Common issues
+
+### Docker not running
+- Open Docker Desktop
+- Retry: `docker compose up`
+
+### Build or startup errors
+- Retry rebuild: `docker compose up --build`
+
+### Port 5000 not reachable
+- Confirm containers are running
+- Confirm you are visiting: `http://localhost:5000`
+- Close anything else that might be using port 5000 (advanced)
+
+### Stuck at login
+- Try demo mode: `http://localhost:5000?demo=true`
+- See: `11-first-run-demo-mode.md`
+
+### Weekly review not loading
+- Try again after containers fully start
+- See: `14-weekly-review.md`
+
+## If you need deeper help
+- Copy the last ~30 lines of terminal logs
+- Note your OS (Windows/Mac/Linux) and Docker version
+
+## References
+- Quickstart: `10-quickstart-standalone-docker.md`
+```
+
+---
+
+# Operator guide
+
+## `docs/20-operator-guide/20-standalone-deployment-docker-compose.md`
+
+```md
+# Standalone deployment (Docker Compose)
+
+**Audience:** Operators / self-hosters  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Run the app + database locally with Docker Compose in a repeatable way.
+
+## What this covers
+- Starting/stopping services
+- Log inspection
+- Basic verification steps
+
+## Prerequisites
+- Docker + Docker Compose installed
+- Repo cloned locally
+- `.env` created from `.env.example`
+
+## Run
+- Start: `docker compose up`
+- Start (rebuild): `docker compose up --build`
+- Stop: `Ctrl+C`
+
+## Verify
+- UI reachable: `http://localhost:5000`
+- Health endpoint (if available to you): `http://localhost:5000/api/health`
+
+## Notes on persistence
+- Database runs as a separate service (PostgreSQL) under compose.
+- Persistence depends on volumes; see `22-data-storage-and-persistence.md`.
+
+## References
+- Env config: `21-configuration-env.md`
+- Data/persistence: `22-data-storage-and-persistence.md`
+```
+
+## `docs/20-operator-guide/21-configuration-env.md`
+
+```md
+# Configuration: .env
+
+**Audience:** Operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Document how environment configuration works and which settings are optional.
+
+## Baseline setup
+- Copy `.env.example` → `.env`
+- For standalone mode:
+  - Replit-specific keys should not be required
+  - AI keys are optional (core app should function with AI OFF)
+
+## AI configuration
+- If AI keys are not present, the app should fall back to OFF.
+- See also: `30-developer-reference/35-ai-provider-ladder.md`
+
+## Authentication configuration
+- When Replit OIDC variables are present, auth uses that path.
+- Without them, demo/standalone fallback should exist.
+- See: `30-developer-reference/34-auth-replit-oidc-and-fallbacks.md`
+
+## TODO
+- List exact env var names and safe defaults once finalized and reviewed.
+
+## References
+- Security: `24-security-local-lan-and-auth-modes.md`
+```
+
+## `docs/20-operator-guide/22-data-storage-and-persistence.md`
+
+```md
+# Data storage and persistence
+
+**Audience:** Operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Explain where data lives in standalone mode and how to validate persistence.
+
+## Architecture (standalone)
+- App service + PostgreSQL service (via Docker Compose)
+
+## Persistence expectations
+- Data should persist across container restarts when volumes are configured.
+
+## Verification test (operator-run)
+Status: PENDING (run and update checklist)
+1. Start services: `docker compose up`
+2. Create one log entry in the UI
+3. Stop services
+4. Start services again
+5. Confirm the log entry still exists
+6. Record result in: `50-releases-and-evidence/51-acceptance-test-checklist.md`
+
+## Backups
+- User-level: JSON export (see `10-user-guide/15-export-and-personal-backups.md`)
+- Operator-level: volume/DB backups (TBD: document exact procedure)
+
+## References
+- Disaster recovery: `26-disaster-recovery.md`
+```
+
+## `docs/20-operator-guide/23-updates-and-upgrades.md`
+
+```md
+# Updates and upgrades (standalone)
+
+**Audience:** Operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Update the code safely while protecting data.
+
+## Recommended safe upgrade flow
+1. Export user data (JSON) for personal backup
+2. Pull latest code:
+   - `git pull`
+3. Rebuild and restart:
+   - `docker compose up --build`
+4. Verify:
+   - UI loads
+   - `/api/health` returns OK (if used)
+   - Basic CRUD works (create a log, export works)
+
+## Notes
+- Schema sync/migrations may run on startup depending on implementation.
+- If you see DB/schema errors, pause upgrades and capture logs.
+
+## References
+- Export: `10-user-guide/15-export-and-personal-backups.md`
+- Healthchecks: `25-healthchecks-and-basic-monitoring.md`
+```
+
+## `docs/20-operator-guide/24-security-local-lan-and-auth-modes.md`
+
+```md
+# Security: local vs LAN, auth modes
+
+**Audience:** Operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Clarify what “private” means in practice when running locally and (optionally) accessing from other devices.
+
+## Threat model (baseline)
+- Standalone mode is commonly accessed at `localhost` on a single machine.
+- If you expose the service to your LAN for phone access, treat it as a networked app.
+
+## Access modes
+### Local-only (recommended)
+- Use `http://localhost:5000`
+
+### LAN access (advanced)
+- If you access via computer IP address from a phone on the same network:
+  - Only use trusted private Wi‑Fi
+  - Confirm authentication mode (demo vs authenticated)
+  - Avoid exposing to public networks
+
+## Authentication
+- Replit OIDC when configured
+- Demo/standalone fallback when not
+- Ensure you understand which mode you are running (see `11-first-run-demo-mode.md`)
+
+## Data handling
+- Red-zone categories (family/faith) should not be shared/exported by default without opt-in.
+- See: `40-protocols-and-governance/42-privacy-red-zones-and-sharing-boundaries.md`
+
+## TODO
+- Document network binding behavior (localhost-only vs 0.0.0.0) after confirming deployment defaults.
+
+## References
+- Auth: `30-developer-reference/34-auth-replit-oidc-and-fallbacks.md`
+```
+
+## `docs/20-operator-guide/25-healthchecks-and-basic-monitoring.md`
+
+```md
+# Healthchecks and basic monitoring
+
+**Audience:** Operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Provide a simple way to confirm the app and DB are up.
+
+## Health endpoint
+- `GET /api/health`
+
+Expected shape (example; confirm exact fields):
+- overall status
+- database status
+- active AI provider + AI status
+
+## Operator checklist (quick)
+- App UI loads at `http://localhost:5000`
+- Health endpoint returns OK
+- Export works
+- Weekly review endpoint returns output
+
+## Logging
+- Use `docker compose up` output for immediate logs
+- (Optional) run in detached mode and inspect logs (TBD)
+
+## References
+- Validation checklist: `30-developer-reference/36-validation-and-testing-checklist.md`
+```
+
+## `docs/20-operator-guide/26-disaster-recovery.md`
+
+```md
+# Disaster recovery (standalone)
+
+**Audience:** Operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Define a recovery plan when something breaks (containers, DB, or app).
+
+## First response checklist
+1. Capture logs (last ~200 lines)
+2. Confirm Docker is running
+3. Restart:
+   - `docker compose up --build`
+
+## Data safety
+- Preferred: keep routine JSON exports (user-level safety net)
+- Operator-level: DB volume backups (TBD)
+
+## Failure modes
+### App fails to start
+- Rebuild and restart
+- Check `.env` configuration
+
+### DB fails to start
+- Inspect DB container logs
+- Check disk space and volume state
+
+### Data appears missing
+- Confirm you are looking at the same environment/user/mode
+- Run the persistence verification test in `22-data-storage-and-persistence.md`
+
+## Restore from export
+Status: TBD
+- Document exact import/restore process once implemented and verified.
+
+## References
+- Export: `10-user-guide/15-export-and-personal-backups.md`
+```
+
+---
+
+# Developer reference
+
+## `docs/30-developer-reference/30-architecture-overview.md`
+
+```md
+# Architecture overview
+
+**Audience:** Developers / maintainers  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Describe the system at a component level without duplicating the full keystone.
+
+## Conceptual model
+- Dual lanes: LifeOps (ledger) and ThinkOps (ideas)
+- Weekly synthesis: stats + drift flags
+- Exports: JSON bundle
+- Auth: Replit OIDC with demo/standalone fallback
+- AI: provider ladder (Gemini → OpenRouter → OFF)
+
+## Components
+- Client (React/Vite)
+- Server (Node/Express)
+- Database (PostgreSQL via ORM)
+- Optional AI provider adapters
+
+## Data flow (high level)
+1. User input (forms/UI)
+2. Auth gate (if enabled)
+3. API routes (CRUD, weekly, export)
+4. DB persistence
+5. Outputs: weekly review + export
+6. Human decisions
+
+## References
+- Repo layout: `31-repo-layout.md`
+- Schema: `33-database-schema-reference.md`
+- Routes: `32-api-routes-reference.md`
+```
+
+## `docs/30-developer-reference/31-repo-layout.md`
+
+```md
+# Repository layout
+
+**Audience:** Developers  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Document the top-level project structure and where key concerns live.
+
+## Top-level folders (expected)
+- `client/` (frontend)
+- `server/` (backend)
+- `shared/` (shared types/schemas)
+- `docs/` (documentation)
+- `script/` (utility scripts)
+
+## Key root files (examples)
+- `Dockerfile`
+- `docker-compose.yml`
+- `.env.example`
+- `package.json`
+
+## TODO
+- Add a one-line description for each directory/file once paths are confirmed.
+
+## References
+- Architecture: `30-architecture-overview.md`
+```
+
+## `docs/30-developer-reference/32-api-routes-reference.md`
+
+```md
+# API routes reference
+
+**Audience:** Developers  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+List the primary HTTP routes and what they are intended to return.
+
+## Health
+- `GET /api/health` — overall service + DB + AI provider status
+
+## Auth (when enabled)
+- `GET /api/login`
+- `GET /api/callback`
+- `POST /api/logout` (method may vary; confirm)
+
+## Core features (CRUD)
+> TBD: Fill in exact route paths once verified in code.
+- Logs: create/read/update
+- Ideas: create/read/update
+- Goals: create/read/update
+- Check-ins: create/read/update
+- Teaching requests: create/read/update
+- Harris content: create/read/update
+
+## Exports
+- `GET /export` — JSON bundle of user entities
+
+## Weekly review
+- `GET /weekly.pdf` — text-based synthesis (PDF pending/stub)
+
+## References
+- Validation checklist: `36-validation-and-testing-checklist.md`
+```
+
+## `docs/30-developer-reference/33-database-schema-reference.md`
+
+```md
+# Database schema reference
+
+**Audience:** Developers  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Provide a stable reference for the main entities/tables.
+
+## Entities (expected)
+- `logs` — daily LifeOps entries (booleans/scales/text)
+- `ideas` — ThinkOps pipeline entries (status, optional AI checks)
+- `goals` — domain goals / targets
+- `checkins` — per-goal daily check-ins (done/score/note)
+- `driftFlags` — factual drift signals (type, timeframe, sentence)
+- `userSettings` — preferences (theme, AI tone/model, protocols)
+- `teachingRequests` — structured teaching output requests
+- `harrisContent` — structured content generation requests
+- `settings` — legacy key-value (if present)
+
+## Validation
+- Input validation is expected via schemas (e.g., Zod)
+
+## TODO
+- Include field-level documentation (types, nullable, defaults).
+- Include indexing and migration strategy notes.
+
+## References
+- Drift protocols: `40-protocols-and-governance/41-drift-detection-signals.md`
+```
+
+## `docs/30-developer-reference/34-auth-replit-oidc-and-fallbacks.md`
+
+```md
+# Authentication: Replit OIDC and fallbacks
+
+**Audience:** Developers / operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Describe the authentication modes and expected fallback behavior.
+
+## Modes
+### Replit OIDC (configured)
+- Uses OIDC to authenticate users
+- Sessions are stored (Postgres-backed if configured) with a TTL (example: 1 week; confirm)
+
+### Standalone / demo fallback (no OIDC env vars)
+- App should still be usable without Replit-specific configuration
+- Demo mode may be enabled via URL flag (e.g., `?demo=true`)
+
+## Session storage
+- Prefer Postgres session store when available
+- Allow memory store fallback for local/dev (confirm)
+
+## TODO
+- List required env vars and callbacks once confirmed.
+- Document how user identity is represented in DB.
+
+## References
+- Security: `20-operator-guide/24-security-local-lan-and-auth-modes.md`
+- Demo mode: `10-user-guide/11-first-run-demo-mode.md`
+```
+
+## `docs/30-developer-reference/35-ai-provider-ladder.md`
+
+```md
+# AI provider ladder
+
+**Audience:** Developers / operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Document the intended behavior when AI is configured vs when it is OFF.
+
+## Design intent
+- Use an “AI ladder” for resilience:
+  1. Gemini
+  2. OpenRouter
+  3. OFF (no AI)
+
+## OFF mode
+- Core app functions (logging, ideas, weekly review, export) should still operate.
+- AI features (summaries, reality checks) are disabled.
+
+## Where AI is used (examples)
+- Optional log summarization
+- Optional idea “reality check”
+- (Optional) teaching/content generation helpers
+
+## TODO
+- Document prompt boundaries (“Bruce” context) and safety constraints.
+- Document rate limiting and error handling.
+
+## References
+- Non-goals: `40-protocols-and-governance/43-non-goals-and-safety-constraints.md`
+```
+
+## `docs/30-developer-reference/36-validation-and-testing-checklist.md`
+
+```md
+# Validation and testing checklist
+
+**Audience:** Developers / operators  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Keep a single, updatable checklist of “what is proven” vs “what is pending”.
+
+## Canonical checklist
+See: `50-releases-and-evidence/51-acceptance-test-checklist.md`
+
+## Recommended workflow
+1. Run checklist after any meaningful change
+2. Update status (PASS/FAIL/PENDING) with date
+3. Link to evidence (logs, screenshots, export files) when possible
+
+## TODO
+- Add CI hooks if/when needed
+```
+
+---
+
+# Protocols and governance
+
+## `docs/40-protocols-and-governance/40-lifeops-thinkops-separation.md`
+
+```md
+# LifeOps / ThinkOps separation
+
+**Audience:** All readers  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Codify the “two lanes” rule so future changes preserve the core design.
+
+## The rule
+- LifeOps captures facts about what happened.
+- ThinkOps contains ideas so they do not pollute operational truth.
+
+## Why this matters
+- Prevents “idea debt” from masquerading as progress
+- Preserves clarity in weekly review and drift detection
+
+## Practical guidance
+- If it happened: LifeOps
+- If it might happen: ThinkOps
+- If it is sensitive (family/faith): treat as red-zone
+
+## TODO
+- Add examples from UI and templates once stable.
+
+## References
+- Drift: `41-drift-detection-signals.md`
+- Privacy: `42-privacy-red-zones-and-sharing-boundaries.md`
+```
+
+## `docs/40-protocols-and-governance/41-drift-detection-signals.md`
+
+```md
+# Drift detection signals
+
+**Audience:** All readers  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Define drift flags as factual signals and document how they should be interpreted.
+
+## Core principle
+- Drift flags are **signals, not judgments**.
+- Flags should use factual language and avoid prescriptive commands.
+
+## Example heuristics (confirm in code)
+- Completion rate below a threshold (example: < 40%) → drift flag
+- Missed days above a threshold (example: ≥ 4) → drift flag
+
+## What drift flags are NOT
+- Not a moral score
+- Not a diagnosis
+- Not a command
+
+## Operator/Developer note
+- Keep heuristics transparent and configurable where possible.
+
+## TODO
+- Enumerate drift flag types and timeframes.
+- Add guidance for false positives/false negatives.
+
+## References
+- Weekly review: `10-user-guide/14-weekly-review.md`
+```
+
+## `docs/40-protocols-and-governance/42-privacy-red-zones-and-sharing-boundaries.md`
+
+```md
+# Privacy: red-zones and sharing boundaries
+
+**Audience:** All readers  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Define what must not be shared by default and how to document boundaries.
+
+## Red-zones (concept)
+- Categories of information that should not be auto-shared or exported without explicit opt-in.
+
+## Explicit boundaries (examples)
+- Family/private details
+- Faith/sacred content
+
+## Practical rules
+- Default: keep red-zone information private
+- Sharing requires explicit, informed opt-in
+- Avoid embedding red-zone content into AI prompts by default (unless explicitly requested and configured)
+
+## TODO
+- Document exactly how the system enforces red-zones in code and exports.
+- Add UI guidance (what users should expect).
+
+## References
+- Non-goals: `43-non-goals-and-safety-constraints.md`
+```
+
+## `docs/40-protocols-and-governance/43-non-goals-and-safety-constraints.md`
+
+```md
+# Non-goals and safety constraints
+
+**Audience:** All readers  
+**Status:** DRAFT  
+**Last updated:** 2025-12-27
+
+## Purpose
+Prevent scope creep and “AI authority” drift by keeping constraints visible.
+
+## Non-goals
+- AI as therapist/coach/authority
+- Default data sharing
+- Feature bloat
+- Moral judgments disguised as “insights”
+
+## Constraints
+- Human agency: system provides structure; user decides
+- Privacy: red-zones protected by default
+- Anti-hype: unknowns must be labeled; reality checks for ideation
+- Minimal energy: core inputs should be fast and low friction
+
+## TODO
+- Link each constraint to implementation enforcement points (routes, schema, exports).
+```
+
+---
+
+# Releases and evidence
+
+## `docs/50-releases-and-evidence/50-keystone-v1.0-2025-12-27.md`
+
+```md
+# Keystone reference: v1.0 (2025-12-27)
+
+**Audience:** Stewards / developers / auditors  
+**Status:** DRAFT (container for the keystone text)  
+**Last updated:** 2025-12-27
+
+## Purpose
+Store the keystone technical reference in a versioned, repo-native format.
+
+## Source
+- Original keystone document (DOCX) should be migrated here as Markdown.
+
+## Recommended structure
+1. Executive summary
+2. Abstract & problem statement
+3. Background & evolution
+4. Objectives, non-goals, constraints
+5. System overview & conceptual architecture
+6. Detailed technical architecture (stack, schema, routes, auth, deployment)
+7. Implementation details
+8. Verification & acceptance testing
+9. Proven capabilities
+10. Risk register & mitigations
+11. Future roadmap
+12. Operational handoff
+13. Appendices + change log
+
+## TODO
+- Paste/convert the full keystone content here.
+- Keep a tight change log in `52-changelog.md`.
+```
+
+## `docs/50-releases-and-evidence/51-acceptance-test-checklist.md`
+
+```md
+# Acceptance test checklist
+
+**Audience:** Developers / operators  
+**Last updated:** 2025-12-27
+
+Use this as the canonical “what is proven” list. Keep it current.
+
+## Checklist
+
+| Test | Command / action | Expected | Status | Evidence / notes |
+|---|---|---|---|---|
+| Local dev | `npm run dev` | Server runs on configured port | PASS |  |
+| Health endpoint | `curl /api/health` | JSON status (incl. AI provider/status) | PASS |  |
+| Demo mode | Visit `?demo=true` | Demo banner/samples or demo usability | PASS |  |
+| No AI keys | Start without AI keys | Core app works; AI OFF | PASS |  |
+| Export | Use export feature | JSON bundle downloads | PASS |  |
+| No Replit env | Run without OIDC vars | Standalone/demo fallback works | PASS |  |
+| Build | `npm run build` / `npm start` | Production build serves | PENDING |  |
+| Docker start | `docker compose up` | Containers start cleanly | PENDING |  |
+| DB persistence | Create log → restart → verify | Data survives restart | PENDING |  |
+
+## Update rules
+- Only mark PASS when you have reproduced it on a real machine.
+- Put a date and a short evidence note in the table.
+
+## References
+- Operator persistence test: `20-operator-guide/22-data-storage-and-persistence.md`
+```
+
+## `docs/50-releases-and-evidence/52-changelog.md`
+
+```md
+# Change log
+
+**Last updated:** 2025-12-27
+
+Use this to record changes to documentation, protocols, and verification status.
+
+## Unreleased
+- TBD
+
+## 2025-12-27
+- Added initial docs skeleton structure
+- Added acceptance checklist container
+
+> Rule: If a change affects user behavior, update at least:
+> - `00-start-here/00-overview-and-reading-paths.md`
+> - the relevant user/operator doc
+> - the checklist if verification status changes
+```
+
+---

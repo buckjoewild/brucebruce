@@ -1,0 +1,4 @@
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch4\gravity_prove.bat
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch4\OPERATOR_RULES.md
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch4\PATCH4_PROVE_EXIT_2026-01-29.txt
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch4\PATCH4_PROVE_OUTPUT_2026-01-29.txt

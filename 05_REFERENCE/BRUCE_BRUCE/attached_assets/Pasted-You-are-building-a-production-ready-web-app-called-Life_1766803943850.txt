@@ -1,0 +1,182 @@
+You are building a production-ready web app called “LifeOps” with multi-user auth and strict data boundaries.
+
+GOAL
+Implement:
+1) Personal Daily Logs (LifeOps) for each user
+2) A Shared Devotional Log (separate artifact) that two users can both contribute to
+3) Weekly summaries + drift flags OPTIONAL (but structure must support it)
+
+NON-NEGOTIABLE PRIVACY RULES
+- Each user owns their own logs. No user can view another user’s personal logs.
+- Shared Devotional entries are visible only to members of that household.
+- Never show raw transcripts (this app is checkbox + scale logging only).
+- Do not build “always-on visibility” between spouses.
+
+APP PAGES
+- /login, /register
+- /dashboard (today’s status + quick actions)
+- /log/new (Daily Log form)
+- /logs (list + filter by date + domain)
+- /devotional (shared devotional list)
+- /devotional/new (shared devotional form)
+- /settings/household (invite spouse, join via invite code)
+- /weekly (simple weekly view, optional)
+
+DATA MODEL (Postgres)
+Users:
+- id (uuid)
+- email (unique)
+- password_hash
+- display_name
+- created_at
+
+Households:
+- id (uuid)
+- name (nullable)
+- created_at
+
+HouseholdMembers:
+- id
+- household_id (fk)
+- user_id (fk)
+- role enum: 'member' | 'admin'
+- created_at
+(unique household_id + user_id)
+
+Invites:
+- id
+- household_id
+- invite_code (unique, short)
+- expires_at
+- used_by_user_id nullable
+- created_at
+
+DailyLogs:
+- id (uuid)
+- user_id (fk)
+- log_date (date)
+- log_type enum: 'morning'|'midday'|'evening'
+- payload_json (jsonb)  <-- store the checkbox + scale fields
+- created_at
+(index user_id + log_date)
+
+DevotionalEntries:
+- id (uuid)
+- household_id (fk)
+- entry_date (date)
+- together boolean
+- logged_by_user_id (fk)
+- payload_json (jsonb)
+- created_at
+(index household_id + entry_date)
+
+UI REQUIREMENTS
+- Use the exact checkbox/scale templates below as the form fields.
+- Keep typing minimal: most fields checkbox/radio, a few short text optional.
+- Use sections with collapsible panels: Core -> Expanded -> Evening Debrief.
+- Mobile-first.
+
+TEMPLATES (FORM FIELDS)
+Implement these fields exactly (use keys that match labels; store in payload_json).
+
+Daily Log Core:
+- sleep_hours (number)
+- sleep_quality_1_10
+- energy_1_10
+- hydration_ok (bool)
+- body_tension (bool), body_tension_area (text optional)
+- emotional_tone (enum: calm/focused/distracted/stressed/energized/fatigued)
+- focus_1_10
+- clarity_1_10
+- aligned_1_10
+- home_ack (bool)
+- kids_ack (bool)
+- work_ack (bool)
+- one_priority (bool)
+- faith_touched (bool)
+- gratitude_text (text optional)
+- open_loop_1 (text optional)
+- open_loop_2 (text optional)
+- open_loop_3 (text optional)
+
+Daily Log Expanded:
+Home/Chores:
+- kitchen_handled (enum yes/no/na)
+- laundry_moved_forward (enum yes/no/na)
+- floors_pickup_done (enum yes/no/na)
+- trash_dishes_handled (enum yes/no/na)
+- house_win_text (text optional)
+
+Kids:
+- school_needs_checked (enum yes/no/na)
+- activities_confirmed (enum yes/no/na)
+- present_with_kids_1_10
+- discipline_required (bool)
+- kid_responsibility_completed (enum yes/no/na)
+
+Work:
+- work_obligation_identified (bool)
+- work_moved_forward (bool)
+- admin_touched (enum yes/no/na)
+- classroom_readiness_1_10
+- work_friction_text (text optional)
+
+Logistics:
+- calendar_checked (bool)
+- important_message_replied (enum yes/no/na)
+- errands_required (bool), errands_text (text optional)
+- budget_awareness (bool)
+
+Property:
+- land_touchpoint (bool)
+- land_observation_text (text optional)
+
+Evening Mini-Debrief:
+- matched_intent (enum yes/no/mixed)
+- biggest_drain (enum sleep/logistics/conflict/scrolling/work_overload/unclear_priorities/other)
+- biggest_drain_other_text (text optional)
+- lesson_observed_text (text optional)
+- carry_forward_1 (text optional)
+- carry_forward_2 (text optional)
+- carry_forward_3 (text optional)
+
+Wife “HomeOps” Daily Check-In
+This is just another user using the same Daily Log page; keep the form identical but allow a “Simple Mode” toggle that only shows:
+- sleep_quality_1_10
+- energy_1_10
+- stress_1_10 (add this field in payload)
+- emotional_tone
+- one_household_priority_exists (bool)
+- logistics_manageable (enum yes/no/mixed)
+- home_win_text (text)
+- present_with_kids_1_10
+- support_needed (enum time/help_with_chores/quiet/planning/rest/other)
+- support_needed_other_text (text)
+- faith_touched
+- gratitude_text
+- open_loop_1
+- open_loop_2
+
+Shared Devotional Form (DevotionalEntries payload_json):
+- reading_type (enum bible/plan/sermon_notes/other)
+- reference_text (text)
+- did_read (bool)
+- did_discuss (bool)
+- did_pray (bool)
+- minutes_together (number)
+- themes (array of enums: gratitude/patience/leadership/humility/love/provision/wisdom/forgiveness/courage/service)
+- reflection_sentence (text optional)
+- prayer_intentions (array of enums: marriage/kids/health/work/finances/family_extended/guidance/protection)
+
+INVITE FLOW
+- Household admin can generate invite_code
+- Spouse creates account then enters invite_code to join household
+- Once joined, both can view devotional entries
+
+VERIFY
+- Confirm user A cannot view user B DailyLogs.
+- Confirm both can view DevotionalEntries for their household.
+- Confirm mobile usability and that Core section can be completed in under 2 minutes.
+
+SHIP
+- Provide env vars, migrations, seed, and a simple README with run steps.

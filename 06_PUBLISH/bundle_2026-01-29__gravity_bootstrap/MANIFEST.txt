@@ -1,0 +1,47 @@
+GRAVITY BOOTSTRAP BUNDLE MANIFEST
+===================================
+
+Bundle: bundle_2026-01-29__gravity_bootstrap
+Date: 2026-01-29
+Status: PUBLISHED
+
+CONTENTS:
+---------
+
+Core System Files (12 files):
+
+00_INDEX/ (5 files):
+✅ START_HERE.md — 161 lines — Entry point for GRAVITY
+✅ SYSTEM_MAP.md — 202 lines — Folder structure and scope
+✅ CURRENT_STATE.md — 114 lines — Operational status snapshot
+✅ FOREMAN_TASK_ORDER_TEMPLATE.md — 140 lines — Task order standard
+✅ OPERATOR_SESSION_PROMPT.md — 70 lines — Claude session guardrail
+
+01_RUNBOOKS/ (5 files):
+✅ OPERATOR_RULES.md — 288 lines — The law
+✅ SESSION_START.md — 169 lines — Pre-flight checklist
+✅ SESSION_END.md — 176 lines — Completion checklist
+✅ PUBLISH_PROCESS.md — 272 lines — Bundle delivery procedure
+✅ EMERGENCY_RESET.md — 152 lines — Recovery circuit breaker
+
+02_STATE/ (1 file):
+✅ STATE_SCHEMA.md — 201 lines — Machine-readable state structure
+
+03_WORK/ (1 file):
+✅ GRAVITY_OPERATIONS_README.md — 123 lines — Daily operations reference
+
+TOTAL: 12 System Files + 1 Manifest + 1 Session Log = 14 Files
+
+VERIFICATION:
+-------------
+
+✅ All 7 folders created
+✅ All 12 system files written and verified
+✅ No truncations or errors
+✅ Scope boundaries enforced (C:\GRAVITY write scope)
+✅ Session log completed with [VERIFY], [PATCH], [TEST], [LOG], [PUBLISH] phases
+✅ Bootstrap bundle created and documented
+
+SYSTEM READY FOR OPERATIONS
+
+Next: Use OPERATOR_SESSION_PROMPT.md to start Claude with guardrails active.
