@@ -1,0 +1,118 @@
+1) Lock in “safe unattended” mode (right now) 🧹🔒
+
+In your Replit Deployment environment, set:
+
+IDLE_MODE=1
+
+MUD_BRUCE_AUTOPILOT=true (if you want Bruce roaming)
+
+HOST=0.0.0.0
+
+PORT → (leave unset if Replit injects it; otherwise set 5000)
+
+Smoke test in the web terminal:
+
+/plan cleaning-house ✅ should work
+
+/build on ❌ must be blocked
+
+/consent yes ❌ must be blocked
+
+DoD: you can walk away and the AI literally can’t mutate code/world.
+
+2) Domain hookup: do it the Replit way (A + TXT), not vibes 🌐
+
+Replit’s current custom-domain flow is: copy the A + TXT records Replit gives you and paste them into your registrar DNS.
+
+Recommended: use a subdomain for the MUD
+
+mud.harriswildlands.com → MUD
+
+keep harriswildlands.com for your website or a landing page
+
+Steps (actual workflow)
+
+In Replit: Deployments → your Autoscale Deployment → Custom Domains
+
+Add: mud.harriswildlands.com
+
+Replit will show A record value + TXT record value → copy both
+
+In GoDaddy DNS:
+
+Add the TXT record exactly
+
+Add the A record exactly (hostname mud)
+
+Wait for DNS propagation, then Replit should show verified
+
+WebSocket sanity check
+
+After it verifies:
+
+terminal should load at https://mud.harriswildlands.com
+
+websocket should connect to wss://mud.harriswildlands.com/ws
+
+If you’re using Cloudflare in front: avoid “Flexible SSL” (it can cause loops); use Full/Strict.
+
+3) Prove you’re truly host-independent (1 local run) 🐳
+
+When you’re back at your own machine (or any Linux box), run:
+
+docker build -t harriswildlands-mud .
+
+docker run -e HOST=0.0.0.0 -e PORT=5000 -p 5000:5000 harriswildlands-mud
+
+If the terminal loads and /ws connects locally, you’ve validated: Replit is optional.
+
+4) Next build: Commit 3 should be “Bruce memory v1” (not Neo4j yet) 🧠
+
+Given your repo truth map, the clean v1 is exactly what your Replit agent described:
+
+append-only bruce_memory.jsonl in 07_HARRIS_WILDLANDS/evidence/
+
+Bruce can reference:
+
+player chat (uncertain)
+
+build events with result: ok (factual)
+
+Bruce cannot write world JSON from memory entries
+
+This gets you “Bruce learning & interacting” without canon corruption.
+
+Copy-paste prompt for Replit PLAN (Commit 3) 🧾
+
+Use this next (PLAN first, then build it):
+
+/plan
+
+GOAL (Commit 3): feat: Bruce memory v1 (append-only) + safe readback in autopilot
+
+CONSTRAINTS:
+- No LLM required for v1 (template responses ok).
+- Memory must be append-only JSONL stored under 07_HARRIS_WILDLANDS/evidence/.
+- Memory must never directly mutate world data (rooms.json / npcs.json).
+- Bruce may cite facts only from build_event entries with result="ok".
+- IDLE_MODE must still prevent all build execution.
+
+TASKS:
+1) Add orchestrator/bruce_memory.py
+   - append_entry({...}) -> writes one JSON line
+   - read_recent(filter...) -> reads last N entries safely
+   - tag entries with source: player_chat | build_event | bruce_observation
+
+2) Wire into server.py autopilot loop
+   - On player chat: append player_chat entry
+   - On Bruce say/action: append bruce_observation entry
+   - For “what happened” style prompts: read build_event entries relevant to room/player and respond with "The build log confirms..." wording
+
+3) Tests
+   - Add tests that:
+     a) appends are append-only (no rewrite)
+     b) build_event result!="ok" is not treated as fact in response helper
+
+DELIVERABLE:
+- file-cited plan + exact paths
+STOP before implementing until /build on + /consent yes
