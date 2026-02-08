@@ -19,7 +19,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `07_HARRIS_WILDLANDS/orchestrator/patch_apply.py` — PatchApplier for applying diffs
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/rooms.json` — Room definitions
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/npcs.json` — NPC definitions
-- `07_HARRIS_WILDLANDS/orchestrator/tests/test_build_loop.py` — 13 orchestrator tests
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_build_loop.py` — 15 orchestrator tests
 
 ## MUD Commands
 - Movement: `north/south/east/west/up/down` (or `n/s/e/w/u/d`)
@@ -36,5 +36,12 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - Run command: `python server.py`
 - Port: 5000
 
+## Environment Variables
+- `HOST` — Bind address (default: `0.0.0.0`)
+- `PORT` — Listen port (default: `5000`)
+- `IDLE_MODE` — Set to `1` to block all build operations (safe unattended mode)
+- `MUD_BRUCE_AUTOPILOT` — Set to `false` to disable Bruce NPC (default: `true`)
+
 ## Recent Changes
+- 2026-02-08: feat: host-agnostic runtime (HOST/PORT env vars) + IDLE_MODE safety flag blocks arm/consent/build when active, 15 tests pass
 - 2026-02-08: Created unified server.py with HTTP+WebSocket multiplexing, integrated orchestrator, CRT terminal UI, 10-room world, Bruce autopilot NPC
