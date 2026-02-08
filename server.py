@@ -18,6 +18,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "07_HARRIS_WILDLANDS"))
 from orchestrator.mode_state import ModeStateManager
 from orchestrator.build_loop import BuildOrchestrator
 from orchestrator.bruce_memory import BruceMemory, format_build_fact_response
+from orchestrator.bot_audit import BotAuditLogger
 
 import websockets
 from websockets.http11 import Response
@@ -26,6 +27,8 @@ from websockets.datastructures import Headers
 
 WORLD_DIR = PROJECT_ROOT / "07_HARRIS_WILDLANDS" / "structure" / "mud-server" / "world"
 EVIDENCE_DIR = PROJECT_ROOT / "07_HARRIS_WILDLANDS" / "evidence"
+BOT_AUTH_TOKEN = os.environ.get("BOT_AUTH_TOKEN", "")
+BOT_ENABLED = os.environ.get("MUD_BOT_ENABLED", "true").lower() == "true"
 
 LOGIN_BANNER = r"""
           <|
@@ -105,11 +108,11 @@ class NPC:
 
 
 class Player:
-    def __init__(self, name: str, is_agent: bool = False):
+    def __init__(self, name: str, role: str = "human"):
         self.name = name
         self.room_id = "spawn"
         self.inventory: List[str] = []
-        self.is_agent = is_agent
+        self.role = role  # "human" or "bot" — assigned server-side only
         self.websocket = None
         self.explored_rooms: Set[str] = set()
 
@@ -117,10 +120,41 @@ class Player:
         return {
             "name": self.name,
             "room": self.room_id,
-            "is_agent": self.is_agent,
+            "role": self.role,
             "inventory": self.inventory,
             "explored": len(self.explored_rooms),
         }
+
+
+DENIED_BOT_COMMANDS = {
+    "/build", "/consent", "create", "spawn",
+}
+DENIED_BOT_SUBCOMMANDS = {"dev buildstub"}
+
+def authorize(player: "Player", cmd_text: str) -> tuple:
+    """
+    Authorization choke point. Returns (allowed: bool, reason: str).
+    Runs BEFORE any command parsing/execution.
+    Humans always pass. Bots are denied privileged commands.
+    """
+    if player.role != "bot":
+        return (True, "human")
+    
+    parts = cmd_text.strip().split()
+    if not parts:
+        return (True, "empty")
+    
+    cmd = parts[0].lower()
+    
+    if cmd in DENIED_BOT_COMMANDS:
+        return (False, f"bot denied: {cmd}")
+    
+    if len(parts) >= 2:
+        sub = f"{cmd} {parts[1].lower()}"
+        if sub in DENIED_BOT_SUBCOMMANDS:
+            return (False, f"bot denied: {sub}")
+    
+    return (True, "allowed")
 
 
 class MUDWorld:
@@ -132,6 +166,7 @@ class MUDWorld:
         self.mode_manager = mode_manager
         self.orchestrator = orchestrator
         self.bruce_memory = BruceMemory(str(EVIDENCE_DIR))
+        self.bot_audit = BotAuditLogger(str(EVIDENCE_DIR))
         if not self.load_world():
             self.init_world()
 
@@ -189,6 +224,25 @@ class MUDWorld:
         print(f"World initialized with {len(self.rooms)} rooms")
 
     async def handle_command(self, player: Player, command_line: str) -> str:
+        if player.role == "bot":
+            rate_ok, rate_reason = self.bot_audit.check_rate_limit(player.name)
+            if not rate_ok:
+                self.bot_audit.log(player, command_line, "rate_limited", rate_reason)
+                return f"Rate limited: {rate_reason}"
+            
+            cmd_ok, cmd_reason = self.bot_audit.validate_command(command_line)
+            if not cmd_ok:
+                self.bot_audit.log(player, command_line, "denied", cmd_reason)
+                return f"Command rejected: {cmd_reason}"
+        
+        allowed, reason = authorize(player, command_line)
+        if not allowed:
+            self.bot_audit.log(player, command_line, "denied", reason)
+            return f"Permission denied: {reason}"
+        
+        if player.role == "bot":
+            self.bot_audit.log(player, command_line, "allowed", reason)
+        
         mode_result = self.mode_manager.process_command(player.name, command_line)
         if mode_result is not None:
             return mode_result
@@ -360,7 +414,7 @@ class MUDWorld:
         return f"You carry: {', '.join(player.inventory)}"
 
     async def cmd_who(self, player: Player) -> str:
-        players = [p.name + (" (AI)" if p.is_agent else "") for p in self.players.values()]
+        players = [p.name + (" [BOT]" if p.role == "bot" else "") for p in self.players.values()]
         return f"Online ({len(players)}): {', '.join(players)}"
 
     def cmd_help(self) -> str:
@@ -437,33 +491,69 @@ class MUDServer:
                 "type": "system",
                 "text": LOGIN_BANNER,
             }))
-            name_msg = await websocket.recv()
+            first_msg = await websocket.recv()
+            role = "human"
+            
             try:
-                name_data = json.loads(name_msg)
-                name = name_data.get("command", "Wanderer").strip()
+                data = json.loads(first_msg)
+                
+                if data.get("type") == "auth":
+                    if not BOT_ENABLED:
+                        await websocket.send(json.dumps({
+                            "type": "error",
+                            "text": "Bot connections disabled.",
+                        }))
+                        await websocket.close()
+                        return
+                    
+                    token = data.get("token", "")
+                    if not BOT_AUTH_TOKEN or token != BOT_AUTH_TOKEN:
+                        await websocket.send(json.dumps({
+                            "type": "error",
+                            "text": "Authentication failed.",
+                        }))
+                        await websocket.close()
+                        return
+                    
+                    name = data.get("name", "AIPlayer").strip()
+                    if not name:
+                        name = "AIPlayer"
+                    role = "bot"
+                    print(f"Bot authenticated: {name}")
+                else:
+                    name = data.get("command", "Wanderer").strip()
             except (json.JSONDecodeError, AttributeError):
-                name = str(name_msg).strip() or "Wanderer"
-
+                name = str(first_msg).strip() or "Wanderer"
+            
             if not name:
                 name = "Wanderer"
-
-            is_agent = name.lower() in ["openclaw", "agent", "ai", "bruce"]
-            player = Player(name, is_agent)
+            
+            player = Player(name, role=role)
             player.websocket = websocket
             self.world.players[name] = player
             self.world.connections.add(websocket)
-
-            welcome = f"Welcome, {name}! {'[AUTONOMOUS AGENT]' if is_agent else ''}\nType 'help' for commands."
+            
+            agent_tag = "[BOT]" if role == "bot" else ""
+            welcome = f"Welcome, {name}! {agent_tag}\nType 'help' for commands."
             await websocket.send(json.dumps({"type": "system", "text": welcome}))
             look_result = await self.world.cmd_look(player)
             await websocket.send(json.dumps({"type": "room", "text": look_result}))
             await self.world.broadcast(f"{name} materializes from the void!", "spawn", name)
-            print(f"Player connected: {name} {'(AI)' if is_agent else ''}")
-
+            print(f"Player connected: {name} (role={role})")
+            
             async for message in websocket:
+                if player.role == "bot":
+                    msg_ok, msg_reason = self.world.bot_audit.validate_message(message)
+                    if not msg_ok:
+                        self.world.bot_audit.log(player, "(oversized)", "denied", msg_reason)
+                        await websocket.send(json.dumps({
+                            "type": "error",
+                            "text": f"Message rejected: {msg_reason}",
+                        }))
+                        continue
                 try:
-                    data = json.loads(message)
-                    command = data.get("command", "").strip()
+                    msg_data = json.loads(message)
+                    command = msg_data.get("command", "").strip()
                     if command:
                         result = await self.world.handle_command(player, command)
                         if result:
@@ -477,7 +567,7 @@ class MUDServer:
                         "type": "error",
                         "text": "Invalid message format",
                     }))
-
+        
         except websockets.exceptions.ConnectionClosed:
             pass
         except Exception as e:
@@ -498,7 +588,7 @@ class MUDServer:
         name = "Bruce"
         player = self.world.players.get(name)
         if not player:
-            player = Player(name, is_agent=True)
+            player = Player(name, role="human")
             self.world.players[name] = player
             if player.room_id in self.world.rooms:
                 self.world.rooms[player.room_id].players.add(name)
