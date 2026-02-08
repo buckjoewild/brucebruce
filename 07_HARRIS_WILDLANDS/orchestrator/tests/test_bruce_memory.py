@@ -3,8 +3,9 @@ Tests for Bruce memory system.
 
 Verifies:
 - Append-only writes (file only grows)
+- Source validation (only player_chat and bruce_observation allowed)
 - read_recent returns correct count and respects filter
-- format_fact_response only cites build_event entries with result="ok"
+- format_build_fact_response reads from event_log.jsonl, cites only result="ok"
 """
 import pytest
 import tempfile
@@ -15,11 +16,11 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from orchestrator.bruce_memory import BruceMemory
+from orchestrator.bruce_memory import BruceMemory, format_build_fact_response
 
 
 class TestAppendEntry:
-    """Test append-only behavior."""
+    """Test append-only behavior and source validation."""
 
     def test_append_creates_file(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -64,19 +65,29 @@ class TestAppendEntry:
         with tempfile.TemporaryDirectory() as tmpdir:
             mem = BruceMemory(tmpdir)
             entry = mem.append_entry(
-                "build_event",
-                "Room added",
+                "player_chat",
+                "hello world",
                 player="Alice",
                 room="clearing",
-                metadata={"verb": "build room", "result": "ok"},
             )
 
-            assert entry["source"] == "build_event"
-            assert entry["content"] == "Room added"
+            assert entry["source"] == "player_chat"
+            assert entry["content"] == "hello world"
             assert entry["player"] == "Alice"
             assert entry["room"] == "clearing"
-            assert entry["metadata"]["result"] == "ok"
             assert "ts" in entry
+
+    def test_rejects_build_event_source(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mem = BruceMemory(tmpdir)
+            with pytest.raises(ValueError, match="Invalid source"):
+                mem.append_entry("build_event", "Room added", metadata={"result": "ok"})
+
+    def test_rejects_unknown_source(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mem = BruceMemory(tmpdir)
+            with pytest.raises(ValueError, match="Invalid source"):
+                mem.append_entry("system_event", "something")
 
 
 class TestReadRecent:
@@ -102,7 +113,6 @@ class TestReadRecent:
         with tempfile.TemporaryDirectory() as tmpdir:
             mem = BruceMemory(tmpdir)
             mem.append_entry("player_chat", "chat 1", player="Alice")
-            mem.append_entry("build_event", "build 1", metadata={"result": "ok"})
             mem.append_entry("player_chat", "chat 2", player="Bob")
             mem.append_entry("bruce_observation", "Bruce looked")
 
@@ -110,51 +120,67 @@ class TestReadRecent:
             assert len(chats) == 2
             assert all(e["source"] == "player_chat" for e in chats)
 
-            builds = mem.read_recent(10, source_filter="build_event")
-            assert len(builds) == 1
+            obs = mem.read_recent(10, source_filter="bruce_observation")
+            assert len(obs) == 1
 
 
-class TestFormatFactResponse:
-    """Test that format_fact_response only cites result='ok' build events."""
+def _write_event_log(path: str, events: list):
+    """Helper: write mock event_log.jsonl entries."""
+    with open(path, "w") as f:
+        for evt in events:
+            f.write(json.dumps(evt) + "\n")
 
-    def test_empty_memory(self):
+
+class TestFormatBuildFactResponse:
+    """Test that format_build_fact_response reads event_log.jsonl and cites only result='ok'."""
+
+    def test_missing_event_log(self):
         with tempfile.TemporaryDirectory() as tmpdir:
-            mem = BruceMemory(tmpdir)
-            result = mem.format_fact_response()
-            assert "empty" in result.lower() or "nothing" in result.lower()
-
-    def test_no_successful_builds(self):
-        with tempfile.TemporaryDirectory() as tmpdir:
-            mem = BruceMemory(tmpdir)
-            mem.append_entry("build_event", "Failed build", metadata={"result": "error", "verb": "build room"})
-            mem.append_entry("build_event", "Blocked build", metadata={"result": "blocked", "verb": "build room"})
-            mem.append_entry("player_chat", "hello", player="Alice")
-
-            result = mem.format_fact_response()
+            result = format_build_fact_response(os.path.join(tmpdir, "event_log.jsonl"))
             assert "no confirmed builds" in result.lower()
 
-    def test_only_ok_builds_cited(self):
+    def test_empty_event_log(self):
         with tempfile.TemporaryDirectory() as tmpdir:
-            mem = BruceMemory(tmpdir)
-            mem.append_entry("build_event", "Failed attempt", metadata={"result": "error", "verb": "build room"})
-            mem.append_entry("build_event", "Cabin added", metadata={"result": "ok", "verb": "build room"})
-            mem.append_entry("build_event", "Trail added", metadata={"result": "ok", "verb": "build trail"})
-            mem.append_entry("build_event", "Reverted", metadata={"result": "reverted", "verb": "build room"})
+            log_path = os.path.join(tmpdir, "event_log.jsonl")
+            _write_event_log(log_path, [])
+            result = format_build_fact_response(log_path)
+            assert "no confirmed builds" in result.lower()
 
-            result = mem.format_fact_response()
+    def test_no_ok_events(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = os.path.join(tmpdir, "event_log.jsonl")
+            _write_event_log(log_path, [
+                {"ts": "2026-01-01T00:00:00Z", "verb": "build room", "actor": "Alice", "result": "failed"},
+                {"ts": "2026-01-01T00:01:00Z", "verb": "build room", "actor": "Bob", "result": "blocked"},
+                {"ts": "2026-01-01T00:02:00Z", "verb": "build room", "actor": "Eve", "result": "reverted"},
+            ])
+            result = format_build_fact_response(log_path)
+            assert "no confirmed builds" in result.lower()
+
+    def test_only_ok_events_cited(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = os.path.join(tmpdir, "event_log.jsonl")
+            _write_event_log(log_path, [
+                {"ts": "2026-01-01T00:00:00Z", "verb": "build room", "actor": "Alice", "result": "failed"},
+                {"ts": "2026-01-01T00:01:00Z", "verb": "build room", "actor": "Bob", "result": "ok"},
+                {"ts": "2026-01-01T00:02:00Z", "verb": "build trail", "actor": "Carol", "result": "ok"},
+                {"ts": "2026-01-01T00:03:00Z", "verb": "build room", "actor": "Dave", "result": "reverted"},
+            ])
+            result = format_build_fact_response(log_path)
             assert "build log confirms" in result.lower()
-            assert "Cabin added" in result
-            assert "Trail added" in result
-            assert "Failed attempt" not in result
-            assert "Reverted" not in result
+            assert "Bob" in result
+            assert "Carol" in result
+            assert "Alice" not in result
+            assert "Dave" not in result
 
-    def test_player_chat_never_cited_as_fact(self):
+    def test_player_chat_in_bruce_memory_never_cited_as_fact(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             mem = BruceMemory(tmpdir)
             mem.append_entry("player_chat", "I built a castle!", player="Liar")
             mem.append_entry("bruce_observation", "Bruce saw something")
 
-            result = mem.format_fact_response()
+            log_path = os.path.join(tmpdir, "event_log.jsonl")
+            result = format_build_fact_response(log_path)
             assert "castle" not in result.lower()
             assert "Bruce saw" not in result
 

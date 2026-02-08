@@ -17,7 +17,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "07_HARRIS_WILDLANDS"))
 
 from orchestrator.mode_state import ModeStateManager
 from orchestrator.build_loop import BuildOrchestrator
-from orchestrator.bruce_memory import BruceMemory
+from orchestrator.bruce_memory import BruceMemory, format_build_fact_response
 
 import websockets
 from websockets.http11 import Response
@@ -314,7 +314,9 @@ class MUDWorld:
                 npc.name == "Bruce" for npc in self.rooms.get(player.room_id, Room("", "", "")).npcs
             ) or "Bruce" in self.rooms.get(player.room_id, Room("", "", "")).players
             if bruce_in_room:
-                fact_response = self.bruce_memory.format_fact_response()
+                fact_response = format_build_fact_response(
+                    str(self.orchestrator.event_log_path)
+                )
                 self.bruce_memory.append_entry(
                     "bruce_observation",
                     fact_response,

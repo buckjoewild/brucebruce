@@ -22,9 +22,9 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `07_HARRIS_WILDLANDS/orchestrator/patch_apply.py` — PatchApplier for applying diffs
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/rooms.json` — Room definitions
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/npcs.json` — NPC definitions
-- `07_HARRIS_WILDLANDS/orchestrator/bruce_memory.py` — BruceMemory (append-only JSONL, fact readback)
+- `07_HARRIS_WILDLANDS/orchestrator/bruce_memory.py` — BruceMemory (append-only JSONL, fact readback from event_log.jsonl)
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_build_loop.py` — 15 orchestrator tests
-- `07_HARRIS_WILDLANDS/orchestrator/tests/test_bruce_memory.py` — 11 Bruce memory tests
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_bruce_memory.py` — 14 Bruce memory tests
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_banner.py` — 6 banner content tests
 
 ## MUD Commands
@@ -35,7 +35,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 
 ## Scripts
 - `python server.py` — Start the MUD server
-- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (32 total)
+- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (35 total)
 
 ## Deployment
 - Target: VM (persistent WebSocket connections)
@@ -49,6 +49,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `MUD_BRUCE_AUTOPILOT` — Set to `false` to disable Bruce NPC (default: `true`)
 
 ## Recent Changes
+- 2026-02-08: fix: single source of truth — bruce_memory.jsonl stores only player_chat/bruce_observation, build facts read from event_log.jsonl, source validation enforced, 35 tests pass
 - 2026-02-08: feat: ASCII login banner — full art displayed on WebSocket connect before name prompt, 32 tests pass
 - 2026-02-08: feat: Bruce memory v1 — append-only JSONL in evidence/, player chat logging, Bruce cites only confirmed builds, 26 tests pass
 - 2026-02-08: feat: Docker escape pod + hosting docs (Dockerfile, docker-compose.yml, docs/hosting.md with Caddy/Nginx/DNS)

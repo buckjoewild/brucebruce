@@ -1,18 +1,19 @@
 """
 Bruce memory — append-only JSONL store for Bruce NPC observations.
 
-Sources:
+Sources (allowed in bruce_memory.jsonl):
   player_chat      — what players said
-  build_event      — build results (only result="ok" treated as fact)
   bruce_observation — Bruce's own actions/sayings
 
+Build events live in event_log.jsonl (single source of truth).
 Memory never mutates world data (rooms.json / npcs.json).
 """
 import json
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
+
+ALLOWED_SOURCES = {"player_chat", "bruce_observation"}
 
 
 class BruceMemory:
@@ -36,15 +37,24 @@ class BruceMemory:
         Append one entry to bruce_memory.jsonl.
 
         Args:
-            source: One of player_chat, build_event, bruce_observation
+            source: Must be one of player_chat, bruce_observation
             content: Text content of the entry
             player: Player name (if relevant)
             room: Room id (if relevant)
-            metadata: Extra data (e.g. build result, verb)
+            metadata: Extra data
 
         Returns:
             The entry dict that was written
+
+        Raises:
+            ValueError: If source is not in ALLOWED_SOURCES
         """
+        if source not in ALLOWED_SOURCES:
+            raise ValueError(
+                f"Invalid source '{source}'. "
+                f"Allowed: {', '.join(sorted(ALLOWED_SOURCES))}"
+            )
+
         entry = {
             "ts": datetime.now(timezone.utc).isoformat(),
             "source": source,
@@ -95,42 +105,45 @@ class BruceMemory:
 
         return entries[-n:]
 
-    def format_fact_response(self, n: int = 5) -> str:
-        """
-        Build a response string from build_event entries where result="ok".
-        Only confirmed-successful builds are treated as factual.
 
-        Returns:
-            A formatted string Bruce can use, or a default if nothing found.
-        """
-        if not self.memory_path.exists():
-            return "The build log is empty. Nothing has been built yet."
+def format_build_fact_response(event_log_path: str, n: int = 5) -> str:
+    """
+    Read build facts from event_log.jsonl (the single source of truth).
+    Only events with result=="ok" are treated as confirmed facts.
 
-        facts = []
-        with open(self.memory_path, "r") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                    if (
-                        entry.get("source") == "build_event"
-                        and entry.get("metadata", {}).get("result") == "ok"
-                    ):
-                        facts.append(entry)
-                except json.JSONDecodeError:
-                    continue
+    Args:
+        event_log_path: Path to event_log.jsonl
+        n: Max number of recent facts to include
 
-        if not facts:
-            return "The build log shows no confirmed builds yet."
+    Returns:
+        A formatted string Bruce can use for "what happened" responses.
+    """
+    path = Path(event_log_path)
+    if not path.exists():
+        return "The build log has no confirmed builds yet."
 
-        recent = facts[-n:]
-        lines = ["The build log confirms:"]
-        for fact in recent:
-            verb = fact.get("metadata", {}).get("verb", "unknown")
-            ts = fact.get("ts", "?")
-            content = fact.get("content", "")
-            lines.append(f"  [{ts}] {verb}: {content}")
+    facts = []
+    with open(path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+                if entry.get("result") == "ok":
+                    facts.append(entry)
+            except json.JSONDecodeError:
+                continue
 
-        return "\n".join(lines)
+    if not facts:
+        return "The build log has no confirmed builds yet."
+
+    recent = facts[-n:]
+    lines = ["The build log confirms:"]
+    for fact in recent:
+        verb = fact.get("verb", "unknown")
+        ts = fact.get("ts", "?")
+        actor = fact.get("actor", "unknown")
+        lines.append(f"  [{ts}] {verb} by {actor}")
+
+    return "\n".join(lines)
