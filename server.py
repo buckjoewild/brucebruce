@@ -19,6 +19,7 @@ from orchestrator.mode_state import ModeStateManager
 from orchestrator.build_loop import BuildOrchestrator
 from orchestrator.bruce_memory import BruceMemory, format_build_fact_response
 from orchestrator.bot_audit import BotAuditLogger
+from orchestrator.bot_security import authorize, check_bot_interlock, DENIED_BOT_COMMANDS, DENIED_BOT_SUBCOMMANDS
 
 import websockets
 from websockets.http11 import Response
@@ -124,37 +125,6 @@ class Player:
             "inventory": self.inventory,
             "explored": len(self.explored_rooms),
         }
-
-
-DENIED_BOT_COMMANDS = {
-    "/build", "/consent", "create", "spawn",
-}
-DENIED_BOT_SUBCOMMANDS = {"dev buildstub"}
-
-def authorize(player: "Player", cmd_text: str) -> tuple:
-    """
-    Authorization choke point. Returns (allowed: bool, reason: str).
-    Runs BEFORE any command parsing/execution.
-    Humans always pass. Bots are denied privileged commands.
-    """
-    if player.role != "bot":
-        return (True, "human")
-    
-    parts = cmd_text.strip().split()
-    if not parts:
-        return (True, "empty")
-    
-    cmd = parts[0].lower()
-    
-    if cmd in DENIED_BOT_COMMANDS:
-        return (False, f"bot denied: {cmd}")
-    
-    if len(parts) >= 2:
-        sub = f"{cmd} {parts[1].lower()}"
-        if sub in DENIED_BOT_SUBCOMMANDS:
-            return (False, f"bot denied: {sub}")
-    
-    return (True, "allowed")
 
 
 class MUDWorld:
@@ -502,6 +472,15 @@ class MUDServer:
                         await websocket.send(json.dumps({
                             "type": "error",
                             "text": "Bot connections disabled.",
+                        }))
+                        await websocket.close()
+                        return
+
+                    interlock_ok, interlock_reason = check_bot_interlock()
+                    if not interlock_ok:
+                        await websocket.send(json.dumps({
+                            "type": "error",
+                            "text": f"Bot connection refused: {interlock_reason}",
                         }))
                         await websocket.close()
                         return

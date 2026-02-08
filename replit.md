@@ -23,6 +23,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `docs/hosting.md` — Caddy/Nginx reverse proxy configs, DNS notes, production checklist
 - `07_HARRIS_WILDLANDS/orchestrator/mode_state.py` — ModeStateManager (PLAN/BUILD modes, arm/consent flow)
 - `07_HARRIS_WILDLANDS/orchestrator/build_loop.py` — BuildOrchestrator (execute builds with gates)
+- `07_HARRIS_WILDLANDS/orchestrator/bot_security.py` — Single source of truth: authorize(), deny sets, check_bot_interlock(), constants
 - `07_HARRIS_WILDLANDS/orchestrator/bot_audit.py` — BotAuditLogger + RateLimiter (append-only JSONL provenance)
 - `07_HARRIS_WILDLANDS/orchestrator/codex_adapter.py` — Codex patch generator (stub/real modes)
 - `07_HARRIS_WILDLANDS/orchestrator/patch_apply.py` — PatchApplier for applying diffs
@@ -54,7 +55,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `python server.py` — Start the MUD server
 - `python ai_player.py` — Run AI player client (requires BOT_AUTH_TOKEN env)
 - `python ai_player.py --test-deny` — Run denial tests against live server
-- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (62 total)
+- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (66 total)
 
 ## Deployment
 - Target: VM (persistent WebSocket connections)
@@ -68,6 +69,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `MUD_BRUCE_AUTOPILOT` — Set to `false` to disable Bruce NPC (default: `true`)
 - `BOT_AUTH_TOKEN` — Secret token for AI player authentication (required for bot connections)
 - `MUD_BOT_ENABLED` — Set to `false` to disable all bot connections (default: `true`)
+- `MUD_BOT_ALLOW_WHEN_ACTIVE` — Set to `1` to allow bots when IDLE_MODE=0 (default: `0`, bots blocked during active builds)
 
 ## Windows Launch
 - `RUN_MUD.bat` — Safe mode (IDLE_MODE=1): creates venv, installs deps, runs tests, starts server
@@ -75,6 +77,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - Edit `RUN_TESTS=0` in RUN_MUD.bat to skip tests for faster boot
 
 ## Recent Changes
+- 2026-02-08: refactor: single source of truth for bot security — extracted authorize/denylist/interlock into bot_security.py, tests import real production code, added IDLE_MODE safety interlock (bots blocked when builds active), 66 tests pass
 - 2026-02-08: feat: AI Integration Phase 1 — external AI player with token auth, permission gate (authorize choke point), rate limiting (5/10s), provenance audit log (bot_audit.jsonl), ai_player.py stub client with --test-deny mode, 62 tests pass
 - 2026-02-08: feat: Windows .bat launchers (RUN_MUD.bat + RUN_MUD_UNSAFE_BUILD.bat) + requirements.txt
 - 2026-02-08: fix: single source of truth — bruce_memory.jsonl stores only player_chat/bruce_observation, build facts read from event_log.jsonl, source validation enforced, 35 tests pass

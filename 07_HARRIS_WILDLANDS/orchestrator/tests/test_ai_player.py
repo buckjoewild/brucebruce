@@ -1,23 +1,30 @@
 """
 Tests for AI Player integration — auth, role, permission gate, rate limit, audit.
 
-Verifies:
-- authorize() choke point blocks bots from build/consent/create/spawn
-- authorize() allows humans everything
-- RateLimiter enforces sliding-window throttle
-- BotAuditLogger writes provenance to JSONL
-- Bot audit entries have required fields
-- Role is "bot" or "human" — never from client payload
+All security tests import from bot_security.py — the SAME module used by server.py.
+No local copies of authorize logic. Tests exercise the real production code path.
 """
 import pytest
 import tempfile
 import json
 import time
+import os
 from pathlib import Path
+from unittest.mock import patch
 
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
+from orchestrator.bot_security import (
+    authorize,
+    check_bot_interlock,
+    DENIED_BOT_COMMANDS,
+    DENIED_BOT_SUBCOMMANDS,
+    MAX_MESSAGE_BYTES,
+    MAX_CMD_LENGTH,
+    BOT_RATE_LIMIT,
+    BOT_RATE_WINDOW,
+)
 from orchestrator.bot_audit import RateLimiter, BotAuditLogger
 
 
@@ -28,29 +35,8 @@ class MockPlayer:
         self.role = role
 
 
-DENIED_BOT_COMMANDS = {
-    "/build", "/consent", "create", "spawn",
-}
-DENIED_BOT_SUBCOMMANDS = {"dev buildstub"}
-
-def authorize(player, cmd_text: str) -> tuple:
-    if player.role != "bot":
-        return (True, "human")
-    parts = cmd_text.strip().split()
-    if not parts:
-        return (True, "empty")
-    cmd = parts[0].lower()
-    if cmd in DENIED_BOT_COMMANDS:
-        return (False, f"bot denied: {cmd}")
-    if len(parts) >= 2:
-        sub = f"{cmd} {parts[1].lower()}"
-        if sub in DENIED_BOT_SUBCOMMANDS:
-            return (False, f"bot denied: {sub}")
-    return (True, "allowed")
-
-
 class TestAuthorize:
-    """Test the authorization choke point."""
+    """Test the authorization choke point (imported from bot_security)."""
 
     def test_human_can_build(self):
         player = MockPlayer("Alice", role="human")
@@ -139,6 +125,36 @@ class TestAuthorize:
         allowed_b, _ = authorize(bot, "/build on")
         assert allowed_h is True
         assert allowed_b is False
+
+    def test_denied_sets_match_expected(self):
+        assert "/build" in DENIED_BOT_COMMANDS
+        assert "/consent" in DENIED_BOT_COMMANDS
+        assert "create" in DENIED_BOT_COMMANDS
+        assert "spawn" in DENIED_BOT_COMMANDS
+        assert "dev buildstub" in DENIED_BOT_SUBCOMMANDS
+
+
+class TestBotInterlock:
+    """Test the IDLE_MODE safety interlock for bot connections."""
+
+    def test_idle_mode_0_no_override_blocks_bots(self):
+        with patch.dict(os.environ, {"IDLE_MODE": "0"}, clear=False):
+            os.environ.pop("MUD_BOT_ALLOW_WHEN_ACTIVE", None)
+            allowed, reason = check_bot_interlock()
+            assert allowed is False
+            assert "builds active" in reason.lower()
+
+    def test_idle_mode_0_with_override_allows_bots(self):
+        with patch.dict(os.environ, {"IDLE_MODE": "0", "MUD_BOT_ALLOW_WHEN_ACTIVE": "1"}, clear=False):
+            allowed, reason = check_bot_interlock()
+            assert allowed is True
+            assert "override" in reason.lower()
+
+    def test_idle_mode_1_allows_bots(self):
+        with patch.dict(os.environ, {"IDLE_MODE": "1"}, clear=False):
+            allowed, reason = check_bot_interlock()
+            assert allowed is True
+            assert "idle" in reason.lower()
 
 
 class TestRateLimiter:
