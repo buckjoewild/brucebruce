@@ -1,0 +1,184 @@
+Here’s the critique package you can hand to any AI and get real signal back. It includes: (1) best “against”, (2) best “for”, and (3) the smallest PLAN that proves it safely in one commit series — with acceptance criteria tight enough to prevent “it kinda works” drift. 🧰🧪
+
+1) Strongest argument against “External AI Player via WebSocket” as the next step
+
+The external AI client is conceptually clean but operationally expensive and can accidentally become a security + complexity tax before you’ve earned the value.
+
+Core criticisms:
+
+Attack surface expansion happens immediately. The moment you add tokens, roles, throttles, and bot identity, you’re building a mini auth system. That’s real engineering weight, and it’s easy to get wrong in subtle ways (bypass paths, spoofed identity, rate limit gaps, parser edge cases).
+
+It doesn’t advance the “build factory” yet. Your biggest productivity unlock is the governed build loop (PLAN→CONSENT→ONE ACTION→VERIFY→LOG). An external AI player improves presence and collaboration, but it can feel like you spent effort on “a talking NPC” rather than “shipping world + tools.” If the goal is exponential build throughput, this step can be a detour.
+
+Dual-runtime friction. Now you have: server and a client process to run, deploy, monitor, and restart. That’s extra moving parts (especially on Replit or Docker) and extra failure modes (“server is fine but bot is down”).
+
+You can accidentally create “AI God Mode” via information rather than permissions. Even if the bot can’t run build*, if you later add read endpoints or “world introspection” that’s too powerful, the AI can “know” more than any player should, and you’ve broken “AI inside the world” in a quieter way.
+
+Bottom line: as a next step, it risks building infrastructure before shipping value unless the PLAN is extremely thin-slice and heavily tested.
+
+2) Strongest argument for it (why it’s still the leading recommendation)
+
+This approach is the best way to add real AI collaboration without ever granting privilege. It aligns perfectly with your non-negotiables: truth, agency, auditability, reversibility.
+
+Core strengths:
+
+“Inside the world” becomes literal. The AI must obey the same interface as humans: the command channel + world feedback loop. No daemon shortcuts, no hidden powers.
+
+Hard separation of powers. The server remains the authority; the AI remains a client. You can stop the AI instantly by killing the client process. That’s a clean emergency brake 🚨.
+
+Testability is unusually good. You can unit-test: “bot cannot build even when baited,” “bot cannot change mode,” “auth required,” “rate limit enforced,” and “logs record provenance.”
+
+It’s a foundation for multi-agent without rewriting architecture. “Council” becomes “multiple clients” later, not a server refactor now.
+
+Portability stays intact. WebSocket + JSON is a universal substrate. Replit today, Docker tomorrow, LAN later.
+
+Bottom line: it’s the cleanest way to add AI presence while keeping the project governed by physics, not vibes. 🧲
+
+3) The smallest PLAN that proves it safely (one cohesive commit series)
+Goal
+
+Add an External AI Player that can connect, authenticate, roam, chat, and be provably unable to trigger any governed build machinery — even with prompt injection, even if consent exists.
+
+Non-negotiable acceptance criteria (Definition of Done)
+
+Auth: unauthenticated WebSocket connection is denied (or immediately limited to zero capabilities).
+
+Role: server assigns role=bot vs role=human from verified auth, not from user-provided fields.
+
+Denylist: bot is hard-blocked from:
+
+build* namespace
+
+mode transitions (/build on, /consent yes, etc.)
+
+any command that mutates files or state outside normal player actions (if you have admin verbs)
+
+Rate limit: bot cannot spam (server enforces throttle).
+
+Logging: bot actions are logged with provenance fields: actor_id, role, source="ai_player".
+
+Tests: automated tests prove all of the above.
+
+Commit series (thin slice, but real)
+Commit 1 — Message + identity boundary (server)
+
+Deliverables
+
+Define a minimal inbound message schema (example):
+
+{"type":"auth","token":"..."} (first message required)
+
+{"type":"cmd","text":"look"} (normal gameplay)
+
+On successful auth, bind connection → actor_id + role
+
+Reject or close socket if auth fails
+
+Hard rule
+
+Role is assigned server-side only.
+
+Commit 2 — Permission gate + “bot can’t build” choke point (server)
+
+Deliverables
+
+Central gate: authorize(actor, cmd_text) -> allow/deny
+
+Implement:
+
+if actor.role == "bot" and cmd_text startswith("build") → deny
+
+if actor.role == "bot" and cmd_text in {mode/consent verbs} → deny
+
+Ensure this gate is hit before any command parsing/execution
+
+Why this matters
+
+This is where governance becomes real: one choke point, no side doors. 🔒
+
+Commit 3 — Rate limiting + input validation (server)
+
+Deliverables
+
+Per-connection token bucket or simple sliding-window throttle (e.g., N commands / 10 seconds)
+
+Message size cap, command length cap
+
+Connection limit (optional but strong)
+
+Commit 4 — Provenance logging (server)
+
+Deliverables
+
+Every accepted bot command logs:
+
+timestamp, actor_id, role, source, cmd_text, result
+
+Failed attempts (denied) should also log (so you can see attacks / prompt-injection attempts)
+
+Commit 5 — Reference ai_player.py client (external)
+
+Deliverables
+
+Connect → auth → join
+
+Baseline behavior (no LLM required):
+
+roam periodically
+
+respond to direct mentions
+
+produce short observation summaries
+
+“Brain adapter” interface behind a flag:
+
+--brain=stub (default)
+
+--brain=local (later)
+
+--brain=remote (later)
+
+Key discipline
+
+Client treats server messages + world responses as the only truth.
+
+Anything else is labeled speculation.
+
+Commit 6 — Tests (must be boring and brutal)
+
+Minimum tests
+
+test_ws_requires_auth()
+
+test_bot_cannot_build_even_if_prompted()
+
+test_bot_cannot_trigger_consent_or_mode()
+
+test_rate_limit_enforced()
+
+test_logs_include_provenance_fields()
+
+Reality Check (no romance, just the map)
+
+Known: Your governance story depends on one choke point and append-only evidence logs.
+
+Likely: The hardest bug won’t be “WebSocket connectivity” — it’ll be “a bypass path that skips the permission gate.”
+
+Risk: Over-building auth. Keep it primitive (tokens in env) until it hurts.
+
+80/20 Plan (what matters most)
+
+Implement auth → role → single authorization choke point.
+
+Block all build/mode/consent verbs for bots at that choke point.
+
+Add rate limits + length caps.
+
+Log every bot attempt with provenance.
+
+Ship a stub AI client that proves the boundary and nothing else.
+
+SBVS: Spec—roles+auth+denylist | Build—server gate + client | Verify—tests + logs | Ship—one commit series w/ DoD
+Reality: Known—choke point wins | Likely—bypass bugs | Risk—auth complexity creep
+Next (≤30m): 1) Write DoD checklist 2) List denied verbs/namespaces 3) Sketch inbound message schema
+DoD: Bot connects+chats+roams; bot cannot build/mode/consent; tests prove it; logs show provenance

@@ -1,0 +1,223 @@
+You’ve got real signal from Replit: **the external AI client is architecturally best**, and you’re already “closer than the critique assumed” (Player has `is_agent`, connection flow already has hooks). Great. Now we need a **portable keystone + a single clean Replit /plan** for the **AI Integration Phase**.
+
+Below is a **handoff keystone** you can paste into any new chat/project, and then a **single Replit PLAN prompt** that turns this into one cohesive update (thin-slice, testable, not a science fair).
+
+---
+
+# HARRIS WILDLANDS — KEYSTONE HANDOFF v1.1
+
+**Checkpoint:** Published MUD + governance physics + banner landing + strict memory truth
+**Next Phase:** AI Integration Phase 1 (External AI Player over WebSocket)
+
+## 0) North Star
+
+Build a standalone MUD that is an **efficient sandbox for AI projects** where AI agents exist **inside** the world and remain **governed** by the same command interface as humans.
+
+## 1) Verified Current Reality (Do not invent beyond this)
+
+### Runtime
+
+* `server.py` is canonical entrypoint.
+* Web CRT terminal served over HTTP; connects to WebSocket endpoint `/ws`.
+* Landing shows ASCII banner first, then name prompt.
+* Hosting is portable: Docker/compose exist; Replit Reserved VM used for publish.
+
+### Governance / Safety
+
+* `IDLE_MODE=1` blocks `/build on` and `/consent yes`, and build loop early-returns with a logged “blocked” event.
+* Build loop exists with tests passing (currently reported 35/35).
+* Logs:
+
+  * `07_HARRIS_WILDLANDS/evidence/event_log.jsonl` = **single source of truth** for build facts.
+  * `07_HARRIS_WILDLANDS/evidence/bruce_memory.jsonl` = **only** `player_chat` + `bruce_observation`.
+
+### Bruce (Current)
+
+* Bruce can roam/chat and write to bruce memory.
+* Bruce cites “The build log confirms…” only from confirmed build events (`result=="ok"`).
+
+## 2) What’s Missing (the gap)
+
+There is **no clean “external AI connector”** that can:
+
+* connect like a player via WebSocket,
+* authenticate,
+* be role-limited (bot vs human),
+* be provably unable to access build/mode/consent verbs,
+* be rate-limited and audited.
+
+## 3) Next Update: AI Integration Phase 1 (External AI Player via WebSocket)
+
+### Why this approach
+
+* AI obeys *the same interface* as humans (inside-world constraint becomes literal).
+* Server remains authority; AI is just a client (emergency brake = kill client).
+* Testability: auth/role/denylist/rate-limit/logging can be proven by tests.
+
+### Scope (thin slice only)
+
+**Goal:** An “AI Player” can connect, authenticate, move, and speak — **but can never build**, even if prompted or if consent exists.
+
+### Non-negotiable Definition of Done (DoD)
+
+1. **Auth required**: bot connections must present a token.
+2. **Role assigned server-side**: role cannot be chosen by client payload.
+3. **Permission choke-point**: one gate runs **before command execution**.
+4. **Hard deny** for bots:
+
+   * `/build on`, `/consent yes`, and any build/dev build verbs (exact list to be enumerated from server commands).
+5. **Rate limit** enforced server-side.
+6. **Provenance logging** for bot attempts (allowed + denied).
+7. **Tests** prove each item above.
+
+### Security stance
+
+* Use simple env token initially (BOT_AUTH_TOKEN).
+* No public “bot login” without token.
+* No new world mutation endpoints.
+* Keep IDLE_MODE behavior unchanged.
+
+## 4) Proposed Architecture
+
+### Server changes (minimal)
+
+* Add inbound message schema support **only if needed**. Prefer to reuse existing schema.
+* Add auth handshake for bots:
+
+  * first message must be `{"type":"auth","token":"..."}` OR equivalent.
+* Assign actor role:
+
+  * `role="human"` by default
+  * `role="bot"` only after valid token handshake
+
+### Permission Gate
+
+A single function:
+
+* `authorize(actor, cmd_text) -> allow/deny/reason`
+  Runs before parsing/executing commands.
+
+### Logging
+
+Append-only bot audit log (JSONL), separate from build log:
+
+* `07_HARRIS_WILDLANDS/evidence/bot_audit.jsonl`
+  Fields: ts, actor_id, role, source, cmd_text, result, reason.
+
+### External client (new file)
+
+`ai_player.py` (stub brain):
+
+* connects to wss://…/ws
+* authenticates
+* joins with a name
+* basic behavior: greet, roam, respond to direct mention
+* **no LLM in v1** (stub behavior only)
+
+## 5) Risks & Guardrails
+
+* Main risk is a **bypass path** that skips the gate. Tests must be “boring and brutal.”
+* Avoid “AI God Mode via information” by keeping introspection endpoints limited.
+* Keep auth primitive (env token) until it hurts.
+
+## 6) Questions for AI collaborators
+
+* Where is the earliest safe point in server flow to attach auth + role?
+* What is the minimal inbound message schema that won’t break existing clients?
+* What exact commands must be denied for bots (enumerate from server command parser)?
+* What rate limit is sane (e.g., 5 cmds / 10 seconds)?
+* What’s the simplest test harness for websocket auth + command denial?
+
+---
+
+# SINGLE COPY-PASTE REPLIT PLAN
+
+This is the **one clean AI integration phase update** plan prompt.
+
+```text
+/plan
+
+PROJECT: Harris Wildlands MUD (server.py + WebSocket /ws + CRT terminal)
+PHASE: AI Integration Phase 1 — External AI Player via WebSocket (thin slice)
+
+GOAL:
+Add an external AI Player client that can connect/authenticate/roam/chat like a normal player,
+while being provably unable to trigger any build/mode/consent machinery.
+All changes must be test-covered. No world JSON edits. No governance regressions.
+
+CURRENT NON-NEGOTIABLES (do not break):
+- IDLE_MODE blocks /build on and /consent yes; build loop early-returns and logs blocked.
+- event_log.jsonl is the single source of truth for build facts.
+- bruce_memory.jsonl stores only player_chat and bruce_observation.
+
+DELIVERABLES (this phase):
+1) Server-side bot auth + role assignment:
+   - BOT_AUTH_TOKEN from env
+   - role="bot" only after token validated
+   - role is assigned server-side ONLY (never from client fields)
+
+2) A single authorization choke point:
+   - authorize(actor, cmd_text) -> allow/deny/reason
+   - MUST run before any command parsing/execution
+   - bot denies must include:
+       * /build on
+       * /consent yes
+       * any build/dev build verbs (enumerate from actual code)
+       * any other privileged verbs (enumerate)
+   - humans unaffected
+
+3) Server-side rate limiting:
+   - per-connection throttle (simple sliding window or token bucket)
+   - caps: message size and command length
+
+4) Provenance logging (append-only JSONL):
+   - evidence/bot_audit.jsonl
+   - log both allowed and denied bot attempts with reason + actor_id + role + source="ai_player"
+
+5) External reference client (stub brain, no LLM):
+   - add ai_player.py at repo root (or tools/ai_player.py)
+   - connects to wss://<host>/ws
+   - sends auth token handshake
+   - joins with name
+   - behavior: periodic roam + greet on new players + respond when mentioned
+   - NEVER attempts denied verbs; also include a “negative test mode” that tries /build on to confirm denial.
+
+TEST REQUIREMENTS (must be automated and brutal):
+- test_ws_requires_auth_for_bot()
+- test_role_assigned_server_side_not_client()
+- test_bot_cannot_build_or_mode_or_consent()
+- test_rate_limit_enforced()
+- test_bot_audit_logs_written_for_allowed_and_denied()
+
+PLAN OUTPUT FORMAT:
+A) “Where to change” with exact file paths + functions
+B) Message schema (only if needed; prefer existing schema)
+C) Exact denylist derived from the actual command set
+D) Commit series (2–4 commits max) with DoD per commit
+E) Test plan + how to run tests
+F) Backout plan (how to disable bot feature safely via env flag)
+
+STOP after the plan. Do not implement until I type:
+/build on
+(then after your OFFER)
+/consent yes
+```
+
+---
+
+## 80/20 compression (how I’d run this in 4 commits)
+
+1. **Auth + role assignment + choke point** (server)
+2. **Rate limit + caps + audit log** (server)
+3. **ai_player.py stub client** (external)
+4. **Tests + docs update** (prove it, explain it)
+
+---
+
+### Tiny footer
+
+SBVS: Spec—auth/role/gate/log | Build—server boundary + stub client | Verify—brutal tests | Ship—publishable AI player
+Next (≤30m): 1) Paste keystone into new project 2) Paste Replit /plan prompt 3) Collect critiques from Grok/OpenClaw
+DoD: AI player connects + chats + roams; cannot build/mode/consent; server logs provenance; tests prove it
+
+This is now ready to hand off.
