@@ -1,0 +1,14 @@
+services:
+  mud:
+    build: .
+    ports:
+      - "${PORT:-5000}:${PORT:-5000}"
+    environment:
+      - HOST=${HOST:-0.0.0.0}
+      - PORT=${PORT:-5000}
+      - IDLE_MODE=${IDLE_MODE:-0}
+      - MUD_BRUCE_AUTOPILOT=${MUD_BRUCE_AUTOPILOT:-true}
+      - USE_CODEX=${USE_CODEX:-}
+      - CODEX_DRYRUN=${CODEX_DRYRUN:-}
+      - CODEX_CLI=${CODEX_CLI:-}
+    restart: unless-stopped

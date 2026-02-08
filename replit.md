@@ -13,6 +13,9 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 
 ## Key Files
 - `server.py` — Main server (HTTP + WebSocket MUD + orchestrator integration)
+- `Dockerfile` — Docker escape pod (python:3.12-slim, websockets only)
+- `docker-compose.yml` — Single-service compose with full env passthrough
+- `docs/hosting.md` — Caddy/Nginx reverse proxy configs, DNS notes, production checklist
 - `07_HARRIS_WILDLANDS/orchestrator/mode_state.py` — ModeStateManager (PLAN/BUILD modes, arm/consent flow)
 - `07_HARRIS_WILDLANDS/orchestrator/build_loop.py` — BuildOrchestrator (execute builds with gates)
 - `07_HARRIS_WILDLANDS/orchestrator/codex_adapter.py` — Codex patch generator (stub/real modes)
@@ -43,5 +46,6 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `MUD_BRUCE_AUTOPILOT` — Set to `false` to disable Bruce NPC (default: `true`)
 
 ## Recent Changes
+- 2026-02-08: feat: Docker escape pod + hosting docs (Dockerfile, docker-compose.yml, docs/hosting.md with Caddy/Nginx/DNS)
 - 2026-02-08: feat: host-agnostic runtime (HOST/PORT env vars) + IDLE_MODE safety flag blocks arm/consent/build when active, 15 tests pass
 - 2026-02-08: Created unified server.py with HTTP+WebSocket multiplexing, integrated orchestrator, CRT terminal UI, 10-room world, Bruce autopilot NPC
