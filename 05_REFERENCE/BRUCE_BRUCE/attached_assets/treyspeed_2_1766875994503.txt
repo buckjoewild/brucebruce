@@ -1,0 +1,322 @@
+## Proposed `docs/` folder table of contents
+
+This structure is designed to (1) preserve what already exists in your **Quick Start**  and **Keystone**  documents, (2) close the biggest documentation gaps surfaced by those two documents (backup/restore, security/LAN exposure, and demo-mode consistency), and (3) create clean “reading paths” for users vs operators vs developers.
+
+### Directory tree
+
+```text
+docs/
+  README.md
+
+  00-start-here/
+    00-overview-and-reading-paths.md
+    01-glossary.md
+
+  10-user-guide/
+    10-quickstart-standalone-docker.md
+    11-first-run-demo-mode.md
+    12-lifeops-daily-logging.md
+    13-thinkops-ideas-pipeline.md
+    14-weekly-review.md
+    15-export-and-personal-backups.md
+    16-troubleshooting.md
+
+  20-operator-guide/
+    20-standalone-deployment-docker-compose.md
+    21-configuration-env.md
+    22-data-storage-and-persistence.md
+    23-updates-and-upgrades.md
+    24-security-local-lan-and-auth-modes.md
+    25-healthchecks-and-basic-monitoring.md
+    26-disaster-recovery.md
+
+  30-developer-reference/
+    30-architecture-overview.md
+    31-repo-layout.md
+    32-api-routes-reference.md
+    33-database-schema-reference.md
+    34-auth-replit-oidc-and-fallbacks.md
+    35-ai-provider-ladder.md
+    36-validation-and-testing-checklist.md
+
+  40-protocols-and-governance/
+    40-lifeops-thinkops-separation.md
+    41-drift-detection-signals.md
+    42-privacy-red-zones-and-sharing-boundaries.md
+    43-non-goals-and-safety-constraints.md
+
+  50-releases-and-evidence/
+    50-keystone-v1.0-2025-12-27.md
+    51-acceptance-test-checklist.md
+    52-changelog.md
+```
+
+---
+
+# What each section contains (and exactly what it maps to)
+
+## `docs/README.md`
+
+**Purpose:** Single entry point for the repo docs: what this system is, who each doc set is for, and where to start.
+
+* Links to the “reading paths” page.
+* Links to Keystone v1.0 and Quick Start.
+
+**Maps to:** The existence of both a beginner setup guide  and a comprehensive keystone technical reference .
+
+---
+
+## `00-start-here/`
+
+### `00-overview-and-reading-paths.md`
+
+**Purpose:** A short bridge between “how to run it” and “full technical keystone.”
+
+Includes 3 reading paths:
+
+1. **End user (standalone):** Quickstart → First run/demo → LifeOps → ThinkOps → Weekly → Export
+2. **Operator (self-host):** Docker compose → env → persistence → updates → security → recovery
+3. **Developer:** Architecture → schema → routes → auth → AI ladder → tests
+
+**Maps to:**
+
+* Quick Start is operational and beginner-focused 
+* Keystone is full lifecycle / architecture / risk + acceptance testing 
+
+### `01-glossary.md`
+
+**Purpose:** Define the minimum terms so users aren’t forced into the keystone to understand the UI language.
+
+Must include (at minimum):
+
+* LifeOps, ThinkOps
+* Drift flags/signals (and “signals not judgments”)
+* Demo mode vs authenticated mode
+* Export
+
+**Maps to:** LifeOps/ThinkOps separation and drift as “signals, not judgments”  and the user-facing LifeOps/ThinkOps references in the Quick Start .
+
+---
+
+## `10-user-guide/` (what normal users need)
+
+### `10-quickstart-standalone-docker.md`
+
+**Purpose:** A Markdown version of your Quick Start guide, with the same step-by-step commands.
+
+**Maps to:** Entire Quick Start document .
+
+### `11-first-run-demo-mode.md`
+
+**Purpose:** Make demo-mode behavior unambiguous and consistent.
+
+* Keystone acceptance checklist references demo via `?demo=true`. 
+* Quick Start implies demo is available at `http://localhost:5000` without further qualifier. 
+  This doc reconciles that into one “do this first” instruction set, so beginners don’t conclude setup failed.
+
+### `12-lifeops-daily-logging.md`
+
+**Purpose:** Explain what daily logging captures and how to do it in <5 minutes.
+
+**Maps to:** Quick Start “Daily Logging (LifeOps)” summary  and Keystone statement of minimal-input daily logging with persistence and scales/toggles .
+
+### `13-thinkops-ideas-pipeline.md`
+
+**Purpose:** Explain the “idea lane” and basic statuses (e.g., draft).
+
+**Maps to:** Quick Start ThinkOps + status mention (“draft”)  and Keystone “idea pipeline with status tracking” .
+
+### `14-weekly-review.md`
+
+**Purpose:** Explain what `/weekly.pdf` produces and what it means.
+
+* Quick Start says `/weekly.pdf` “makes a text file with stats.” 
+* Keystone states weekly is text-based with PDF pending / stubbed. 
+
+This doc standardizes that expectation and explains the outputs (completion rates/domain stats/drift flags) without overpromising.
+
+### `15-export-and-personal-backups.md`
+
+**Purpose:** A user-safe explanation of exporting and what to do with the JSON.
+
+**Maps to:** Quick Start “Export Data: JSON file”  and Keystone “Exports: JSON bundle” .
+
+Critically: this is where you add the missing *beginner* language about safe habits (“export cadence”), without inventing a restore feature that isn’t documented.
+
+### `16-troubleshooting.md`
+
+**Purpose:** Consolidate predictable beginner pitfalls into a checklist format.
+
+**Maps to:** Quick Start troubleshooting (“restart, rebuild, Docker open”)  and Keystone health endpoint/testing mindset .
+
+---
+
+## `20-operator-guide/` (for people running it for real)
+
+### `20-standalone-deployment-docker-compose.md`
+
+**Purpose:** Operator-grade version of “docker compose up,” plus run modes, ports, and container expectations.
+
+**Maps to:** Quick Start Docker Compose flow  and Keystone Docker/Compose deployment description .
+
+### `21-configuration-env.md`
+
+**Purpose:** What `.env` is, how `.env.example` is used, and what “AI off” means operationally.
+
+**Maps to:** Quick Start `.env.example → .env` and “AI keys not needed”  plus Keystone AI ladder design and “off” fallback .
+
+### `22-data-storage-and-persistence.md`
+
+**Purpose:** Explain persistence expectations.
+
+**Maps to:** Keystone use of PostgreSQL persistence  and Quick Start’s implication that it runs with a Postgres setup .
+
+Also: this is where you address the keystone checklist “DB persist” verification status (it appears as a checklist item, not a declared PASS), without making claims beyond what the checklist states. 
+
+### `23-updates-and-upgrades.md`
+
+**Purpose:** Safe upgrade path:
+
+* `git pull`
+* rebuild flow
+* when to export first
+
+**Maps to:** Quick Start update instructions  and Keystone’s desire for iterative updates/change logs .
+
+### `24-security-local-lan-and-auth-modes.md`
+
+**Purpose:** Close the “LAN phone access” security gap.
+
+**Maps to:** Quick Start “access from phone via IP”  and Keystone’s auth/fallback framing (Replit OIDC vs demo/standalone) .
+
+This doc should answer:
+
+* What modes exist (OIDC vs demo/standalone)
+* What “private” means in local vs LAN contexts
+* Operator best practices (without inventing new features)
+
+### `25-healthchecks-and-basic-monitoring.md`
+
+**Purpose:** How to verify it’s healthy and what “AI provider ladder” status implies.
+
+**Maps to:** Keystone `/api/health` route description and acceptance tests .
+
+### `26-disaster-recovery.md`
+
+**Purpose:** Operator-grade recovery runbook:
+
+* what to do if containers fail
+* what to do if DB breaks
+* how exports fit in
+
+**Maps to:** Keystone emphasis on persistence/exports and operational handoff concepts  and Quick Start “export JSON” .
+
+(If restore/import is not implemented, this doc should explicitly state that and define the current best practice: export-based backup + DB volume backup strategy, *as documented and verified*.)
+
+---
+
+## `30-developer-reference/` (for maintainers and contributors)
+
+### `30-architecture-overview.md`
+
+**Purpose:** A shorter, developer-readable version of the conceptual architecture.
+
+**Maps to:** Keystone architecture section (dual-lane flow, DB, AI ladder, outputs) .
+
+### `31-repo-layout.md`
+
+**Purpose:** Explain the repo structure (client/server/shared, etc.) at a high level.
+
+**Maps to:** Keystone repo tree section .
+
+### `32-api-routes-reference.md`
+
+**Purpose:** List routes and their meanings, especially:
+
+* `/api/health`
+* `/export`
+* `/weekly.pdf`
+* auth endpoints
+
+**Maps to:** Keystone API routes overview  and user-facing `/weekly.pdf` mention in Quick Start .
+
+### `33-database-schema-reference.md`
+
+**Purpose:** Tables/entities and what they represent (logs/ideas/goals/checkins/driftFlags/etc.).
+
+**Maps to:** Keystone schema list .
+
+### `34-auth-replit-oidc-and-fallbacks.md`
+
+**Purpose:** Explain the Replit OIDC path vs fallback behavior.
+
+**Maps to:** Keystone authentication description .
+
+### `35-ai-provider-ladder.md`
+
+**Purpose:** Explain the ladder and what “off” means.
+
+**Maps to:** Keystone AI ladder (Gemini → OpenRouter → Off)  and Quick Start “AI features will be off” without keys .
+
+### `36-validation-and-testing-checklist.md`
+
+**Purpose:** Put the PASS/Pending checklist into a stable doc that can be updated.
+
+**Maps to:** Keystone acceptance checklist table .
+
+---
+
+## `40-protocols-and-governance/` (what keeps the system from drifting into “AI coach”)
+
+### `40-lifeops-thinkops-separation.md`
+
+**Purpose:** Codify the “lane separation” principles and what counts as operational truth vs ideation.
+
+**Maps to:** Keystone’s core thesis of separation and anti-contamination .
+
+### `41-drift-detection-signals.md`
+
+**Purpose:** Define what drift flags are, what they aren’t, and the factual-language requirement.
+
+**Maps to:** Keystone drift detection framing (“signals, not judgments”) and drift flag heuristics described .
+
+### `42-privacy-red-zones-and-sharing-boundaries.md`
+
+**Purpose:** Make “red-zones” and “family/faith boundaries” explicit and operational.
+
+**Maps to:** Keystone privacy/red-zone constraints  and Quick Start privacy statement (family/faith stays private; not shared unless chosen) .
+
+### `43-non-goals-and-safety-constraints.md`
+
+**Purpose:** Keep non-goals visible so future contributors can’t accidentally violate them.
+
+**Maps to:** Keystone non-goals and constraints section .
+
+---
+
+## `50-releases-and-evidence/` (keystone + changelog + proof artifacts)
+
+### `50-keystone-v1.0-2025-12-27.md`
+
+**Purpose:** Store the keystone report as a versioned artifact in docs, as the report itself recommends (git-tracked updates and change log discipline). 
+
+### `51-acceptance-test-checklist.md`
+
+**Purpose:** Separate checklist so it’s easy to update as items move from Pending → PASS.
+
+**Maps to:** Keystone checklist section .
+
+### `52-changelog.md`
+
+**Purpose:** Single chronological log of doc+system changes (quarterly reviews recommended by the keystone). 
+
+---
+
+# Notes on accuracy and “no invented behavior”
+
+* Where the documents imply something but don’t fully specify it (e.g., “demo mode” mechanics, Docker persistence verification, restore processes), the corresponding pages should be written with **explicit “Verified / Not yet verified / TBD” flags** rather than filling gaps with assumptions. This is consistent with the Keystone’s PASS vs Pending posture. 
+* `/weekly.pdf` should be documented as producing a **text-based weekly output** (PDF pending/stubbed), because both docs characterize it that way.
+
+---
+
+If you want the next step, I can generate the **actual Markdown skeletons** for each file above (headers + standardized sections like Purpose/Audience/Verified-On/Applies-To/Steps/Troubleshooting), staying strictly within what these two documents already claim.

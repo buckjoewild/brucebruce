@@ -1,0 +1,6 @@
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch2\gravity_gate.bat
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch2\gravity_hash_verify.bat
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch2\PATCH2_GATE_EXIT_2026-01-29.txt
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch2\PATCH2_GATE_OUTPUT_2026-01-29.txt
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch2\PATCH2_HASHVERIFY_EXIT_2026-01-29.txt
+C:\GRAVITY\06_PUBLISH\bundle_2026-01-29__gravity_gatekeeper_v1_patch2\PATCH2_HASHVERIFY_OUTPUT_2026-01-29.txt

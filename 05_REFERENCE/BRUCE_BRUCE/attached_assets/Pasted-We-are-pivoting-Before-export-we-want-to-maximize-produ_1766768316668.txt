@@ -1,0 +1,103 @@
+We are pivoting. Before export, we want to maximize product completeness and content quality.
+
+IMPORTANT: This app must run OUTSIDE Replit (local + Docker + VPS). Treat Replit as a dev environment only.
+
+Do this in 4 phases: AUDIT → BUILD → VERIFY → EXPORT.
+Do NOT start coding until you produce the Phase 0 plan.
+
+PHASE 0 — AUDIT + PLAN (NO CODE CHANGES)
+1) Inspect the repo and print:
+- folder tree (depth 3)
+- package.json scripts
+- API route map (list endpoints + file paths)
+- DB schema summary (tables + key fields) from Drizzle
+- Demo mode behavior (exact triggers: ?demo=true, localStorage, etc)
+- Any Replit-specific integrations (@replit/vite-plugin-*, replit auth files, .replit, replit.nix)
+
+2) Output “PRODUCT BACKLOG v1” (prioritized) using this format:
+For each item: [Impact 1-5] [Effort 1-5] [Risk 1-5] + acceptance criteria.
+Focus on:
+A) Core UX completeness (navigation, onboarding, empty states, settings)
+B) LifeOps features (logging, goals, streaks, weekly review, tags, search, exports)
+C) ThinkOps features (idea capture, reality check template, status pipeline, archive)
+D) Teaching module (lesson template builder, standards tags if present, PDF export hooks)
+E) System utilities (profile, preferences, backups/exports, audit log)
+F) Content fill (demo seed data, examples, tooltips, help pages)
+G) Portability (remove/disable Replit-only auth; keep demo mode; externalize config)
+
+3) Choose the top set of backlog items that maximize impact with minimal risk BEFORE export.
+Define a “Feature Freeze” line: what we will NOT attempt now.
+
+End Phase 0 with:
+- “READY FOR PHASE 1 BUILD”
+- the exact list of files you plan to touch.
+
+Wait for my “GO PHASE 1” before coding.
+
+PHASE 1 — BUILD (IMPLEMENT THE PLAN)
+Rules:
+- Keep changes portable (no dependency on Replit hosting).
+- Prefer server-side + DB-backed features over purely cosmetic.
+- Any new feature must include:
+  - DB support (if needed)
+  - API endpoint(s)
+  - UI wired end-to-end
+  - sensible empty states
+  - error handling (graceful, no crashes)
+- Create/extend seed/demo data so the app looks “alive” on first run.
+
+Must-deliver features (unless already complete):
+1) Onboarding + Demo Experience
+- A welcome screen explaining modules (BruceOps/LifeOps/ThinkOps/Teaching).
+- Demo mode banner + explanation + toggle instructions.
+- Seed data for each module (realistic examples; not lorem ipsum).
+
+2) Core Data UX
+- Global search (or per-module search) for logs/notes/ideas
+- Tags + filtering
+- Basic analytics summary (counts, recent activity, streak, weekly snapshot)
+
+3) Export/Portability Prep
+- Ensure PDF export works (if already planned) OR stub a clean “Export as JSON/CSV” feature.
+- Add a “Data Export” page: export user data to JSON (download).
+- Add a “Backup/Restore” note (restore can be later, export now).
+
+4) Reliability Basics
+- /api/health route (minimal)
+- consistent error responses
+- loading states in UI
+
+Auth constraint:
+- We will NOT depend on Replit OIDC outside Replit.
+- For now: Demo Mode is the default for standalone. Keep Replit auth code isolated behind a toggle/guard so it does not break outside Replit.
+
+PHASE 2 — VERIFY (PARITY + SMOKE TESTS)
+Create a CHECKLIST.md and run through it:
+- App loads (dev + production build)
+- API health OK
+- DB persistence OK after restart
+- Demo mode works (?demo=true + localStorage)
+- Create/read/update/delete for core entities works
+- Export works (PDF and/or JSON export)
+- Missing OPENROUTER_API_KEY fails gracefully (no crash)
+Record results and any known issues.
+
+PHASE 3 — EXPORT PACK (STANDALONE DELIVERY)
+Generate these files for outside-Replit deployment:
+- README.md (local + docker)
+- .env.example
+- Dockerfile (Node 20, build then run dist/index.cjs)
+- docker-compose.yml (app + postgres + persistent volume)
+- ARCHITECTURE.md (“what talks to what”, folder meanings, 3 key workflows)
+- STANDALONE_EXPORT_PLAN.md (what to download, what to ignore, how to deploy)
+
+Portability requirements:
+- No Replit-only env vars required for standalone.
+- Ignore/remove Replit-only artifacts from the export instructions (.replit, replit.nix, replit.md).
+- Keep secrets out of repo; document placeholders only.
+
+Deliverables:
+- Commit-ready file changes with minimal churn.
+- Clear “How to run outside Replit” steps that work.
+
+STOP after producing Phase 0 plan and wait for my “GO PHASE 1”.

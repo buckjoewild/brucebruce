@@ -1,0 +1,31 @@
+
+========== GRAVITY HASH VERIFY V1 ==========
+Timestamp: Thu 01/29/2026 13:48:34.26
+Hash Reference: C:\GRAVITY\00_INDEX\INTEGRITY_HASHES_2026-01-29.txt
+
+[INFO] Reading hash file...
+
+Verification Results:
+=====================
+
+Checking 00_INDEX files...
+  [OK] CURRENT_STATE exists
+  [OK] FOREMAN_TASK_ORDER_TEMPLATE exists
+  [OK] OPERATOR_SESSION_PROMPT exists
+  [OK] START_HERE exists
+  [OK] SYSTEM_MAP exists
+
+Checking 01_RUNBOOKS files...
+  [OK] ALLOWED_PATHS exists
+  [OK] EMERGENCY_RESET exists
+  [OK] OPERATOR_RULES exists
+  [OK] PUBLISH_PROCESS exists
+  [OK] SESSION_END exists
+  [OK] SESSION_START exists
+
+========== VERIFICATION SUMMARY ==========
+Total Files Checked: 11
+Tampering Detected: 11
+
+[FAIL] Hash integrity compromised
+Missing files indicate tampering

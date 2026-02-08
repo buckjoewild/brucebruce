@@ -1,0 +1,256 @@
+{
+  "system": {
+    "name": "Bruce™",
+    "version": "1.0.0",
+    "description": "Bruce Harris Personal Operating System - AI Companion",
+    "author": "OpenClaw AI",
+    "created": "2026-02-03",
+    "mode": "production"
+  },
+  "paths": {
+    "home": "C:\\Users\\wilds\\harriswildlands.com",
+    "scripts": "C:\\Users\\wilds\\harriswildlands.com\\bruce-scripts",
+    "logs": "C:\\Users\\wilds\\harriswildlands.com\\logs",
+    "pids": "C:\\Users\\wilds\\harriswildlands.com\\pids",
+    "backups": "C:\\Users\\wilds\\backups\\bruce",
+    "bruceops": "C:\\Users\\wilds\\harriswildlands.com\\structure\\harriswildlands",
+    "mud": "C:\\Users\\wilds\\harriswildlands.com\\structure\\mud-server",
+    "openclaw": "C:\\Users\\wilds\\harriswildlands.com\\structure\\integrations\\openclaw"
+  },
+  "services": {
+    "bruceops": {
+      "enabled": true,
+      "name": "BruceOps Core",
+      "port": 5000,
+      "command": "npm run dev",
+      "working_dir": "C:\\Users\\wilds\\harriswildlands.com\\structure\\harriswildlands",
+      "log_file": "bruceops.log",
+      "auto_restart": true,
+      "restart_attempts": 3,
+      "depends_on": ["postgres"],
+      "health_endpoint": "/api/health",
+      "health_timeout": 10,
+      "priority": 1
+    },
+    "postgres": {
+      "enabled": true,
+      "name": "PostgreSQL",
+      "port": 5432,
+      "type": "docker",
+      "container_name": "bruce-postgres",
+      "auto_restart": true,
+      "health_command": "pg_isready -U postgres",
+      "priority": 0
+    },
+    "mud": {
+      "enabled": true,
+      "name": "MUD Server",
+      "port": 4008,
+      "command": "python src/server.py",
+      "working_dir": "C:\\Users\\wilds\\harriswildlands.com\\structure\\mud-server",
+      "log_file": "mud.log",
+      "auto_restart": true,
+      "restart_attempts": 3,
+      "depends_on": [],
+      "health_type": "tcp",
+      "priority": 2
+    },
+    "openclaw": {
+      "enabled": true,
+      "name": "OpenClaw Gateway",
+      "port": 18789,
+      "command": "openclaw gateway",
+      "log_file": "openclaw.log",
+      "auto_restart": true,
+      "restart_attempts": 3,
+      "depends_on": ["bruceops"],
+      "health_endpoint": "/",
+      "health_timeout": 10,
+      "priority": 3
+    },
+    "mud-agent": {
+      "enabled": true,
+      "name": "MUD World Builder Agent",
+      "type": "script",
+      "script": "C:\\Users\\wilds\\harriswildlands.com\\bruce-scripts\\bruce-mud-agent.bat",
+      "log_file": "mud-agent.log",
+      "auto_restart": true,
+      "restart_attempts": 3,
+      "depends_on": ["mud"],
+      "focus": "world-building",
+      "priority": 4
+    }
+  },
+  "monitoring": {
+    "enabled": true,
+    "mode": "balanced",
+    "interval": 30,
+    "health_check_timeout": 10,
+    "max_restart_attempts": 3,
+    "circuit_breaker": {
+      "enabled": true,
+      "failure_threshold": 5,
+      "failure_window": 60,
+      "timeout": 30
+    },
+    "preventative_maintenance": {
+      "enabled": true,
+      "disk_threshold": 90,
+      "memory_threshold": 85,
+      "cpu_threshold": 80,
+      "log_rotation_size": 52428800,
+      "log_retention_days": 7
+    }
+  },
+  "backup": {
+    "enabled": true,
+    "mode": "local",
+    "schedule": "0 3 * * *",
+    "retention_days": 30,
+    "compression": true,
+    "cloud_sync": false,
+    "sources": [
+      "database",
+      "config",
+      "logs",
+      "user_data"
+    ]
+  },
+  "notifications": {
+    "enabled": true,
+    "channels": {
+      "discord": {
+        "enabled": true,
+        "webhook_url": "",
+        "levels": ["info", "warning", "critical"],
+        "events": [
+          "startup",
+          "shutdown",
+          "service_restart",
+          "health_warning",
+          "health_critical",
+          "backup_complete"
+        ]
+      },
+      "email": {
+        "enabled": false,
+        "smtp_server": "",
+        "smtp_port": 587,
+        "username": "",
+        "password": "",
+        "from": "bruce@harriswildlands.com",
+        "to": "",
+        "levels": ["warning", "critical"]
+      }
+    }
+  },
+  "ai": {
+    "provider": "openai-codex",
+    "model": "gpt-5.2-codex",
+    "fallback": "openrouter/auto",
+    "temperature": 0.7,
+    "max_tokens": 4096
+  },
+  "mud_agent": {
+    "enabled": true,
+    "name": "BruceMUD_WorldBuilder",
+    "server": "ws://localhost:4008",
+    "behaviors": {
+      "world_building": {
+        "priority": "high",
+        "probability": 0.50,
+        "actions": [
+          "create_room",
+          "add_item",
+          "spawn_npc",
+          "set_weather",
+          "create_flora",
+          "create_fauna"
+        ]
+      },
+      "exploration": {
+        "priority": "medium",
+        "probability": 0.20,
+        "actions": [
+          "explore_new_areas",
+          "map_rooms",
+          "discover_exits"
+        ]
+      },
+      "content_creation": {
+        "priority": "medium",
+        "probability": 0.15,
+        "actions": [
+          "write_room_descriptions",
+          "create_item_lore",
+          "npc_dialogue"
+        ]
+      },
+      "social": {
+        "priority": "low",
+        "probability": 0.10,
+        "actions": [
+          "interact_with_players",
+          "respond_to_chat"
+        ]
+      },
+      "rest": {
+        "priority": "low",
+        "probability": 0.05,
+        "actions": [
+          "idle",
+          "sleep"
+        ]
+      }
+    },
+    "auto_connect": true,
+    "reconnect_attempts": 5,
+    "reconnect_delay": 10
+  },
+  "windows_services": {
+    "enabled": true,
+    "services": [
+      {
+        "name": "BruceOps",
+        "display_name": "BruceOps - Personal OS",
+        "description": "Bruce Harris Personal Operating System",
+        "auto_start": true,
+        "restart_on_failure": true,
+        "max_restarts": 3
+      },
+      {
+        "name": "BruceMUD",
+        "display_name": "Bruce MUD Server",
+        "description": "Multi-User Dungeon Game Server",
+        "auto_start": true,
+        "restart_on_failure": true,
+        "max_restarts": 3
+      },
+      {
+        "name": "BruceClaw",
+        "display_name": "Bruce OpenClaw Gateway",
+        "description": "AI Agent Gateway and Discord Bot",
+        "auto_start": true,
+        "restart_on_failure": true,
+        "max_restarts": 3,
+        "depends_on": ["BruceOps"]
+      },
+      {
+        "name": "BruceMonitor",
+        "display_name": "Bruce Health Monitor",
+        "description": "Self-healing health monitoring service",
+        "auto_start": true,
+        "restart_on_failure": true
+      }
+    ]
+  },
+  "features": {
+    "auto_start": true,
+    "auto_heal": true,
+    "circuit_breaker": true,
+    "preventative_maintenance": true,
+    "log_rotation": true,
+    "backup_automation": true,
+    "update_prompts": true
+  }
+}

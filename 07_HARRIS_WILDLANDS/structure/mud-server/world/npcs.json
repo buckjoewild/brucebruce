@@ -1,0 +1,32 @@
+{
+  "npcs": [
+    {
+      "id": "elder_willow",
+      "name": "Elder Willow",
+      "description": "An ancient mystic who tends the forest",
+      "type": "mystic",
+      "room_id": "spawn"
+    },
+    {
+      "id": "ranger_jeb",
+      "name": "Ranger Jeb",
+      "description": "A steady-eyed ranger who guards the homestead gate",
+      "type": "ranger",
+      "room_id": "hw_gate"
+    },
+    {
+      "id": "mama_harris",
+      "name": "Mama Harris",
+      "description": "Warm and watchful, she keeps the lodge running smooth",
+      "type": "caretaker",
+      "room_id": "hw_lodge"
+    },
+    {
+      "id": "rue_gardener",
+      "name": "Rue the Gardener",
+      "description": "Quiet and focused, Rue tends the garden rows",
+      "type": "gardener",
+      "room_id": "hw_garden"
+    }
+  ]
+}

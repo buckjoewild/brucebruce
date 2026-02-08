@@ -1,0 +1,67 @@
+You built my website and it runs correctly in Replit. Now I need a standalone, portable version I can run outside Replit (locally and on another host) with the SAME behavior.
+
+Create a single “Keystone Standalone Document” (in Markdown) that includes:
+
+1) App Identity
+- App name, purpose, main features
+- Current runtime stack (frontend framework, backend framework, database, auth, storage)
+- Exact versions (Node/Python/etc) and package managers used
+
+2) Project Inventory (What files are required?)
+- Print the full directory tree
+- Identify the “must have” files/folders to run the app
+- Identify optional/dev-only files
+- List all environment variables required (names, descriptions, examples)
+- List all secrets and where they are expected to be injected (DO NOT print real secret values)
+
+3) How to Run Standalone (Local)
+- Step-by-step instructions from a blank machine:
+  a) prerequisites (Node/Python/Docker/etc)
+  b) install commands
+  c) database setup/migrations/seed steps
+  d) how to create the .env file
+  e) how to start in dev mode
+  f) how to build and start in production mode
+- Include exact commands that work for THIS project
+
+4) How to Deploy Standalone (Non-Replit)
+Provide two deployment paths:
+- Option A: Docker (preferred)
+  - create Dockerfile(s) and docker-compose.yml if needed
+  - include volumes, ports, env var injection, database container if used
+- Option B: Traditional host (VM/VPS)
+  - Nginx reverse proxy example config if applicable
+  - systemd service file example if applicable
+  - how to set env vars securely
+
+5) Data & External Services
+- What database is used (SQLite/Postgres/etc), where the DB file lives or connection string format
+- Any external providers (auth, email, storage, OpenRouter/OpenAI, etc)
+- How to swap providers safely
+
+6) Build Artifacts / Export Package
+- Tell me exactly what to download/export from this Replit project so I can run it elsewhere.
+- If there are build outputs (dist/, build/, .next/, etc) explain when they are generated and whether they should be included or rebuilt.
+
+7) “Parity Checklist”
+- A checklist to verify the standalone build matches the Replit version:
+  - routes work
+  - login works
+  - database persists
+  - PDF export works (if included)
+  - no missing env vars
+
+DELIVERABLES:
+A) Provide the Keystone Standalone Document as a single Markdown file named:
+   harriswildlands-standalone-keystone.md
+
+B) Create or update these files in the repo if missing:
+- README.md (short)
+- .env.example
+- Dockerfile (or Dockerfile(s))
+- docker-compose.yml (if needed)
+
+Important constraints:
+- Do not hand-wave. If you don’t know something, inspect the existing project files and config and then answer.
+- Keep the instructions accurate to THIS repo structure.
+- Never include real secret values in outputs.

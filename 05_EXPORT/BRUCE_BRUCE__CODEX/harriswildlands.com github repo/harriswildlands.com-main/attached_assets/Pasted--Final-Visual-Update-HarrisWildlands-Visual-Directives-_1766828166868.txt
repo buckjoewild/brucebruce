@@ -1,0 +1,96 @@
+✅ Final Visual Update: HarrisWildlands Visual Directives (2025)
+
+Here’s our polish pass — clarified for current system state and final build.
+
+🎨 COLOR PALETTE
+✅ Keep current core logic:
+
+Cyan (Core/Operations)
+
+Amber (LifeOps/Roots)
+
+Violet (ThinkOps/Canopy)
+
+Refinement:
+
+Use muted, earth-integrated variants — no neons
+
+Add supporting tones: moss green, bark brown, off-white paper, silver-gray
+
+Core/Console areas can include silver-glyph detailing for subtle sophistication
+
+🎞️ ANIMATIONS
+Minimal but meaningful. We want classy, system-aligned movement, not spectacle.
+
+✅ Include:
+
+Hover pulses (sap logic, node glow)
+
+Page transitions that feel like flowing across layers (e.g. root to canopy)
+
+Single standout motion element on BruceOps (e.g. glowing “Enter the Wildlands” button with soft data-thread animation)
+
+🚫 Avoid:
+
+Bouncing, zoom-ins, floating cards, or any attention-seeking UI animations
+
+Use animation to reinforce structure, not just aesthetics.
+
+🖼️ IMAGERY
+Yes — images are pre-generated and mapped:
+
+BruceOps: Forest-root gateway (already themed)
+
+Core: Trunk merged here — use “trunk + console” image
+
+LifeOps: Use Root visuals (underground, sensors, grounding)
+
+ThinkOps: Use Canopy visuals (hypotheses, field labs, complexity)
+
+Visual treatment:
+
+Use subtle overlays, parallax, or slice-based crops for responsiveness
+
+Make sure images still breathe — no harsh masks or hard cutouts
+
+🌐 PRIORITY PAGES
+Most in need of polish:
+
+BruceOps: Make this feel like a true living entry point
+
+One or two standout effects only
+
+Maybe a subtle portal pulse at the root or data-thread animation
+
+ThinkOps: Visuals are strong — could use overlay scaffolding to guide thought process or track interaction
+
+Console/Core: Feels solid — just lightly enhance with thematic textures (resin, fiber grid)
+
+💻 CONSOLE AESTHETIC (Core)
+✅ Keep MS-DOS foundation, but allow for gentle modern infusion:
+
+Embedded textures (bark lines, glyph grids, sapflow outlines)
+
+Slight animation of active terminal lines or command flashes
+
+Keep UI text aligned left, monospace, systemic
+
+The console is a living root terminal, not a retro novelty.
+
+🌗 DARK / LIGHT MODE
+
+Dark mode is primary.
+
+Light mode can exist as a passive mirror, with calm parchment tones
+
+Avoid stark contrast — aim for natural light, not white
+
+🧭 FINAL NOTES
+
+Every element should grow from the system, not float on top
+
+A single moment of surprise per page is more powerful than a dozen animations
+
+This isn’t sci-fi flash — it’s calm intelligence grown in soil and stewardship
+
+Let’s finish this system like we started it — with clarity, density, and love. 🌲🤝

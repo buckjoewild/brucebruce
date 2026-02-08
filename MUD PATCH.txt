@@ -1,0 +1,14 @@
+Implement MUD wiring now.
+In C:\GRAVITY\HW_ENV\repo\structure\01_MUD_SERVER_CODE\ locate the telnet server command handler (process_command or equivalent).
+Add a command: dev buildstub that:
+
+requires armed+consent from the existing mode state (use per-player state if present)
+
+calls orchestrator.build_loop.run_build(...) (or the equivalent function already written)
+
+uses the codex_adapter stub (no real Codex yet)
+
+writes one event line to structure/evidence/event_log.jsonl with durable:false
+
+consumes the build cycle (snap back to PLAN) so the next dev buildstub is blocked until re-armed
+Provide: (a) diff, (b) exact telnet manual test steps + expected output.

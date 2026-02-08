@@ -1,0 +1,152 @@
+You're almost there — and what you’ve built visually is next-level. Let’s **lock this into a tight, dev-ready Replit prompt** that:
+
+* Anchors all visuals properly
+* Keeps the site light and performant
+* Makes the design usable and responsive
+* Instructs the agent with clarity and flexibility
+
+---
+
+## ✅ REPLIT AGENT INTEGRATION PROMPT
+
+(Replace your current one with this full version 👇)
+
+---
+
+### 🌲 HarrisWildlands Visual Front-End Build — Prompt for Replit Agent
+
+**Let’s build a lightweight, visually immersive, and highly usable front-end experience for [harriswildlands.com](http://harriswildlands.com).**
+
+#### ✅ PROJECT OVERVIEW:
+
+HarrisWildlands is a digital stewardship platform. Its aesthetic and structure are **rooted in forest systems, biological intelligence, and visual clarity**. The experience should feel like walking through a living, data-integrated forest.
+
+---
+
+### 🖼️ ASSET DELIVERY (Images Attached)
+
+You will receive **12 full-resolution UI art images**, each ~1024x1792 (portrait), optimized for:
+
+* Scrollable sections
+* Background layers
+* Thematic transitions
+* Embedded UI components
+
+🗂️ Save in `/assets/img/` as:
+
+```
+root-system-v1.webp
+root-system-v2.webp
+trunk-system-v1.webp
+trunk-system-v2.webp
+canopy-v1.webp
+canopy-v2.webp
+lifeops-dashboard-v1.webp
+lifeops-dashboard-v2.webp
+login-portal-v1.webp
+login-portal-v2.webp
+lab-viz-v1.webp
+lab-viz-v2.webp
+```
+
+🛠 **To optimize**:
+
+* Convert PNG → **`.webp`**
+* Lazy load below the fold
+* Avoid CSS filters; use native hues
+* Use responsive `srcset` for scaling
+
+---
+
+### 🧭 PAGE STRUCTURE
+
+| Page                | Visual Base                     | Notes                                 |
+| ------------------- | ------------------------------- | ------------------------------------- |
+| `/` (Landing)       | `trunk-system-v1` + `canopy-v1` | Stack or scroll transition            |
+| `/login`            | `root-system-v2`                | Embed login panel into root system    |
+| `/console`          | `lifeops-dashboard-v2`          | Feels like a tree ring command center |
+| `/lab`              | `lab-viz-v2`                    | Field station and data overlay        |
+| `/map` *(optional)* | `canopy-v2` + `login-portal-v1` | World map or networked root nodes     |
+
+---
+
+### 🎨 VISUAL SYSTEM RULES
+
+✅ Use image **as system architecture**, not decoration
+✅ Avoid flat UI/UX styles
+✅ Match UI to the image (bark panels, root inputs, resin-glass modals)
+✅ UI elements **embed** into shapes and layers, not float in boxes
+✅ Typography = scientific field notes, not startup glossy
+✅ No dark mode — use soft light, natural tints only
+
+---
+
+### 🧩 UI ELEMENTS TO BUILD
+
+1. **Login Panel** (in root)
+
+   * Fields: Email, Key, "Link to Root"
+   * Style: Glowing bark-inset
+   * Position: Lower third of `root-system-v2.webp`
+
+2. **Trunk Console**
+
+   * Tabs: `Systems Map`, `Protocols`, `Logs`, `Loops`
+   * Embed UI in trunk ring or data lines
+   * Visuals animate subtly (e.g. sap flow)
+
+3. **Sensor Dashboard Overlay**
+
+   * Use `lab-viz-v1.webp`
+   * Hoverable tooltips, micrographs, data pulses
+   * Panel asks: “What are we testing today?”
+
+4. **LifeOps Dashboard**
+
+   * Use `lifeops-dashboard-v2.webp`
+   * Time cycles, charts, logs visualized in tree ring format
+   * Use radial graphs + flowing inputs
+
+---
+
+### ⚙️ TECHNICAL HINTS
+
+* Use `.ts` (TypeScript) for all interactive logic
+* You can mock sensor data for now (`data/seed.json`)
+* Use `css clip-path` or SVG masks for curved UI panels
+* Avoid generic frameworks — use **Tailwind with heavy theming** if needed
+* Animate microinteractions with CSS (ripples, pulses, sap drips)
+
+---
+
+### ✅ GOAL
+
+Build a **fully integrated, responsive UI** that looks and feels like a forest-embedded system — light enough to load fast, but **deep enough to feel sacred**.
+
+All visual interactions should emerge from the world, not interrupt it.
+
+Let the user feel they are not clicking through a site — but **stepping into a steward’s system**.
+
+---
+
+### 🤖 NEED HELP?
+
+If you're unsure how to extract a UI from a given visual:
+Ask ChatGPT with:
+
+> "Continue HarrisWildlands UI system from image X. Match overlay style and rules. Use biological embedding, not abstract UI."
+
+---
+
+Let’s make this **lightweight**, **magical**, and **usable across all devices** — without compromising beauty, structure, or the principles of ecological intelligence.
+
+---
+
+Let me know when you're ready for:
+
+* [ ] Starter `.ts` and `.css` files
+* [ ] Iconography in SVG
+* [ ] Font pairing based on scientific notes + botanical style
+* [ ] Component library in Figma-style structure
+
+This is the tree of systems. Let's build it right 🌱

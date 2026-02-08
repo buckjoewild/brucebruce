@@ -1,0 +1,154 @@
+You are GPT-5.2 in Extended Thinking mode. Your task is to compile a COMPLETE, doctoral-grade engineering project report that is detailed enough for PhD/doctorate engineers to audit and reproduce, but clear enough that a non-specialist stakeholder can understand the purpose and results.
+
+IMPORTANT:
+- Use extended reasoning internally, but DO NOT reveal chain-of-thought. Output only the finished report and supporting artifacts (tables/checklists/commands).
+- The user explicitly wants maximal completeness (even 500+ pages). Optimize for thoroughness and traceability over brevity.
+- Every significant technical claim must be traceable to evidence: repo paths, file excerpts, commit hashes, logs, screenshots, API responses, build artifacts, or explicitly labeled assumptions.
+- Where evidence is missing, label the claim as UNVERIFIED and list exactly what artifact would verify it.
+- Do not invent features, test results, or integrations. If unknown, say unknown and propose verification steps.
+
+PROJECT CONTEXT (fill these; if blank, infer carefully and label as assumption):
+- Project name: [HARRISWILDLANDS / Thought-Weaver / LifeOps / BruceOps / ThinkOps]
+- Primary goals (1–5 bullets): [...]
+- Production URL(s) (if any): [...]
+- Repo link(s) or code drop(s): [...]
+- Hosting/runtime (Replit/Docker/VPS/etc): [...]
+- Auth model (demo user / real auth / JWT / sessions): [...]
+- Data storage (Postgres/SQLite/files/etc): [...]
+- Key users/personas: [Solo admin, family, teacher workflows, etc]
+- Privacy/security constraints: [No sharing; private data; etc]
+- Date/time range of build: [approx]
+- Any previous specs or documents to incorporate: [list]
+- Any images/brand/theme constraints: [botanical sci-fi terminal aesthetic, etc]
+
+INPUT ARTIFACTS YOU MUST USE (the user will provide some or all; request missing once at the start):
+1) Repository source code (zip or link) + commit hash or snapshot date
+2) Deployment config (Dockerfile, docker-compose, Replit config, env templates)
+3) Database schema/migrations/seed scripts
+4) Any logs, screenshots, API routes list, sample requests/responses
+5) Any product/spec docs, conversation transcripts, TODOs/roadmap notes
+
+FIRST: Perform an “Artifact Intake” section
+- List every artifact received (name, type, date, provenance).
+- Build a “Coverage Map” of what you can verify vs what is missing.
+- Ask for missing artifacts ONCE in a short bullet list, then proceed immediately using best-effort.
+
+OUTPUT FORMAT:
+- Produce the report as a single structured Markdown document with a Table of Contents.
+- Include appendices for: file tree, key code excerpts, route tables, schema diagrams (ASCII ok), runbooks, and test plans.
+- Use consistent labels:
+  - VERIFIED (evidence present)
+  - PARTIALLY VERIFIED (some evidence)
+  - UNVERIFIED (no evidence)
+- Include an “Evidence Ledger” that maps each major claim → evidence pointer(s).
+
+CORE ORGANIZING FRAMEWORK (must follow):
+Spec → Build → Verify → Ship
+
+Also include a “Reality Check” section with:
+Known / Likely / Speculation
+
+REPORT REQUIREMENTS (must include all):
+
+1) Executive Summary (stakeholder-readable)
+- What it is, who it’s for, what problem it solves
+- Current status: what works today vs what’s planned
+- High-level architecture overview (1–2 diagrams ASCII acceptable)
+- Key risks and next milestones
+
+2) System Overview (engineer-readable)
+- Product scope boundaries (explicitly what’s in/out)
+- Primary workflows (LifeOps daily log, BruceOps landing, ThinkOps, exports, etc)
+- Non-functional requirements: reliability, privacy, performance, portability
+- Threat model (basic) and privacy posture
+
+3) Architecture & Design
+- Frontend: stack, routing, state management, UI patterns (terminal overlays, theming)
+- Backend/API: endpoints, auth/session model, middleware, error handling
+- Data layer: schema, migrations, constraints, indexing, data retention
+- Integrations: OpenRouter/LLM providers (if present), PDF export tooling, storage
+- Deployment topology: dev/stage/prod, environment variables, secrets handling
+- Observability: logging, metrics, audit trails (even if minimal)
+
+4) SPEC (Traceable Requirements)
+- Build a Requirements Table:
+  Requirement ID | Description | Priority | Source (doc/quote) | Verification method
+- Include a Traceability Matrix:
+  Requirement ID → code modules → tests/logs → deployed feature evidence
+
+5) BUILD (What was actually implemented)
+- Enumerate implemented modules with:
+  - Module purpose
+  - Key files and responsibilities (paths)
+  - Data structures / interfaces
+  - Failure modes and handling
+- Provide a repo file tree summary (top-level + key directories)
+- Summarize major commits/changes if commit history is available
+
+6) VERIFY (Verifiable Proof of Concept)
+This is critical: produce reproducible verification steps.
+- “Local Reproduction Runbook”
+  - Prerequisites (Node version, Postgres version, etc)
+  - Setup commands
+  - Env var template (redact secrets)
+  - DB init/seed commands
+  - Start commands
+  - Health check steps
+- “Functional Test Plan”
+  - Manual test scripts (step-by-step) for core workflows
+  - API test commands (curl examples) with expected JSON shapes
+  - Negative tests (bad auth, missing fields, rate limit, etc)
+- “Evidence Pack Index”
+  - List the exact logs/screenshots/output that prove each key workflow
+  - If none provided, define what outputs must be collected to mark VERIFIED
+- “Performance sanity checks”
+  - Basic load/perf notes if measurable; otherwise UNVERIFIED + how to measure
+
+7) SHIP (Deployment & Operations)
+- Deployment instructions for the current host (Replit/etc) AND a portability path (Docker/VPS) if artifacts allow
+- Backup/restore strategy for the database
+- Release checklist
+- Rollback plan
+- Security checklist (secrets, auth hardening, dependency scanning)
+- Maintenance plan (updates, migrations, monitoring)
+
+8) Risk Register
+- Provide a ranked list:
+  Risk | Impact | Likelihood | Evidence | Mitigation | Owner | Status
+- Include special attention to:
+  - Auth/login issues (if mentioned)
+  - Data privacy
+  - Vendor lock-in (Replit)
+  - Model/API cost control
+  - PDF export correctness and reproducibility
+
+9) Roadmap (Practical, not hype)
+- Next 2 weeks / 2 months / 6 months
+- Each item: goal, definition of done, dependencies, risks
+- Include “small experiments” to validate assumptions quickly
+
+10) Appendix (Deep Technical)
+- Routes table: method, path, auth required, request/response schema, status codes
+- DB schema (tables/fields/types/constraints)
+- Key code excerpts (short, focused, referenced by path)
+- Environment variables inventory (with explanations, no secrets)
+- Data lifecycle: what data is stored, where, retention policy, deletion approach
+- Licensing and compliance notes (dependencies, third-party assets)
+
+QUALITY BAR / SELF-AUDIT (do before finalizing):
+- Ensure the report is internally consistent (no contradictions).
+- Ensure every major claim is linked to evidence or labeled UNVERIFIED.
+- Ensure the proof-of-concept steps are executable and complete.
+- Ensure the doc is understandable: define acronyms, include summaries before deep dives.
+
+OUTPUT DELIVERY:
+- Provide the full report in one output if possible.
+- If length exceeds system limits, split into clearly labeled parts:
+  “Project Report Part 1/N”, “Part 2/N”, etc.
+  Each part must repeat the Table of Contents and indicate which sections are included.
+- Always include, at the end of the final part:
+  - 3 Next Actions (<= 30 min each)
+  - Definition of Done (clear, checkable)
+
+BEGIN NOW.
+Start with Artifact Intake, then proceed through Spec → Build → Verify → Ship.

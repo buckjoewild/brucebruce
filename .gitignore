@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Logs
+logs/
+**/logs/
+*.log
+**/*.log
+
+# PIDs
+pids/
+**/pids/
+
+# Environment
+.env
+.env.*
+**/.env
+**/.env.*
+.env.local
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+**/.venv/
+
+# Caches & build
+.cache/
+**/.cache/
+.pytest_cache/
+**/.pytest_cache/
+dist/
+build/
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Archives & dumps
+*.zip
+backup_pre_enhancement_*.sql
+
+# Git internals
+**/.git/
+
+# Windows reserved filename
+nul
+
+# Embedded repo (excluded to avoid submodule)
+HW_ENV/repo/structure/
+*.tar.gz
+*.laz

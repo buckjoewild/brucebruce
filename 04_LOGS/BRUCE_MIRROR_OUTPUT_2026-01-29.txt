@@ -1,0 +1,35 @@
+========== BRUCE MIRROR V1 ==========
+Timestamp: Thu 01/29/2026 20:36:28.96
+[INFO] SRC: "C:\Users\wilds\harriswildlands.com\BRUCE_BRUCE"
+[INFO] DST: "C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE"
+[INFO] Mirroring BRUCE_BRUCE to GRAVITY reference...
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Thursday, January 29, 2026 8:36:29 PM
+   Source : C:\Users\wilds\harriswildlands.com\BRUCE_BRUCE\
+     Dest : C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\
+
+    Files : *.*
+	    
+  Options : *.* /NDL /NFL /S /E /DCOPY:DA /COPY:DAT /PURGE /MIR /NP /R:1 /W:1 
+
+------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :      1026       849       177         0         0         0
+   Files :      7074      5855      1219         0         0         0
+   Bytes :   1.017 g  801.64 m  240.05 m         0         0         0
+   Times :   0:00:15   0:00:14                       0:00:00   0:00:01
+
+
+   Speed :            60020035 Bytes/sec.
+   Speed :            3434.373 MegaBytes/min.
+   Ended : Thursday, January 29, 2026 8:36:44 PM
+
+[OK] Mirror complete (robocopy code 1)

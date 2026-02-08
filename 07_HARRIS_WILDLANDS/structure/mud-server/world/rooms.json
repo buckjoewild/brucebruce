@@ -1,0 +1,79 @@
+{
+  "rooms": [
+    {
+      "id": "spawn",
+      "name": "The Clearing",
+      "description": "A mossy clearing surrounded by ancient pines. Sunlight filters through the canopy.",
+      "objects": ["stone altar", "glowing mushrooms"],
+      "exits": {
+        "north": "forest_north",
+        "east": "forest_east",
+        "south": "forest_south",
+        "west": "forest_west"
+      }
+    },
+    {
+      "id": "forest_north",
+      "name": "Whispering Pines",
+      "description": "Tall pine trees whisper secrets in the wind.",
+      "objects": [],
+      "exits": {"south": "spawn"}
+    },
+    {
+      "id": "forest_east",
+      "name": "Misty Ravine",
+      "description": "A narrow ravine shrouded in perpetual mist.",
+      "objects": [],
+      "exits": {"west": "spawn"}
+    },
+    {
+      "id": "forest_south",
+      "name": "Crystal Stream",
+      "description": "A clear stream sparkles with otherworldly light.",
+      "objects": [],
+      "exits": {"north": "spawn"}
+    },
+    {
+      "id": "forest_west",
+      "name": "Ancient Grove",
+      "description": "Ancient oaks older than memory stand in a circle.",
+      "objects": [],
+      "exits": {"east": "spawn", "west": "hw_gate"}
+    },
+    {
+      "id": "hw_gate",
+      "name": "Harris Wildlands Gate",
+      "description": "A cedar gate marks the boundary of the homestead. Lanterns glow warm against the dusk.",
+      "objects": ["carved sign", "iron lantern"],
+      "exits": {"east": "forest_west", "west": "hw_lodge"}
+    },
+    {
+      "id": "hw_lodge",
+      "name": "Harris Lodge",
+      "description": "A sturdy lodge of timber and stone. The hearth crackles with steady heat.",
+      "objects": ["hearth", "workbench", "family table"],
+      "exits": {"east": "hw_gate", "north": "hw_workshop", "south": "hw_garden"}
+    },
+    {
+      "id": "hw_workshop",
+      "name": "Tool & Maker Shop",
+      "description": "Tools hang in careful order. The scent of cedar and steel fills the air.",
+      "objects": ["tool rack", "lathe", "blueprints"],
+      "exits": {"south": "hw_lodge", "west": "hw_ridge"}
+    },
+    {
+      "id": "hw_garden",
+      "name": "Garden Rows",
+      "description": "Neat rows of soil and herbs. Bees drift over lavender and thyme.",
+      "objects": ["watering can", "seed box", "compost pile"],
+      "exits": {"north": "hw_lodge"}
+    },
+    {
+      "id": "hw_ridge",
+      "name": "Ridge Lookout",
+      "description": "A high ridge overlooks the property. The wind carries a promise of rain.",
+      "objects": ["spyglass", "stone marker"],
+      "exits": {"east": "hw_workshop"}
+    }
+  ]
+}

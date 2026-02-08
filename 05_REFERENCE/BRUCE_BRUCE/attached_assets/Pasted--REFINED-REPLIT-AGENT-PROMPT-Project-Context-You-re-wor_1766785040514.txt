@@ -1,0 +1,442 @@
+# REFINED REPLIT AGENT PROMPT
+
+## Project Context
+You're working on **harriswildlands.com** - a React + Express + PostgreSQL web app with 4 modules (BruceOps, LifeOps, ThinkOps, HarrisWildlands). The core workflow is LifeOps daily logging. The app currently runs on Replit with Replit OIDC auth and has demo mode via `?demo=true` / localStorage.
+
+**Stack:**
+- Frontend: React 18 + Vite + TypeScript + Tailwind + shadcn/ui
+- Backend: Express.js + TypeScript (ESM), serves frontend from dist/public
+- DB: PostgreSQL + Drizzle ORM (uses `drizzle-kit push` for schema sync)
+- Auth: Replit OIDC (Replit-only) + Demo Mode bypass
+- AI: OpenRouter API (gpt-4o-mini), with potential Google AI Studio/Gemini
+- Node 20.x
+
+---
+
+## Goal
+Make this app **operationally portable** outside Replit with minimal risk. Create a "Release Pack" that enables one-click export and standalone deployment via Docker.
+
+---
+
+## Phase 1: Portability Deliverables
+
+### 1. Docker Setup (2 containers)
+Create `docker-compose.yml` with:
+- **app** service:
+  - Node 20 image
+  - Runs existing build flow: `npm ci` → `npm run build` → `npm run start`
+  - Serves frontend from `dist/public`
+  - Exposes port from environment variable (default 5000)
+- **db** service:
+  - PostgreSQL 16
+  - Named volume for persistence: `postgres-data`
+  - Internal port 5432
+
+Create `Dockerfile` for app:
+```dockerfile
+FROM node:20
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+CMD ["npm", "run", "start"]
+```
+
+### 2. Environment Configuration
+Create `.env.example` with these variables ONLY:
+```
+DATABASE_URL=postgresql://user:password@db:5432/harriswildlands
+SESSION_SECRET=change-this-to-random-string-in-production
+PORT=
+# Leave PORT blank or set to 5000 (optional; app defaults to 5000 if not set)
+
+# Optional AI keys
+OPENROUTER_API_KEY=
+GOOGLE_GEMINI_API_KEY=
+
+# AI provider: gemini | openrouter | off
+AI_PROVIDER=gemini
+```
+
+**Notes:**
+- Check what PORT your `server/index.ts` actually uses (likely 5000)
+- Document default PORT behavior in comments
+- Use `AI_PROVIDER=gemini` (not "google") for consistency
+
+### 3. Replit OIDC Guards
+**DO NOT remove Replit auth code.** Instead:
+- Wrap Replit OIDC imports/middleware in environment detection
+- If not on Replit AND demo mode is off: log clear message, don't crash
+- Message should say: "Running outside Replit. Use ?demo=true for demo mode or configure alternative auth."
+- Demo mode via `?demo=true` / localStorage remains the PRIMARY control mechanism
+- DO NOT add `DEMO_MODE` env var as replacement
+
+### 4. Health Endpoint
+Create or update `GET /api/health` to return:
+```json
+{
+  "status": "ok",
+  "database": "connected" | "error",
+  "demo_mode": true | false,
+  "ai_provider": "gemini" | "openrouter" | "off",
+  "ai_status": "active" | "degraded" | "offline"
+}
+```
+
+### 5. Data Export Verification
+Verify existing Settings export functionality includes ALL these data types:
+- logs
+- ideas
+- goals
+- checkins
+- teaching_requests
+- harris_content
+- user_settings
+
+If any are missing, add them. Export format: JSON with timestamp in filename.
+
+### 6. Database Persistence
+- Use named Docker volume for PostgreSQL data
+- On container start: run `drizzle-kit push` (NOT migrations—this is schema sync)
+- Document: "Data persists across `docker compose restart` and `docker compose down` + `docker compose up`. Only lost if you run `docker compose down -v` (removes volumes)."
+
+---
+
+## Phase 2: AI Resilience
+
+### 7. Provider Ladder
+In existing AI service code, implement:
+- Check `AI_PROVIDER` env var: `gemini` | `openrouter` | `off`
+- Priority logic:
+  1. If `AI_PROVIDER=gemini` and `GOOGLE_GEMINI_API_KEY` exists → use Gemini
+  2. If that fails or `AI_PROVIDER=openrouter` and `OPENROUTER_API_KEY` exists → use OpenRouter
+  3. If both fail or `AI_PROVIDER=off` → return canned response
+- Log which provider is active on startup
+
+### 8. Graceful Degradation
+- Wrap all AI calls in try-catch
+- On error (429, 403, 5xx, timeout): log error, return fallback response
+- **NEVER throw or crash** on AI failure
+- Daily logging POST must succeed regardless of AI state
+- UI messages:
+  - Success with AI: "✓ Logged successfully. [AI insight shown]"
+  - Success without AI: "✓ Logged successfully. AI insights unavailable."
+  - No keys configured: "AI features disabled. Daily logging works normally."
+
+---
+
+## Phase 3: Release Pack Creation 🔥
+
+### 9. Create `/release` Folder Structure
+```
+/release/
+├── README.md (standalone setup instructions)
+├── .env.example
+├── docker-compose.yml
+├── Dockerfile
+├── STANDALONE_EXPORT_PLAN.md (what's included, how to use)
+├── CHECKLIST.md (acceptance test results)
+├── HOW_TO_DOWNLOAD.md (3 download methods)
+├── docs/
+│   └── ARCHITECTURE.md
+├── harriswildlands-source.zip
+└── harriswildlands-prod-bundle.zip
+```
+
+### 10. Create Two Zip Artifacts
+
+**A) harriswildlands-source.zip**
+- **Include:** All source code, config files, scripts, documentation
+- **Exclude:** `node_modules/`, `.git/`, `dist/`, any `.env` files with secrets, build artifacts
+
+**B) harriswildlands-prod-bundle.zip**
+- **Include ONLY:** Files needed to run in Docker immediately
+  - `dist/` (built frontend + backend)
+  - `docker-compose.yml`
+  - `Dockerfile`
+  - `README.md`
+  - `.env.example`
+  - `package.json` and `package-lock.json`
+- **Exclude:** `node_modules/`, source code, `.git/`, secrets
+
+### 11. Documentation Files
+
+**README.md** (in /release)
+```markdown
+# Harris Wildlands - Standalone Deployment
+
+## Prerequisites
+- Docker & Docker Compose
+- OR Node 20 (for local development)
+
+## Quick Start (Docker)
+1. Copy `.env.example` to `.env`
+2. Edit `.env` with your database credentials and optional API keys
+3. Run: `docker compose up`
+4. Access at `http://localhost:5000` (or your configured PORT)
+5. Demo mode: visit `/?demo=true`
+
+## Local Development
+npm install
+npm run dev
+# Access at http://localhost:5000 (or configured PORT)
+
+## Production Build (without Docker)
+npm install
+npm run build
+npm run start
+
+## Environment Variables
+See `.env.example` for all configuration options.
+Required: DATABASE_URL, SESSION_SECRET
+Optional: AI keys, PORT override
+
+## Demo Mode
+Add `?demo=true` to URL or set in localStorage.
+No authentication required for testing.
+
+## Database
+- Docker: Postgres data persists in named volume
+- Data survives restarts unless you run `docker compose down -v`
+- Schema sync: Uses `drizzle-kit push` (not migrations)
+```
+
+**HOW_TO_DOWNLOAD.md**
+```markdown
+# How to Download This Project
+
+Since direct download from Replit can be unreliable, we've created pre-packaged zip files:
+
+## Method 1: Download Zip from Replit UI (Easiest)
+1. In Replit Files pane, navigate to `/release/`
+2. Right-click on the zip file you want:
+   - `harriswildlands-source.zip` - Full source code for development
+   - `harriswildlands-prod-bundle.zip` - Ready-to-run Docker bundle
+3. Select "Download"
+
+## Method 2: Push to GitHub
+1. Open the Git pane in Replit (left sidebar)
+2. Create a new GitHub repository or connect to existing
+3. Commit all changes
+4. Push to GitHub
+5. Clone from GitHub on your local machine
+
+## Method 3: Shell Command (If Replit Shell Works)
+1. Zips are already created in `/release/`
+2. In Replit Shell, run:
+   ```bash
+   # Verify zips exist
+   ls -lh /release/*.zip
+   
+   # If you have a way to transfer files (scp, cloud storage CLI):
+   # Example: rclone copy /release/*.zip mydrive:backups/
+   ```
+
+## What's in Each Zip?
+
+**harriswildlands-source.zip**: Everything you need to develop
+- Source code (TypeScript, React components)
+- Configuration files
+- Documentation
+- Scripts and tooling
+
+**harriswildlands-prod-bundle.zip**: Everything you need to deploy
+- Pre-built `dist/` folder
+- Docker configuration
+- README and setup docs
+- No source code (smaller file)
+
+## After Download
+1. Extract the zip file
+2. Follow instructions in `README.md`
+3. Run `docker compose up` or set up local development
+```
+
+**STANDALONE_EXPORT_PLAN.md**
+```markdown
+# Standalone Export Plan
+
+## What's Included
+- ✅ Docker Compose setup (app + database)
+- ✅ Environment configuration template
+- ✅ Replit OIDC guards (won't crash outside Replit)
+- ✅ Demo mode preserved (localStorage control)
+- ✅ Health check endpoint
+- ✅ Data export functionality (7 data types)
+- ✅ AI provider ladder (Gemini → OpenRouter → Off)
+- ✅ Graceful AI failure handling
+- ✅ Complete documentation
+
+## What's NOT Included
+- ❌ Replit-specific auth (guarded, not removed)
+- ❌ Production auth system (use demo mode or add Auth.js later)
+- ❌ Filled `.env` file (you must configure)
+
+## How to Use This Export
+1. Extract zip to your machine
+2. Copy `.env.example` to `.env` and configure
+3. Run `docker compose up`
+4. Access app at configured PORT
+5. Use `?demo=true` for testing without auth
+
+## Next Steps (After Export)
+- [ ] Test all 4 modules in demo mode
+- [ ] Configure AI keys and test provider fallback
+- [ ] Set up production auth (Auth.js recommended)
+- [ ] Deploy to your hosting platform
+- [ ] Set up backups for database volume
+```
+
+**CHECKLIST.md**
+```markdown
+# Acceptance Test Results
+
+## Test Run: [Agent fills timestamp]
+
+| Test | Command | Expected Result | Actual Result | Status |
+|------|---------|-----------------|---------------|--------|
+| Local dev works | `npm run dev` | Server starts, accessible at PORT | [Agent fills] | ✅/❌ |
+| Production build works | `npm run build && npm run start` | Built app serves correctly | [Agent fills] | ✅/❌ |
+| Docker cold start | `docker compose up` (fresh checkout) | Both containers start, app accessible | [Agent fills] | ✅/❌ |
+| Database persists | Create LifeOps log → `docker compose restart` → verify log exists | Log survives restart | [Agent fills] | ✅/❌ |
+| Demo mode works | Visit `/?demo=true` | Shows demo data in LifeOps | [Agent fills] | ✅/❌ |
+| Missing AI keys safe | Start without `OPENROUTER_API_KEY` or `GOOGLE_GEMINI_API_KEY` | App loads, logging works, AI shows "unavailable" | [Agent fills] | ✅/❌ |
+| Health endpoint | `curl http://localhost:PORT/api/health` | Returns JSON with all status fields | [Agent fills] | ✅/❌ |
+| Data export complete | Settings → Export Data → Download | JSON includes all 7 data types | [Agent fills] | ✅/❌ |
+| No crash outside Replit | Run without Replit env vars | Logs message about demo mode, doesn't crash | [Agent fills] | ✅/❌ |
+
+## Notes
+[Agent documents any issues, workarounds, or important observations]
+
+## Database Schema Sync
+- Uses: `drizzle-kit push` (not migrations)
+- Runs on: Container startup
+- Purpose: Sync schema to match code definitions
+```
+
+**docs/ARCHITECTURE.md**
+```markdown
+# System Architecture
+
+## Container Structure
+```
+┌─────────────────────────────────────┐
+│   App Container (Node 20)           │
+│   ┌─────────────┐   ┌────────────┐  │
+│   │  Frontend   │   │  Express   │  │
+│   │  (React)    │◄──┤  API       │  │
+│   │  dist/public│   │  dist/     │  │
+│   └─────────────┘   └──────┬─────┘  │
+└─────────────────────────────┼────────┘
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │  DB Container    │
+                    │  (PostgreSQL 16) │
+                    │  Volume: persist │
+                    └──────────────────┘
+```
+
+## Request Flow
+1. Browser → `http://localhost:5000` (or configured PORT)
+2. App container serves React frontend from `dist/public`
+3. Frontend API calls → Express routes in same container
+4. Express → PostgreSQL in db container
+5. Response back through chain
+
+## Daily Log Workflow
+```
+User fills form → POST /api/logs → Validate → Save to DB
+                                            ↓
+                                    Try AI analysis (optional)
+                                            ↓
+                                    Return success (AI failure ignored)
+```
+
+## Demo Mode
+- **Trigger**: `?demo=true` in URL OR `localStorage.demo = 'true'`
+- **Behavior**: Bypasses auth, returns mock data
+- **Scope**: Works in all 4 modules
+- **Storage**: Browser localStorage (not server-side)
+
+## AI Integration
+- **Providers**: Gemini (free tier) → OpenRouter (paid) → Off (canned responses)
+- **Configuration**: `AI_PROVIDER` env var + API keys
+- **Failure handling**: Never blocks core workflows (logging always succeeds)
+- **Status check**: `/api/health` shows current AI state
+
+## Database
+- **Engine**: PostgreSQL 16
+- **ORM**: Drizzle
+- **Schema sync**: `drizzle-kit push` (not traditional migrations)
+- **Persistence**: Named Docker volume (survives restarts)
+- **Data export**: JSON format, 7 data types, triggered from Settings UI
+
+## Authentication States
+1. **On Replit**: Replit OIDC works normally
+2. **Outside Replit + Demo mode**: Mock auth, demo data
+3. **Outside Replit + No demo**: Shows message to enable demo mode
+4. **Future**: Can add Auth.js or similar (not in this release)
+
+## Port Configuration
+- **Default**: 5000 (check your `server/index.ts`)
+- **Override**: Set `PORT` env var
+- **Docker**: Exposes configured port, maps to host
+
+## Build Process
+1. `npm ci` - Install dependencies
+2. `npm run build` - Vite builds React → `dist/public`, TypeScript compiles → `dist/`
+3. `npm run start` - Runs `node dist/index.cjs` (Express serves frontend + API)
+```
+
+---
+
+## Critical Constraints
+
+### ❌ DO NOT DO
+- Change database schema (unless a test absolutely requires it)
+- Remove Replit OIDC code (guard it instead)
+- Replace demo mode localStorage control with env var
+- Invent new npm scripts (use existing ones from package.json)
+- Create traditional migrations (use `drizzle-kit push`)
+- Add a separate frontend container (serve from app container)
+
+### ✅ DO THIS
+- Use existing build scripts: `npm run build`, `npm run start`, `npm run dev`
+- Guard Replit code with environment checks
+- Keep demo mode working exactly as it does now
+- Record all test results in CHECKLIST.md with actual outcomes
+- Create both zip files in `/release/` folder
+- Stop after zips are created and all docs are written
+
+---
+
+## Success Criteria
+
+Your work is complete when:
+1. ✅ `/release/` folder exists with all 11 items listed above
+2. ✅ Both zip files are created and verified (can be extracted)
+3. ✅ All 9 tests in CHECKLIST.md show ✅ with actual results recorded
+4. ✅ `docker compose up` works from fresh checkout (test this yourself)
+5. ✅ Demo mode works outside Replit (verify at `/?demo=true`)
+6. ✅ App doesn't crash when AI keys are missing
+7. ✅ Database persists after `docker compose restart`
+8. ✅ Documentation accurately reflects actual implementation (no assumptions)
+
+---
+
+## Planning Phase Instructions
+
+In your planning phase:
+1. Review the existing codebase to confirm:
+   - Current PORT configuration
+   - Existing npm scripts in package.json
+   - Current AI integration code location
+   - Data export implementation
+   - Demo mode implementation
+2. Create a work checklist that follows this plan sequentially
+3. Flag any assumptions you're making so I can correct them
+4. Estimate which deliverables might require testing/debugging
+
+After planning, I'll confirm and you'll enter build mode.

@@ -1,0 +1,16 @@
+# Allow all crawlers including ChatGPT
+User-agent: *
+Allow: /
+
+# Explicitly allow OpenAI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Sitemap
+Sitemap: https://harriswildlands.com/sitemap.xml

@@ -1,0 +1,760 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "BruceOps API",
+    "version": "1.0.0",
+    "description": "**BruceOps Personal Operating System API**\n\nBruceOps is a comprehensive life management system built for Bruce Harris - a dad, 5th/6th grade teacher, creator, and builder.\n\n## API Domains\n\n### 🎯 LifeOps - Daily Life Management\nTrack daily metrics, goals, and personal well-being with intelligent insights.\n\n### 💡 ThinkOps - Idea Management  \nCapture, develop, and reality-check ideas with AI-powered analysis.\n\n### 📚 Teaching Assistant\nAI-powered lesson planning and teaching resource generation for 5th/6th grade.\n\n### 🎨 HarrisWildlands Content\nContent generation for HarrisWildlands.com website and personal brand.\n\n### 🤖 AI Command Center\nAdvanced AI features including smart search, multi-perspective analysis, and pattern detection.\n\n### 📊 Weekly Review System\nComprehensive weekly reviews with AI-generated insights and export capabilities.\n\n## Authentication\n\nThis API supports dual authentication methods:\n- **Session Authentication** (Web UI): Cookie-based sessions via Replit OIDC or standalone mode\n- **Bearer Token Authentication** (MCP): For Claude Desktop integration and external API access\n\n## Rate Limiting\n\n- General API: 100 requests per 15 minutes\n- AI Endpoints: 10 requests per minute per user  \n- Daily AI Quota: 100 AI calls per user per day\n\n## AI Provider Fallback\n\nThe system automatically falls back between AI providers:\n1. Primary: OpenAI GPT-4o-mini\n2. Fallback: Google Gemini 1.5 Flash  \n3. Final Fallback: OpenRouter (GPT-4o-mini)\n4. Disabled: No AI functionality\n\n---\n\n**Built with ❤️ for intentional living and creation**",
+    "contact": {
+      "name": "Bruce Harris",
+      "email": "bruce@harriswildlands.com",
+      "url": "https://harriswildlands.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://harriswildlands.com",
+      "description": "Production Server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Development Server"
+    }
+  ],
+  "security": [
+    {
+      "sessionAuth": []
+    },
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "sessionAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "connect.sid",
+        "description": "Session-based authentication using cookies (Web UI)"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Bearer token authentication for MCP/Claude Desktop integration"
+      }
+    },
+    "schemas": {
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Validation error message"
+          },
+          "field": {
+            "type": "string",
+            "description": "Field that failed validation"
+          }
+        }
+      },
+      "NotFoundError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Resource not found message"
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Unauthorized access message"
+          }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "standalone_mode": {
+            "type": "boolean"
+          },
+          "database": {
+            "type": "string",
+            "enum": [
+              "connected",
+              "error"
+            ]
+          },
+          "ai_provider": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "gemini",
+              "openrouter",
+              "off"
+            ]
+          },
+          "ai_status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "degraded",
+              "offline"
+            ]
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "claims": {
+            "type": "object",
+            "properties": {
+              "sub": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "DashboardResponse": {
+        "type": "object",
+        "properties": {
+          "logsToday": {
+            "type": "number"
+          },
+          "openLoops": {
+            "type": "number"
+          },
+          "driftFlags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Log": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "energy": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "stress": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "mood": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "focus": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "sleepQuality": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "sleepHours": {
+            "type": "number"
+          },
+          "moneyPressure": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "connection": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "vaping": {
+            "type": "boolean"
+          },
+          "alcohol": {
+            "type": "boolean"
+          },
+          "junkFood": {
+            "type": "boolean"
+          },
+          "doomScrolling": {
+            "type": "boolean"
+          },
+          "lateScreens": {
+            "type": "boolean"
+          },
+          "skippedMeals": {
+            "type": "boolean"
+          },
+          "excessCaffeine": {
+            "type": "boolean"
+          },
+          "exercise": {
+            "type": "boolean"
+          },
+          "dayType": {
+            "type": "string",
+            "enum": [
+              "work",
+              "rest",
+              "family",
+              "mixed",
+              "chaos"
+            ]
+          },
+          "primaryEmotion": {
+            "type": "string"
+          },
+          "winCategory": {
+            "type": "string"
+          },
+          "timeDrain": {
+            "type": "string"
+          },
+          "topWin": {
+            "type": "string"
+          },
+          "topFriction": {
+            "type": "string"
+          },
+          "tomorrowPriority": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Idea": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "pitch": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "captureMode": {
+            "type": "string",
+            "enum": [
+              "quick",
+              "deep"
+            ]
+          },
+          "whoItHelps": {
+            "type": "string"
+          },
+          "painItSolves": {
+            "type": "string"
+          },
+          "whyICare": {
+            "type": "string"
+          },
+          "tinyTest": {
+            "type": "string"
+          },
+          "resourcesNeeded": {
+            "type": "string"
+          },
+          "timeEstimate": {
+            "type": "string"
+          },
+          "excitement": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "feasibility": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "parked",
+              "promoted",
+              "shipped",
+              "discarded"
+            ]
+          },
+          "priority": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "realityCheck": {
+            "type": "object"
+          },
+          "promotedSpec": {
+            "type": "object"
+          },
+          "milestones": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "nextAction": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "System Health Check",
+        "description": "Check the health and status of the BruceOps system",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "System health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                },
+                "example": {
+                  "status": "ok",
+                  "timestamp": "2025-01-31T12:00:00.000Z",
+                  "version": "1.0.0",
+                  "environment": "production",
+                  "standalone_mode": false,
+                  "database": "connected",
+                  "ai_provider": "gemini",
+                  "ai_status": "active"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get Current User",
+        "description": "Get information about the currently authenticated user",
+        "security": [
+          {
+            "sessionAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                },
+                "example": {
+                  "id": "user-123",
+                  "claims": {
+                    "sub": "user-123",
+                    "email": "bruce@example.com",
+                    "name": "Bruce Harris"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Get Dashboard Stats",
+        "description": "Get dashboard statistics including logs today, open loops, and drift flags",
+        "security": [
+          {
+            "sessionAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponse"
+                },
+                "example": {
+                  "logsToday": 1,
+                  "openLoops": 5,
+                  "driftFlags": [
+                    "Sleep consistency < 70%",
+                    "High stress pattern detected"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/logs": {
+      "get": {
+        "tags": [
+          "LifeOps"
+        ],
+        "summary": "List Daily Logs",
+        "description": "Get all daily logs for the current user",
+        "security": [
+          {
+            "sessionAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of daily logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "LifeOps"
+        ],
+        "summary": "Create Daily Log",
+        "description": "Create a new daily log entry with metrics and reflections",
+        "security": [
+          {
+            "sessionAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Log"
+              },
+              "example": {
+                "date": "2025-01-31",
+                "energy": 7,
+                "stress": 4,
+                "mood": 8,
+                "focus": 6,
+                "sleepQuality": 7,
+                "sleepHours": 7,
+                "vaping": false,
+                "alcohol": false,
+                "junkFood": false,
+                "doomScrolling": false,
+                "lateScreens": false,
+                "skippedMeals": false,
+                "excessCaffeine": false,
+                "exercise": true,
+                "dayType": "work",
+                "primaryEmotion": "grateful",
+                "winCategory": "work",
+                "timeDrain": "meetings",
+                "topWin": "Finished lesson plan",
+                "topFriction": "Too many interruptions",
+                "tomorrowPriority": "Grade papers"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Daily log created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Log"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ideas": {
+      "get": {
+        "tags": [
+          "ThinkOps"
+        ],
+        "summary": "List Ideas",
+        "description": "Get all ideas for the current user",
+        "security": [
+          {
+            "sessionAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of ideas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Idea"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ThinkOps"
+        ],
+        "summary": "Create Idea",
+        "description": "Create a new idea entry in the pipeline",
+        "security": [
+          {
+            "sessionAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Idea"
+              },
+              "example": {
+                "title": "Subscription model for teaching resources",
+                "pitch": "Monthly access to printable materials",
+                "category": "business",
+                "captureMode": "quick"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Idea created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Idea"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "System",
+      "description": "System health and utility endpoints"
+    },
+    {
+      "name": "Authentication",
+      "description": "User authentication and session management"
+    },
+    {
+      "name": "Dashboard",
+      "description": "Dashboard and overview endpoints"
+    },
+    {
+      "name": "LifeOps",
+      "description": "Daily life tracking and metrics"
+    },
+    {
+      "name": "ThinkOps",
+      "description": "Idea management and development"
+    },
+    {
+      "name": "Teaching",
+      "description": "AI-powered teaching assistant"
+    },
+    {
+      "name": "AI Command Center",
+      "description": "Advanced AI features and analysis"
+    },
+    {
+      "name": "Weekly Review",
+      "description": "Weekly reviews and insights"
+    }
+  ]
+}

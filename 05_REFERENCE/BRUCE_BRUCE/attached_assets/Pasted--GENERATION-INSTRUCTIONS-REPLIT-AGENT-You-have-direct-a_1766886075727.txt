@@ -1,0 +1,63 @@
+# GENERATION INSTRUCTIONS (REPLIT AGENT)
+
+You have direct access to this codebase. Use it.
+
+1. **Read Every File Directly:** Use your file system access to read every file in the repository. Do not summarize - document completely.
+
+2. **Start with these key files:**
+   - `package.json` (versions, scripts, dependencies)
+   - `shared/schema.ts` (all database tables)
+   - `server/routes.ts` (all API endpoints)
+   - `server/storage.ts` (all database methods)
+   - `server/ai.ts` or equivalent (AI provider logic)
+   - `client/src/App.tsx` (all routes)
+   - `client/src/pages/*` (all page components)
+
+3. **Output Format:** Generate as a comprehensive Markdown document saved to `/docs/TECHNICAL_MANUAL.md`
+
+4. **Work in Volumes:** If output limits are hit, create separate files:
+   - `/docs/manual/VOL1_OVERVIEW.md`
+   - `/docs/manual/VOL2_TECH_STACK.md`
+   - `/docs/manual/VOL3_ARCHITECTURE.md`
+   - ... etc.
+
+5. **Verify as you go:** After documenting each section, cross-reference against actual files.
+
+6. **Commit when complete:** Stage and prepare for commit with message "docs: comprehensive technical manual v1.0"
+```
+
+---
+
+## WHAT TO TELL REPLIT AGENT
+
+**Planning Mode Prompt:**
+```
+I need you to generate a comprehensive technical project manual for this entire codebase. 
+
+This will be the KEYSTONE DOCUMENT - the single source of truth that any developer or AI agent can reference to fully understand, operate, and extend this system.
+
+The attached prompt describes an 18-volume structure covering:
+- Executive overview & project identity
+- Complete technology stack with versions
+- Architecture documentation with diagrams
+- Every file in the repository documented
+- Complete database schema (all tables, all fields)
+- All 24+ API endpoints with request/response schemas
+- AI integration guide with prompts and cost analysis
+- User workflows step-by-step
+- Component and hook reference
+- Configuration reference (all env vars)
+- Deployment guides (Replit, Docker, local)
+- Security audit
+- Extension patterns (how to add pages, tables, endpoints, AI features)
+- Troubleshooting guide
+- Testing procedures
+- Maintenance procedures
+- Future roadmap
+- Appendices with quick references
+
+Read every file in this repository. Document everything. Miss nothing.
+
+Output to /docs/TECHNICAL_MANUAL.md (or split into /docs/manual/ if needed).
+
+Target: 300-500 pages equivalent in detail.

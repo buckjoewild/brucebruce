@@ -1,0 +1,14 @@
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Backup and logs
+backups/
+logs/
+*.zip
+
+# Environment and model files
+*.env
+*.pth
+*.onnx

@@ -1,0 +1,518 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================
+   HARRIS WILDLANDS DESIGN SYSTEM
+   "Botanical science plate meets starship UI"
+   Three themes: FIELD (earthy), LAB (cool), SANCTUARY (warm)
+   ================================================================ */
+
+:root {
+  /* Base obsidian/ink with forest undertones */
+  --background: 200 20% 8%;
+  --foreground: 45 10% 92%;
+
+  --card: 200 15% 12%;
+  --card-foreground: 45 10% 92%;
+
+  --popover: 200 20% 10%;
+  --popover-foreground: 45 10% 92%;
+
+  /* Default theme: LAB (aurora teal) */
+  --primary: 175 70% 45%;
+  --primary-foreground: 200 20% 8%;
+
+  --secondary: 200 15% 18%;
+  --secondary-foreground: 45 10% 85%;
+
+  --muted: 200 12% 20%;
+  --muted-foreground: 200 10% 55%;
+
+  --accent: 270 60% 55%;
+  --accent-foreground: 45 10% 95%;
+
+  --destructive: 0 60% 45%;
+  --destructive-foreground: 45 10% 95%;
+
+  --border: 200 15% 20%;
+  --input: 200 15% 15%;
+  --ring: 175 70% 50%;
+
+  --radius: 0.5rem;
+
+  /* Wildlands accent colors */
+  --aurora-teal: 175 70% 45%;
+  --bio-green: 140 65% 45%;
+  --electric-violet: 270 60% 55%;
+  --antique-gold: 42 70% 55%;
+  --plasma-glow: 175 80% 60%;
+
+  /* Typography */
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+
+  /* Overlay grid (Interface Overlay feature) */
+  --grid-opacity: 0;
+  --grid-color: 175 70% 45%;
+}
+
+/* ================================================================
+   THEME: FIELD (Earthy/Forest, calmer)
+   ================================================================ */
+[data-theme="field"] {
+  --background: 150 15% 8%;
+  --card: 150 12% 12%;
+  --primary: 140 50% 40%;
+  --accent: 95 45% 45%;
+  --ring: 140 50% 45%;
+  --aurora-teal: 140 50% 40%;
+  --bio-green: 120 55% 40%;
+  --plasma-glow: 140 60% 50%;
+  --grid-color: 140 50% 40%;
+}
+
+/* ================================================================
+   THEME: LAB (Cool/Teal, analytical) - Default
+   ================================================================ */
+[data-theme="lab"] {
+  --background: 200 20% 8%;
+  --card: 200 15% 12%;
+  --primary: 175 70% 45%;
+  --accent: 270 60% 55%;
+  --ring: 175 70% 50%;
+  --aurora-teal: 175 70% 45%;
+  --plasma-glow: 175 80% 60%;
+  --grid-color: 175 70% 45%;
+}
+
+/* ================================================================
+   THEME: SANCTUARY (Warm/Gold, reverent)
+   ================================================================ */
+[data-theme="sanctuary"] {
+  --background: 30 15% 8%;
+  --card: 30 12% 12%;
+  --primary: 42 65% 50%;
+  --accent: 20 60% 50%;
+  --ring: 42 65% 55%;
+  --aurora-teal: 42 65% 50%;
+  --bio-green: 50 55% 45%;
+  --plasma-glow: 42 70% 60%;
+  --grid-color: 42 65% 50%;
+}
+
+/* ================================================================
+   BASE STYLES
+   ================================================================ */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply tracking-tight font-bold;
+  }
+
+  /* Serif for principles/scripture-like text */
+  .font-principle {
+    font-family: var(--font-serif);
+    @apply font-medium tracking-wide;
+  }
+}
+
+/* ================================================================
+   UTILITY CLASSES
+   ================================================================ */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Micro-texture grain overlay */
+  .grain-texture {
+    position: relative;
+  }
+  .grain-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Glass card with botanical feel */
+  .glass-card {
+    @apply bg-card/90 backdrop-blur-sm border border-white/5 shadow-xl;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card) / 0.95) 0%,
+      hsl(var(--card) / 0.85) 100%
+    );
+  }
+
+  /* Soft glow on hover */
+  .glow-hover {
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .glow-hover:hover {
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.3),
+                0 0 40px -10px hsl(var(--primary) / 0.15);
+    border-color: hsl(var(--primary) / 0.3);
+  }
+
+  /* Aurora gradient background */
+  .aurora-bg {
+    background: radial-gradient(
+      ellipse 80% 50% at 50% 120%,
+      hsl(var(--primary) / 0.15) 0%,
+      transparent 60%
+    );
+  }
+
+  /* Topographic contour pattern */
+  .topo-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5c13.807 0 25 11.193 25 25S43.807 55 30 55 5 43.807 5 30 16.193 5 30 5zm0 10c-8.284 0-15 6.716-15 15s6.716 15 15 15 15-6.716 15-15-6.716-15-15-15zm0 8c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z' fill='none' stroke='%2340a89a' stroke-width='0.3' opacity='0.1'/%3E%3C/svg%3E");
+  }
+
+  /* Fade in animation */
+  .animate-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  /* Slide up animation */
+  .slide-in-from-bottom-4 {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  /* Subtle pulse for active elements */
+  .pulse-glow {
+    animation: pulseGlow 3s ease-in-out infinite;
+  }
+}
+
+/* ================================================================
+   INTERFACE OVERLAY (Sci-Fi Grid System)
+   Toggle on to show gridlines, coordinates, micro-labels
+   ================================================================ */
+.interface-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--grid-opacity);
+  transition: opacity 0.3s ease;
+}
+
+.interface-overlay.active {
+  --grid-opacity: 1;
+}
+
+/* Grid lines */
+.overlay-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(hsl(var(--grid-color) / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--grid-color) / 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Coordinate ticks on edges */
+.overlay-ticks {
+  position: absolute;
+  inset: 0;
+}
+.overlay-ticks::before,
+.overlay-ticks::after {
+  content: '';
+  position: absolute;
+  background: repeating-linear-gradient(
+    90deg,
+    hsl(var(--grid-color) / 0.15) 0px,
+    hsl(var(--grid-color) / 0.15) 2px,
+    transparent 2px,
+    transparent 60px
+  );
+}
+.overlay-ticks::before {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+.overlay-ticks::after {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: repeating-linear-gradient(
+    180deg,
+    hsl(var(--grid-color) / 0.15) 0px,
+    hsl(var(--grid-color) / 0.15) 2px,
+    transparent 2px,
+    transparent 60px
+  );
+}
+
+/* Micro labels */
+.overlay-label {
+  position: absolute;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: hsl(var(--grid-color) / 0.4);
+  white-space: nowrap;
+}
+.overlay-label-tl { top: 16px; left: 16px; }
+.overlay-label-tr { top: 16px; right: 16px; }
+.overlay-label-bl { bottom: 16px; left: 16px; }
+.overlay-label-br { bottom: 16px; right: 16px; }
+
+/* ================================================================
+   BOTANICAL SVG DECORATIONS
+   ================================================================ */
+.botanical-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  opacity: 0.15;
+  transition: opacity 0.3s ease;
+}
+.botanical-corner svg {
+  width: 100%;
+  height: 100%;
+  stroke: hsl(var(--primary));
+  fill: none;
+  stroke-width: 0.5;
+}
+.botanical-corner-tl { top: 0; left: 0; }
+.botanical-corner-tr { top: 0; right: 0; transform: scaleX(-1); }
+.botanical-corner-bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.botanical-corner-br { bottom: 0; right: 0; transform: scale(-1); }
+
+/* Hover reveals botanical corners */
+.reveal-botanical:hover .botanical-corner {
+  opacity: 0.35;
+}
+
+/* ================================================================
+   KEYFRAME ANIMATIONS
+   ================================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 15px -5px hsl(var(--primary) / 0.3); }
+  50% { box-shadow: 0 0 25px -5px hsl(var(--primary) / 0.5); }
+}
+
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes portalPulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3), 
+                0 0 40px rgba(16, 185, 129, 0.1),
+                inset 0 0 20px rgba(16, 185, 129, 0.05);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.5), 
+                0 0 60px rgba(16, 185, 129, 0.2),
+                inset 0 0 30px rgba(16, 185, 129, 0.1);
+  }
+}
+
+@keyframes sapFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes energyLineH {
+  0% { 
+    opacity: 0.3;
+    transform: scaleX(0.7) translateX(-15%);
+  }
+  50% { 
+    opacity: 0.6;
+    transform: scaleX(1) translateX(0);
+  }
+  100% { 
+    opacity: 0.3;
+    transform: scaleX(0.7) translateX(15%);
+  }
+}
+
+@keyframes energyLineV {
+  0% { 
+    opacity: 0.2;
+    transform: scaleY(0.6) translateY(-20%);
+  }
+  50% { 
+    opacity: 0.5;
+    transform: scaleY(1) translateY(0);
+  }
+  100% { 
+    opacity: 0.2;
+    transform: scaleY(0.6) translateY(20%);
+  }
+}
+
+.energy-line-h {
+  animation: energyLineH 4s ease-in-out infinite;
+}
+
+.energy-line-v {
+  animation: energyLineV 5s ease-in-out infinite;
+}
+
+/* ================================================================
+   SCROLLBAR STYLING
+   ================================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-secondary/60 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/40;
+}
+
+/* ================================================================
+   NAVIGATION HOLO-ATLAS STYLE
+   ================================================================ */
+.holo-nav-item {
+  position: relative;
+  transition: all 0.2s ease;
+}
+.holo-nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 0;
+  background: hsl(var(--primary));
+  transition: height 0.2s ease;
+}
+.holo-nav-item:hover::before,
+.holo-nav-item.active::before {
+  height: 60%;
+}
+.holo-nav-item.active {
+  background: hsl(var(--primary) / 0.1);
+}
+
+/* ================================================================
+   TERMINAL CURSOR BLINK
+   ================================================================ */
+.cursor-blink {
+  animation: cursorBlink 1s step-end infinite;
+}
+
+/* ================================================================
+   PORTAL BUTTON (Enter the Wildlands)
+   ================================================================ */
+.portal-button {
+  position: relative;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: transform 0.2s ease;
+}
+
+.portal-button:hover {
+  transform: scale(1.02);
+}
+
+.portal-button:active {
+  transform: scale(0.98);
+}
+
+.portal-button-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+}
+
+.portal-button-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 6px;
+  animation: portalPulse 3s ease-in-out infinite;
+}
+
+.portal-button:hover .portal-button-bg {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.35) 100%);
+  border-color: rgba(16, 185, 129, 0.6);
+}
+
+/* ================================================================
+   LANE-SPECIFIC TERMINAL PROMPTS
+   ================================================================ */
+.terminal-prompt {
+  font-family: 'Courier New', 'IBM Plex Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+.terminal-prompt-roots {
+  color: rgb(251, 191, 36);
+}
+
+.terminal-prompt-canopy {
+  color: rgb(167, 139, 250);
+}
+
+.terminal-prompt-core {
+  color: rgb(34, 211, 238);
+}
+
+.terminal-prompt-lab {
+  color: rgb(45, 212, 191);
+}
+
+/* ================================================================
+   SAP FLOW DIVIDER
+   ================================================================ */
+.sapflow-divider {
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(16, 185, 129, 0.3) 20%, 
+    rgba(16, 185, 129, 0.6) 50%, 
+    rgba(16, 185, 129, 0.3) 80%, 
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: sapFlow 4s ease-in-out infinite;
+}

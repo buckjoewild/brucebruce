@@ -1,0 +1,1424 @@
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Thursday, January 29, 2026 10:16:39 PM
+   Source : C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\
+     Dest : C:\GRAVITY\05_EXPORT\BRUCE_BRUCE__CODEX\
+
+    Files : *.*
+	    
+  Options : *.* /S /E /DCOPY:DA /COPY:DAT /PURGE /MIR /R:1 /W:1 
+
+------------------------------------------------------------------------------
+
+	                  24	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\
+	    New File  		   45445	BruceBruce_Project_Closeout.docx 99%  100%  
+	    New File  		   12691	bruceops-ai-leverage.md 99%  100%  
+	    New File  		    8900	bruceops-mcp-server.tar.gz 99%  100%  
+	    New File  		    6214	bruceops-setup-guide.md 99%  100%  
+	    New File  		   20604	bruceops_mcp_server.py100%  
+	    New File  		    4990	BRUCE_START_HERE.md100%  
+	    New File  		   15789	command-center-refinement.md 99%  100%  
+	    New File  		    9991	DELIVERY_SUMMARY.md 99%  100%  
+	    New File  		     282	desktop.ini100%  
+	    New File  		    4083	FINAL_SETUP.md100%  
+	    New File  		   39754	HarrisWildlands_Project_Closeout_v1.docx 99%  100%  
+	    New File  		    5581	MCP_v1_README.md100%  
+	    New File  		    2159	QUICK_REFERENCE.md 96%  100%  
+	    New File  		    4869	README.md 98%  100%  
+	    New File  		   15105	replit-agent-prompt.md 99%  100%  
+	    New File  		 158.7 m	ReplitExport-brosephharris.tar.gz  0.6%  1.2%  1.8%  2.5%  3.1%  3.7%  4.4%  5.0%  5.6%  6.2%  6.9%  7.5%  8.1%  8.8%  9.4% 10.0% 10.7% 11.3% 11.9% 12.5% 13.2% 13.8% 14.4% 15.1% 15.7% 16.3% 17.0% 17.6% 18.2% 18.8% 19.5% 20.1% 20.7% 21.4% 22.0% 22.6% 23.3% 23.9% 24.5% 25.1% 25.8% 26.4% 27.0% 27.7% 28.3% 28.9% 29.6% 30.2% 30.8% 31.4% 32.1% 32.7% 33.3% 34.0% 34.6% 35.2% 35.9% 36.5% 37.1% 37.7% 38.4% 39.0% 39.6% 40.3% 40.9% 41.5% 42.2% 42.8% 43.4% 44.0% 44.7% 45.3% 45.9% 46.6% 47.2% 47.8% 48.5% 49.1% 49.7% 50.3% 51.0% 51.6% 52.2% 52.9% 53.5% 54.1% 54.8% 55.4% 56.0% 56.6% 57.3% 57.9% 58.5% 59.2% 59.8% 60.4% 61.1% 61.7% 62.3% 62.9% 63.6% 64.2% 64.8% 65.5% 66.1% 66.7% 67.4% 68.0% 68.6% 69.2% 69.9% 70.5% 71.1% 71.8% 72.4% 73.0% 73.7% 74.3% 74.9% 75.5% 76.2% 76.8% 77.4% 78.1% 78.7% 79.3% 80.0% 80.6% 81.2% 81.8% 82.5% 83.1% 83.7% 84.4% 85.0% 85.6% 86.3% 86.9% 87.5% 88.1% 88.8% 89.4% 90.0% 90.7% 91.3% 91.9% 92.6% 93.2% 93.8% 94.4% 95.1% 95.7% 96.3% 97.0% 97.6% 98.2% 98.9% 99.5%100%  100%  
+	    New File  		      25	requirements.txt 25%  100%  
+	    New File  		    1434	setup.bat 95%  100%  
+	    New File  		    1441	setup.sh 95%  100%  
+	    New File  		    5346	SETUP_INSTRUCTIONS.md 98%  100%  
+	    New File  		    1835	smoke_test.py100%  
+	    New File  		    4525	TECHNICAL_MANUAL.md 98%  100%  
+	    New File  		   11914	VISUAL_GUIDE.md 99%  100%  
+	    New File  		   14558	wilds-directory-map.md 97%  100%  
+	  New Dir         12	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\CLAUDE\
+	    New File  		   13048	AI_ENDPOINTS_COMPLETE.ts100%  
+	    New File  		    7843	INDEX.md100%  
+	    New File  		    8482	INSTALLATION_GUIDE.md100%  
+	    New File  		   11092	MASTER_REPLIT_PROMPT.md100%  
+	    New File  		    4295	QUICK_START_CHECKLIST.md100%  
+	    New File  		   11235	README.md100%  
+	    New File  		    2696	READ_THIS_FIRST.md100%  
+	    New File  		    8752	REPLIT_AGENT_PROMPT.md100%  
+	    New File  		    5765	REPLIT_MCP_PROMPT.md100%  
+	    New File  		    7299	REPLIT_PASTE_THIS.md100%  
+	    New File  		    9237	START_HERE.md100%  
+	    New File  		   12654	VISUAL_PLACEMENT_GUIDE.md100%  
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\
+	  New Dir         16	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\
+	    New File  		    1544	.env.example 94%  100%  
+	    New File  		      67	.gitignore 42%  100%  
+	    New File  		     898	.replit 90%  100%  
+	    New File  		     459	components.json 83%  100%  
+	    New File  		    4784	design_guidelines.md 98%  100%  
+	    New File  		    1190	docker-compose.yml 92%  100%  
+	    New File  		     138	Dockerfile 60%  100%  
+	    New File  		     325	drizzle.config.ts 77%  100%  
+	    New File  		    7443	HarrisWildlands_UIKit_v1.zip 98%  100%  
+	    New File  		  322839	package-lock.json 40%   81%   99%  100%  
+	    New File  		    3730	package.json 97%  100%  
+	    New File  		      80	postcss.config.js 46%  100%  
+	    New File  		   10310	replit.md 99%  100%  
+	    New File  		    4072	tailwind.config.ts 97%  100%  
+	    New File  		     657	tsconfig.json 87%  100%  
+	    New File  		    1080	vite.config.ts 92%  100%  
+	  New Dir         94	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\attached_assets\
+	    New File  		    9911	AI_COLLABORATION_LOG_1767516216561.md 99%  100%  
+	    New File  		    1084	Automation_251227_085757_1766848136566.txt 92%  100%  
+	    New File  		   10695	bruce-steward-chat_1766852439909.tsx 99%  100%  
+	    New File  		   10719	bruceops-ai-endpoints_1766894549866.ts 99%  100%  
+	    New File  		   12691	bruceops-ai-leverage_1766894549866.md 99%  100%  
+	    New File  		   21874	bruceops-command-center_1766894549866.tsx 99%  100%  
+	    New File  		    2852	bruceops-middleware_1766894549867.ts 96%  100%  
+	    New File  		    9370	bruceops-milestone-checklist_1766876696841.md 99%  100%  
+	    New File  		   3.0 m	bruceops_1766829258081.png 16%   33%   49%   66%   82%   99%   99%  100%  
+	    New File  		   2.4 m	bruceops_core_1766714671490.png 20%   40%   60%   80%   99%  100%  
+	    New File  		  827472	canopy2_1766822928267.webp 31%   63%   95%   99%  100%  
+	    New File  		  827472	canopy2_1766828428461.webp 31%   63%   95%   99%  100%  
+	    New File  		  810708	canopy_1766822928267.webp 32%   64%   96%   99%  100%  
+	    New File  		  810708	canopy_1766828428461.webp 32%   64%   96%   99%  100%  
+	    New File  		     698	Chubs_251227_090154_1766848136566.txt 88%  100%  
+	    New File  		   15789	command-center-refinement_1766894549866.md 99%  100%  
+	    New File  		   15145	cost-monitoring-dashboard_1766894549867.tsx 99%  100%  
+	    New File  		    8095	COST_ANALYSIS_CLAUDE_DESKTOP_1767516216561.md 98%  100%  
+	    New File  		   26486	DUAL_ACCESS_SETUP_1767516216562.md 99%  100%  
+	    New File  		  798610	forest2_1766828428458.webp 32%   65%   98%   99%  100%  
+	    New File  		  579316	forest_1766822928265.webp 45%   90%   99%  100%  
+	    New File  		  579316	forest_1766828428458.webp 45%   90%   99%  100%  
+	    New File  		     905	Free_Bruce_251227_085927_1766848136567.txt 90%  100%  
+	    New File  		   3.0 m	generated-image-2_(2)_1766827325280.png 16%   33%   49%   66%   82%   99%   99%  100%  
+	    New File  		     905	Grok_Bruce_251227_090038_1766848136566.txt 90%  100%  
+	    New File  		  766844	harriswildlands2_1766822928266.webp 34%   68%   99%  100%  
+	    New File  		  766844	harriswildlands2_1766828428460.webp 34%   68%   99%  100%  
+	    New File  		  995332	harriswildlands_1766822928266.webp 26%   52%   79%   99%  100%  
+	    New File  		  995332	harriswildlands_1766828428459.webp 26%   52%   79%   99%  100%  
+	    New File  		   29498	HarrisWildlands_Complete_Technical_Manual_Prompt_(1)_1766886087530.md 99%  100%  
+	    New File  		   2.6 m	harriswildlands_image_core_1766714671488.png 18%   37%   56%   74%   93%   99%  100%  
+	    New File  		   20235	HarrisWildlands_keystone_(1)_1766848136565.docx 99%  100%  
+	    New File  		   17978	IMPLEMENTATION_GUIDE_WEEKEND_1767516216562.md 99%  100%  
+	    New File  		   38522	Lane1_LifeOps_Master_Sheet_1766699317057.docx 99%  100%  
+	    New File  		   38225	Lane2_ThinkOps_Master_Sheet_1766699322758.docx 99%  100%  
+	    New File  		   38091	Lane3_Bruce_Teaching_Assistant_Master_Sheet_1766699327124.docx 99%  100%  
+	    New File  		   37909	Lane4_HarrisWildlands_Master_Sheet_1766699331919.docx 99%  100%  
+	    New File  		   2.4 m	lifeops_core_1766714671490.png 20%   40%   60%   80%   99%  100%  
+	    New File  		   39735	LifeOps_Goal_Tracking_Spec_MVP_to_Pro_1766728216327.docx 99%  100%  
+	    New File  		   11092	MASTER_REPLIT_PROMPT_1767508856134.md 99%  100%  
+	    New File  		   19400	message_treyspeed_1766875994503.txt 99%  100%  
+	    New File  		    3341	Pasted--FINAL-SUMMARY-Ready-for-Replit-Agent-Bruce-I-ve-comple_1766852427316.txt 97%  100%  
+	    New File  		    2698	Pasted--Final-Visual-Update-HarrisWildlands-Visual-Directives-_1766828166868.txt 96%  100%  
+	    New File  		    2452	Pasted--GENERATION-INSTRUCTIONS-REPLIT-AGENT-You-have-direct-a_1766886075727.txt 96%  100%  
+	    New File  		    3158	Pasted--id-thinkops-spiral-agency-date-2025-12-27T01-48-00Z-ti_1766824019847.txt 97%  100%  
+	    New File  		   15655	Pasted--REFINED-REPLIT-AGENT-PROMPT-Project-Context-You-re-wor_1766785040514.txt 99%  100%  
+	    New File  		   15611	Pasted--Replit-Agent-Prompt-BruceOps-AI-Command-Center-OBJECTI_1766894553740.txt 99%  100%  
+	    New File  		    7634	Pasted--REPLIT-AGENT-READY-TO-PASTE-PROMPT-This-is-the-EXACT-p_1767508191190.txt 98%  100%  
+	    New File  		    2128	Pasted--TELL-REPLIT-TO-DO-THIS-Copy-and-paste-this-into-Replit_1767508985553.txt 95%  100%  
+	    New File  		    5576	Pasted-Absolutely-here-is-your-final-refined-asset-integration_1766828149301.txt 98%  100%  
+	    New File  		    5429	Pasted-Absolutely-you-re-building-not-just-a-site-but-a-living_1766801968828.txt 98%  100%  
+	    New File  		    3608	Pasted-Excellent-question-and-you-re-being-smart-about-this-Yo_1766822102626.txt 97%  100%  
+	    New File  		    3420	Pasted-export-interface-ThinkOpsNode-id-string-date-string-tit_1766824031517.txt 97%  100%  
+	    New File  		   10550	Pasted-Good-catch-by-Replit-Agent-Let-me-refine-the-plan-to-wo_1766852697247.txt 99%  100%  
+	    New File  		    7835	Pasted-Got-it-here-s-the-refined-ThinkOps-spec-with-your-Trigg_1767484220151.txt 98%  100%  
+	    New File  		    8305	Pasted-I-ll-help-you-explore-what-we-can-use-to-upgrade-harris_1767511402838.txt 98%  100%  
+	    New File  		    6140	Pasted-Perfect-this-response-from-Replit-is-on-point-and-shows_1766823080631.txt 98%  100%  
+	    New File  		    3909	Pasted-SYSTEM-You-are-the-HarrisWildlands-Finalization-Council_1766835951270.txt 97%  100%  
+	    New File  		    2331	Pasted-This-is-an-excellent-Phase-1-report-from-Replit-Let-me-_1766877453965.txt 96%  100%  
+	    New File  		    3006	Pasted-This-is-great-Replit-Agent-understood-the-milestone-str_1766876852062.txt 97%  100%  
+	    New File  		    4513	Pasted-We-are-pivoting-Before-export-we-want-to-maximize-produ_1766768316668.txt 98%  100%  
+	    New File  		    3531	Pasted-You-are-a-senior-full-stack-engineer-building-an-MVP-we_1766699310730.txt 97%  100%  
+	    New File  		    5826	Pasted-You-are-a-senior-product-designer-front-end-engineer-Yo_1766705985525.txt 98%  100%  
+	    New File  		    5489	Pasted-You-are-building-a-production-ready-web-app-called-Life_1766803943850.txt 98%  100%  
+	    New File  		    7841	Pasted-You-are-GPT-5-2-in-Extended-Thinking-mode-Your-task-is-_1766830008355.txt 98%  100%  
+	    New File  		    3156	Pasted-You-are-my-Replit-engineering-agent-Build-a-LifeOps-Goa_1766728204129.txt 97%  100%  
+	    New File  		    2809	Pasted-You-built-my-website-and-it-runs-correctly-in-Replit-No_1766766098795.txt 96%  100%  
+	    New File  		    4887	Pasted-You-re-almost-there-and-what-you-ve-built-visually-is-n_1766822909534.txt 98%  100%  
+	    New File  		    8399	quick-reference-card_1766852439909.md 98%  100%  
+	    New File  		   10300	reality-check-dashboard_1766852439909.tsx 99%  100%  
+	    New File  		   15105	replit-agent-prompt_1766894655431.md 99%  100%  
+	    New File  		   15105	replit-agent-prompt_1767508174838.md 99%  100%  
+	    New File  		   14177	replit-integration-guide_1766852439909.md 99%  100%  
+	    New File  		   25401	REPLIT_AGENT_PROMPT_1767516216562.md 99%  100%  
+	    New File  		  687492	root2_1766822928268.webp 38%   76%   99%  100%  
+	    New File  		  687492	root2_1766828428461.webp 38%   76%   99%  100%  
+	    New File  		  730370	root_1766822928267.webp 35%   71%   99%  100%  
+	    New File  		  730370	root_1766828428461.webp 35%   71%   99%  100%  
+	    New File  		   1.7 m	screenshot-1766896829942.png 14%   28%   42%   57%   71%   85%   99%   99%  100%  
+	    New File  		   2.4 m	shared_system_utilities_image_core_1766714671489.png 20%   40%   60%   81%   99%  100%  
+	    New File  		  862166	systems2_1766822928266.webp 30%   60%   91%   99%  100%  
+	    New File  		  862166	systems2_1766828428459.webp 30%   60%   91%   99%  100%  
+	    New File  		  834062	systems_1766822928265.webp 31%   62%   94%   99%  100%  
+	    New File  		  834062	systems_1766828428458.webp 31%   62%   94%   99%  100%  
+	    New File  		   2.4 m	thinkops_core_1766714671489.png 20%   40%   60%   80%   99%  100%  
+	    New File  		    8318	treyspeedly_1766875994503.txt 98%  100%  
+	    New File  		   34450	treyspeed_1_1766875994502.txt 99%  100%  
+	    New File  		   11789	treyspeed_2_1766875994503.txt 99%  100%  
+	    New File  		    1084	Trey_AI_and_Joe_251227_014941_(1)_1766848136567.txt 92%  100%  
+	    New File  		    7163	Trey_Joe_free_talk_1766848136565.docx 98%  100%  
+	    New File  		  421696	trunk2_1766828428460.webp 31%   62%   93%   99%  100%  
+	    New File  		  451432	trunk_1766822928266.webp 29%   58%   87%   99%  100%  
+	    New File  		  451432	trunk_1766828428460.webp 29%   58%   87%   99%  100%  
+	    New File  		   16171	UPGRADE_ROADMAP_v1.0_1767516216562.md 99%  100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\attached_assets\generated_images\
+	    New File  		  665636	botanical_circuit_corner_decoration.png 39%   78%   99%  100%  
+	    New File  		   2.2 m	botanical_specimen_frame_border.png 22%   44%   66%   88%   99%  100%  
+	    New File  		   2.2 m	harriswildlands_bioluminescent_wild_botanicals.png 21%   43%   65%   87%   99%  100%  
+	    New File  		  893780	lifeops_botanical_neural_morning_glory.png 29%   58%   87%   99%  100%  
+	    New File  		   1.9 m	neural_circuit_organic_pattern_texture.png 12%   25%   38%   51%   63%   76%   89%   99%  100%  
+	    New File  		   2.1 m	teachingassistant_knowledge_tree_constellation.png 22%   45%   68%   91%   99%  100%  
+	    New File  		   1.7 m	thinkops_idea_seedlings_circuit_leaves.png 14%   28%   43%   57%   72%   86%   99%  100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\
+	    New File  		    1914	index.html 95%  100%  
+	    New File  		     507	requirements.md 84%  100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\public\
+	    New File  		    1145	favicon.png 92%  100%  
+	    New File  		     257	robots.txt 73%  100%  
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\public\assets\
+	  New Dir         10	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\public\assets\img\
+	    New File  		  810708	canopy-v1.webp 32%   64%   96%   99%  100%  
+	    New File  		  827472	canopy-v2.webp 31%   63%   95%   99%  100%  
+	    New File  		  834062	lab-viz-v1.webp 31%   62%   94%   99%  100%  
+	    New File  		  862166	lab-viz-v2.webp 30%   60%   91%   99%  100%  
+	    New File  		  995332	lifeops-dashboard-v1.webp 26%   52%   79%   99%  100%  
+	    New File  		  766844	lifeops-dashboard-v2.webp 34%   68%   99%  100%  
+	    New File  		  730370	root-system-v1.webp 35%   71%   99%  100%  
+	    New File  		  687492	root-system-v2.webp 38%   76%   99%  100%  
+	    New File  		  451432	trunk-system-v1.webp 29%   58%   87%   99%  100%  
+	    New File  		  579316	trunk-system-v2.webp 45%   90%   99%  100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\src\
+	    New File  		    1668	App.tsx 94%  100%  
+	    New File  		   13481	index.css 99%  100%  
+	    New File  		     157	main.tsx 63%  100%  
+	  New Dir          8	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\src\components\
+	    New File  		    4214	BotanicalMotifs.tsx 97%  100%  
+	    New File  		    7158	CanopyView.tsx 98%  100%  
+	    New File  		     969	DemoBanner.tsx 91%  100%  
+	    New File  		    4655	HoverRevealImage.tsx 98%  100%  
+	    New File  		    1391	InterfaceOverlay.tsx 93%  100%  
+	    New File  		   15363	Layout.tsx 99%  100%  
+	    New File  		    1169	PageBackground.tsx 92%  100%  
+	    New File  		    1913	ThemeProvider.tsx 95%  100%  
+	  New Dir         48	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\src\components\ui\
+	    New File  		    1977	accordion.tsx 95%  100%  
+	    New File  		    4420	alert-dialog.tsx 97%  100%  
+	    New File  		    1584	alert.tsx 94%  100%  
+	    New File  		     140	aspect-ratio.tsx 60%  100%  
+	    New File  		    1592	avatar.tsx 94%  100%  
+	    New File  		    1202	badge.tsx 92%  100%  
+	    New File  		    2712	breadcrumb.tsx 96%  100%  
+	    New File  		    2359	button.tsx 96%  100%  
+	    New File  		    2695	calendar.tsx 96%  100%  
+	    New File  		    1904	card.tsx 95%  100%  
+	    New File  		    6210	carousel.tsx 98%  100%  
+	    New File  		   10481	chart.tsx 99%  100%  
+	    New File  		    1056	checkbox.tsx 91%  100%  
+	    New File  		     329	collapsible.tsx 78%  100%  
+	    New File  		    4885	command.tsx 98%  100%  
+	    New File  		    7428	context-menu.tsx 98%  100%  
+	    New File  		    3848	dialog.tsx 97%  100%  
+	    New File  		    3021	drawer.tsx 97%  100%  
+	    New File  		    7609	dropdown-menu.tsx 98%  100%  
+	    New File  		    4120	form.tsx 97%  100%  
+	    New File  		    1251	hover-card.tsx 93%  100%  
+	    New File  		    2154	input-otp.tsx 95%  100%  
+	    New File  		     844	input.tsx 90%  100%  
+	    New File  		     710	label.tsx 88%  100%  
+	    New File  		    8605	menubar.tsx 98%  100%  
+	    New File  		    5128	navigation-menu.tsx 98%  100%  
+	    New File  		    2751	pagination.tsx 96%  100%  
+	    New File  		    1280	popover.tsx 93%  100%  
+	    New File  		     791	progress.tsx 89%  100%  
+	    New File  		    1467	radio-group.tsx 94%  100%  
+	    New File  		    1723	resizable.tsx 94%  100%  
+	    New File  		    1642	scroll-area.tsx 94%  100%  
+	    New File  		    5741	select.tsx 98%  100%  
+	    New File  		     756	separator.tsx 89%  100%  
+	    New File  		    4281	sheet.tsx 97%  100%  
+	    New File  		   21846	sidebar.tsx 99%  100%  
+	    New File  		     261	skeleton.tsx 73%  100%  
+	    New File  		    1077	slider.tsx 92%  100%  
+	    New File  		     775	StatusBadge.tsx 89%  100%  
+	    New File  		    1139	switch.tsx 92%  100%  
+	    New File  		    2765	table.tsx 96%  100%  
+	    New File  		    1883	tabs.tsx 95%  100%  
+	    New File  		     689	textarea.tsx 88%  100%  
+	    New File  		    4845	toast.tsx 98%  100%  
+	    New File  		     772	toaster.tsx 89%  100%  
+	    New File  		    1753	toggle-group.tsx 95%  100%  
+	    New File  		    1527	toggle.tsx 94%  100%  
+	    New File  		    1209	tooltip.tsx 92%  100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\src\hooks\
+	    New File  		    1795	use-auth.ts 95%  100%  
+	    New File  		   13000	use-bruce-ops.ts 99%  100%  
+	    New File  		    7557	use-demo.tsx 98%  100%  
+	    New File  		     565	use-mobile.tsx 85%  100%  
+	    New File  		    3895	use-toast.ts 97%  100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\src\lib\
+	    New File  		     517	auth-utils.ts 84%  100%  
+	    New File  		    1945	coreImagery.ts 95%  100%  
+	    New File  		    2418	queryClient.ts 96%  100%  
+	    New File  		     166	utils.ts 64%  100%  
+	  New Dir         15	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\client\src\pages\
+	    New File  		    3469	Bruce.tsx 97%  100%  
+	    New File  		   22938	BruceOps.tsx 99%  100%  
+	    New File  		   13943	Chat.tsx 99%  100%  
+	    New File  		    6308	Dashboard.tsx 98%  100%  
+	    New File  		   11038	FeatureFactory.tsx100%  
+	    New File  		   25605	Goals.tsx 99%  100%  
+	    New File  		   19874	HarrisWildlands.tsx 99%  100%  
+	    New File  		   18099	Lab.tsx 99%  100%  
+	    New File  		   46583	LifeOps.tsx 99%  100%  
+	    New File  		     711	not-found.tsx 88%  100%  
+	    New File  		   13776	RealityCheck.tsx 99%  100%  
+	    New File  		   11970	Settings.tsx 99%  100%  
+	    New File  		   11115	TeachingAssistant.tsx 99%  100%  
+	    New File  		   35289	ThinkOps.tsx 99%  100%  
+	    New File  		   17986	WeeklyReview.tsx 99%  100%  
+	  New Dir         10	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\docs\
+	    New File  		   23838	ARCHITECTURE.md 99%  100%  
+	    New File  		   33846	CODEBASE.md 99%  100%  
+	    New File  		   17972	ENHANCEMENTS.md 99%  100%  
+	    New File  		   36400	PRIORITY1_CORE_ARCHITECTURE.md 99%  100%  
+	    New File  		   17240	PRIORITY2_FRONTEND.md 99%  100%  
+	    New File  		    8731	PRIORITY3_CONFIG_DEPLOY.md 98%  100%  
+	    New File  		   16378	PRIORITY4_DOCS_COMPLETE.md 99%  100%  
+	    New File  		    2803	README.md 96%  100%  
+	    New File  		    2849	STANDALONE.md 96%  100%  
+	    New File  		   10289	TECHNICAL_EVIDENCE.md 99%  100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\docs\00-start-here\
+	    New File  		    2125	00-overview-and-reading-paths.md 95%  100%  
+	    New File  		    2415	01-glossary.md 96%  100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\docs\10-user-guide\
+	    New File  		    2707	10-quickstart-standalone-docker.md 96%  100%  
+	    New File  		    2414	11-first-run-demo-mode.md 96%  100%  
+	    New File  		    2266	12-lifeops-daily-logging.md 96%  100%  
+	    New File  		    2480	13-thinkops-ideas-pipeline.md 96%  100%  
+	    New File  		    2343	14-weekly-review.md 96%  100%  
+	    New File  		    2436	15-export-and-personal-backups.md 96%  100%  
+	    New File  		    3873	16-troubleshooting.md 97%  100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\docs\20-operator-guide\
+	    New File  		    4383	20-standalone-deployment-docker-compose.md 97%  100%  
+	    New File  		    3788	21-configuration-env.md 97%  100%  
+	    New File  		    4309	22-data-storage-and-persistence.md 97%  100%  
+	    New File  		    2861	23-updates-and-upgrades.md 96%  100%  
+	    New File  		    4412	24-security-local-lan-and-auth-modes.md 97%  100%  
+	    New File  		    3273	25-healthchecks-and-basic-monitoring.md 97%  100%  
+	    New File  		    4100	26-disaster-recovery.md 97%  100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\docs\30-developer-reference\
+	    New File  		    6802	30-architecture-overview.md 98%  100%  
+	    New File  		    5029	31-repo-layout.md 98%  100%  
+	    New File  		    4466	32-api-routes-reference.md 97%  100%  
+	    New File  		    5167	33-database-schema-reference.md 98%  100%  
+	    New File  		    4115	34-auth-replit-oidc-and-fallbacks.md 97%  100%  
+	    New File  		    4769	35-ai-provider-ladder.md 98%  100%  
+	    New File  		    3819	36-validation-and-testing-checklist.md 97%  100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\docs\40-protocols-and-governance\
+	    New File  		    3098	40-lifeops-thinkops-separation.md 97%  100%  
+	    New File  		    3334	41-drift-detection-signals.md 97%  100%  
+	    New File  		    3856	42-privacy-red-zones-and-sharing-boundaries.md 97%  100%  
+	    New File  		    3991	43-non-goals-and-safety-constraints.md 97%  100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\docs\50-releases-and-evidence\
+	    New File  		    3507	50-keystone-v1.0-2025-12-27.md 97%  100%  
+	    New File  		    3983	51-acceptance-test-checklist.md 97%  100%  
+	    New File  		    2866	52-changelog.md 96%  100%  
+	  New Dir         19	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\docs\manual\
+	    New File  		    4525	TECHNICAL_MANUAL.md 98%  100%  
+	    New File  		    6054	VOL01_EXECUTIVE_OVERVIEW.md 98%  100%  
+	    New File  		   12082	VOL02_TECH_STACK.md 99%  100%  
+	    New File  		   13932	VOL03_ARCHITECTURE.md 99%  100%  
+	    New File  		   15449	VOL04_FILE_STRUCTURE.md 99%  100%  
+	    New File  		   14857	VOL05_DATABASE_SCHEMA.md 99%  100%  
+	    New File  		   11672	VOL06_API_CATALOG.md 99%  100%  
+	    New File  		   12098	VOL07_AI_INTEGRATION.md 99%  100%  
+	    New File  		    9614	VOL08_USER_WORKFLOWS.md 99%  100%  
+	    New File  		    9357	VOL09_COMPONENTS.md 99%  100%  
+	    New File  		    7793	VOL10_CONFIGURATION.md 98%  100%  
+	    New File  		    6485	VOL11_DEPLOYMENT.md 98%  100%  
+	    New File  		    7252	VOL12_SECURITY.md 98%  100%  
+	    New File  		    9713	VOL13_EXTENSION_PATTERNS.md 99%  100%  
+	    New File  		    6333	VOL14_TROUBLESHOOTING.md 98%  100%  
+	    New File  		    6129	VOL15_TESTING.md 98%  100%  
+	    New File  		    6128	VOL16_MAINTENANCE.md 98%  100%  
+	    New File  		    5262	VOL17_ROADMAP.md 98%  100%  
+	    New File  		    7613	VOL18_APPENDICES.md 98%  100%  
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\HarrisWildlands_UIKit_v1\
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\HarrisWildlands_UIKit_v1\Code_Snippets\
+	    New File  		    2983	components.tsx 97%  100%  
+	    New File  		    3172	theme-colors.css 97%  100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\HarrisWildlands_UIKit_v1\Components\
+	    New File  		      24	.gitkeep 20%  100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\HarrisWildlands_UIKit_v1\Docs\
+	    New File  		    2155	README.md 95%  100%  
+	    New File  		    3878	UI_Spec_Sheet.md 97%  100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\HarrisWildlands_UIKit_v1\Optimized\
+	    New File  		      33	.gitkeep 26%  100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\HarrisWildlands_UIKit_v1\UI_Embedded_Images\
+	    New File  		      30	.gitkeep 24%  100%  
+	  New Dir         12	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\release\
+	    New File  		     656	.env.example 87%  100%  
+	    New File  		    1868	CHECKLIST.md 95%  100%  
+	    New File  		   12601	deploy-windows.bat 99%  100%  
+	    New File  		     934	docker-compose.yml 91%  100%  
+	    New File  		     138	Dockerfile 60%  100%  
+	    New File  		  13.1 m	harriswildlands-prod-bundle.zip  7.6% 15.2% 22.8% 30.5% 38.1% 45.7% 53.4% 61.0% 68.6% 76.3% 83.9% 91.5% 99.2% 99.9%100%  
+	    New File  		  143669	harriswildlands-source.zip 91%   99%  100%  
+	    New File  		    1454	HOW_TO_DOWNLOAD.md 94%  100%  
+	    New File  		    2540	manage-app.bat 96%  100%  
+	    New File  		    3235	README.md 97%  100%  
+	    New File  		    1177	STANDALONE_EXPORT_PLAN.md 92%  100%  
+	    New File  		    4206	test-app.bat 97%  100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\release\docs\
+	    New File  		    2933	ARCHITECTURE.md 96%  100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\script\
+	    New File  		    1417	build.ts 93%  100%  
+	    New File  		    1922	seed.ts 95%  100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\scripts\
+	    New File  		    4626	smoke-test.sh 98%  100%  
+	    New File  		    6181	verify-golden-path.js 98%  100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\server\
+	    New File  		     395	db.ts 81%  100%  
+	    New File  		    3061	google-drive.ts 97%  100%  
+	    New File  		    2560	index.ts 96%  100%  
+	    New File  		   56482	routes.ts 99%  100%  
+	    New File  		     547	static.ts 85%  100%  
+	    New File  		   18699	storage.ts 99%  100%  
+	    New File  		    1534	vite.ts 94%  100%  
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\server\replit_integrations\
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\server\replit_integrations\auth\
+	    New File  		     178	index.ts 65%  100%  
+	    New File  		    7402	replitAuth.ts 98%  100%  
+	    New File  		     609	routes.ts 86%  100%  
+	    New File  		    1468	storage.ts 94%  100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\shared\
+	    New File  		    6557	routes.ts 98%  100%  
+	    New File  		   15240	schema.ts 99%  100%  
+	    New File  		    3522	thinkopsNodes.ts 97%  100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands.com github repo\harriswildlands.com-main\shared\models\
+	    New File  		    1010	auth.ts 91%  100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\
+	    New File  		    9953	bootstrap_hw_bridge.py100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\
+	    New File  		      71	.gitignore100%  
+	    New File  		     472	pyvenv.cfg100%  
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Include\
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\
+	    New File  		     286	py.typed100%  
+	    New File  		     353	__init__.py100%  
+	    New File  		     854	__main__.py100%  
+	    New File  		    1450	__pip-runner__.py100%  
+	  New Dir          9	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\
+	    New File  		   11566	build_env.py100%  
+	    New File  		   10364	cache.py100%  
+	    New File  		   14587	configuration.py100%  
+	    New File  		   28974	exceptions.py100%  
+	    New File  		     338	main.py100%  
+	    New File  		    7233	pyproject.py100%  
+	    New File  		    8326	self_outdated_check.py100%  
+	    New File  		   11225	wheel_builder.py100%  
+	    New File  		     511	__init__.py100%  
+	  New Dir         13	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\cli\
+	    New File  		    7193	autocompletion.py100%  
+	    New File  		    8716	base_command.py100%  
+	    New File  		   32032	cmdoptions.py100%  
+	    New File  		     817	command_context.py100%  
+	    New File  		    5717	index_command.py100%  
+	    New File  		    2815	main.py100%  
+	    New File  		    4329	main_parser.py100%  
+	    New File  		   10928	parser.py100%  
+	    New File  		    4668	progress_bars.py100%  
+	    New File  		   13081	req_command.py100%  
+	    New File  		    7362	spinners.py100%  
+	    New File  		     116	status_codes.py100%  
+	    New File  		     131	__init__.py100%  
+	  New Dir         13	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\cli\__pycache__\
+	    New File  		    9516	autocompletion.cpython-313.pyc100%  
+	    New File  		   10779	base_command.cpython-313.pyc100%  
+	    New File  		   30965	cmdoptions.cpython-313.pyc100%  
+	    New File  		    1910	command_context.cpython-313.pyc100%  
+	    New File  		    7446	index_command.cpython-313.pyc100%  
+	    New File  		    2262	main.cpython-313.pyc100%  
+	    New File  		    4936	main_parser.cpython-313.pyc100%  
+	    New File  		   15155	parser.cpython-313.pyc100%  
+	    New File  		    6075	progress_bars.cpython-313.pyc100%  
+	    New File  		   13252	req_command.cpython-313.pyc100%  
+	    New File  		   11673	spinners.cpython-313.pyc100%  
+	    New File  		     376	status_codes.cpython-313.pyc100%  
+	    New File  		     276	__init__.cpython-313.pyc100%  
+	  New Dir         19	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\commands\
+	    New File  		    8230	cache.py100%  
+	    New File  		    2244	check.py100%  
+	    New File  		    4530	completion.py100%  
+	    New File  		   10105	configuration.py100%  
+	    New File  		    6805	debug.py100%  
+	    New File  		    5249	download.py100%  
+	    New File  		    3099	freeze.py100%  
+	    New File  		    1679	hash.py100%  
+	    New File  		    1108	help.py100%  
+	    New File  		    5243	index.py100%  
+	    New File  		    3177	inspect.py100%  
+	    New File  		   30080	install.py100%  
+	    New File  		   13514	list.py100%  
+	    New File  		    5917	lock.py100%  
+	    New File  		    5782	search.py100%  
+	    New File  		    8066	show.py100%  
+	    New File  		    3868	uninstall.py100%  
+	    New File  		    6322	wheel.py100%  
+	    New File  		    4026	__init__.py100%  
+	  New Dir         19	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\commands\__pycache__\
+	    New File  		   10321	cache.cpython-313.pyc100%  
+	    New File  		    2647	check.cpython-313.pyc100%  
+	    New File  		    5461	completion.cpython-313.pyc100%  
+	    New File  		   13395	configuration.cpython-313.pyc100%  
+	    New File  		   10190	debug.cpython-313.pyc100%  
+	    New File  		    7515	download.cpython-313.pyc100%  
+	    New File  		    4347	freeze.cpython-313.pyc100%  
+	    New File  		    2997	hash.cpython-313.pyc100%  
+	    New File  		    1711	help.cpython-313.pyc100%  
+	    New File  		    7297	index.cpython-313.pyc100%  
+	    New File  		    4006	inspect.cpython-313.pyc100%  
+	    New File  		   30131	install.cpython-313.pyc100%  
+	    New File  		   17331	list.cpython-313.pyc100%  
+	    New File  		    8004	lock.cpython-313.pyc100%  
+	    New File  		    7747	search.cpython-313.pyc100%  
+	    New File  		   11396	show.cpython-313.pyc100%  
+	    New File  		    4736	uninstall.cpython-313.pyc100%  
+	    New File  		    8849	wheel.cpython-313.pyc100%  
+	    New File  		    4114	__init__.cpython-313.pyc100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\distributions\
+	    New File  		    1830	base.py100%  
+	    New File  		     929	installed.py100%  
+	    New File  		    6952	sdist.py100%  
+	    New File  		    1364	wheel.py100%  
+	    New File  		     858	__init__.py100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\distributions\__pycache__\
+	    New File  		    2930	base.cpython-313.pyc100%  
+	    New File  		    1834	installed.cpython-313.pyc100%  
+	    New File  		    8732	sdist.cpython-313.pyc100%  
+	    New File  		    2381	wheel.cpython-313.pyc100%  
+	    New File  		     964	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\index\
+	    New File  		   16185	collector.py100%  
+	    New File  		   38827	package_finder.py100%  
+	    New File  		    8639	sources.py100%  
+	    New File  		      29	__init__.py100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\index\__pycache__\
+	    New File  		   21447	collector.cpython-313.pyc100%  
+	    New File  		   41724	package_finder.cpython-313.pyc100%  
+	    New File  		   12527	sources.cpython-313.pyc100%  
+	    New File  		     230	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\locations\
+	    New File  		    2550	base.py100%  
+	    New File  		    5975	_distutils.py100%  
+	    New File  		    7716	_sysconfig.py100%  
+	    New File  		   14185	__init__.py100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\locations\__pycache__\
+	    New File  		    3704	base.cpython-313.pyc100%  
+	    New File  		    6879	_distutils.cpython-313.pyc100%  
+	    New File  		    8029	_sysconfig.cpython-313.pyc100%  
+	    New File  		   15828	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\metadata\
+	    New File  		   25420	base.py100%  
+	    New File  		   10544	pkg_resources.py100%  
+	    New File  		    2711	_json.py100%  
+	    New File  		    5714	__init__.py100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\metadata\importlib\
+	    New File  		    2804	_compat.py100%  
+	    New File  		    8259	_dists.py100%  
+	    New File  		    5333	_envs.py100%  
+	    New File  		     135	__init__.py100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\metadata\importlib\__pycache__\
+	    New File  		    4283	_compat.cpython-313.pyc100%  
+	    New File  		   12868	_dists.cpython-313.pyc100%  
+	    New File  		    8076	_envs.cpython-313.pyc100%  
+	    New File  		     359	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\metadata\__pycache__\
+	    New File  		   33826	base.cpython-313.pyc100%  
+	    New File  		   16027	pkg_resources.cpython-313.pyc100%  
+	    New File  		    2923	_json.cpython-313.pyc100%  
+	    New File  		    6591	__init__.cpython-313.pyc100%  
+	  New Dir         13	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\models\
+	    New File  		     753	candidate.py100%  
+	    New File  		    6555	direct_url.py100%  
+	    New File  		    2471	format_control.py100%  
+	    New File  		    1030	index.py100%  
+	    New File  		    2839	installation_report.py100%  
+	    New File  		   21793	link.py100%  
+	    New File  		    6211	pylock.py100%  
+	    New File  		     575	scheme.py100%  
+	    New File  		    4507	search_scope.py100%  
+	    New File  		    2016	selection_prefs.py100%  
+	    New File  		    4243	target_python.py100%  
+	    New File  		    5526	wheel.py100%  
+	    New File  		      62	__init__.py100%  
+	  New Dir         13	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\models\__pycache__\
+	    New File  		    1663	candidate.cpython-313.pyc100%  
+	    New File  		   10665	direct_url.cpython-313.pyc100%  
+	    New File  		    4160	format_control.cpython-313.pyc100%  
+	    New File  		    1766	index.cpython-313.pyc100%  
+	    New File  		    2393	installation_report.cpython-313.pyc100%  
+	    New File  		   26719	link.cpython-313.pyc100%  
+	    New File  		    8152	pylock.cpython-313.pyc100%  
+	    New File  		    1068	scheme.cpython-313.pyc100%  
+	    New File  		    5077	search_scope.cpython-313.pyc100%  
+	    New File  		    1858	selection_prefs.cpython-313.pyc100%  
+	    New File  		    4737	target_python.cpython-313.pyc100%  
+	    New File  		    7433	wheel.cpython-313.pyc100%  
+	    New File  		     264	__init__.cpython-313.pyc100%  
+	  New Dir          8	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\network\
+	    New File  		   20681	auth.py100%  
+	    New File  		    5302	cache.py100%  
+	    New File  		   12682	download.py100%  
+	    New File  		    7651	lazy_wheel.py100%  
+	    New File  		   19188	session.py100%  
+	    New File  		    4091	utils.py100%  
+	    New File  		    1830	xmlrpc.py100%  
+	    New File  		      49	__init__.py100%  
+	  New Dir          8	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\network\__pycache__\
+	    New File  		   21933	auth.cpython-313.pyc100%  
+	    New File  		    8579	cache.cpython-313.pyc100%  
+	    New File  		   16304	download.cpython-313.pyc100%  
+	    New File  		   11445	lazy_wheel.cpython-313.pyc100%  
+	    New File  		   19508	session.cpython-313.pyc100%  
+	    New File  		    2293	utils.cpython-313.pyc100%  
+	    New File  		    3028	xmlrpc.cpython-313.pyc100%  
+	    New File  		     252	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\operations\
+	    New File  		    5894	check.py100%  
+	    New File  		    9854	freeze.py100%  
+	    New File  		   28613	prepare.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          8	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\operations\build\
+	    New File  		    4771	build_tracker.py100%  
+	    New File  		    1421	metadata.py100%  
+	    New File  		    1509	metadata_editable.py100%  
+	    New File  		    2189	metadata_legacy.py100%  
+	    New File  		    1080	wheel.py100%  
+	    New File  		    1422	wheel_editable.py100%  
+	    New File  		    3616	wheel_legacy.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          8	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\operations\build\__pycache__\
+	    New File  		    7653	build_tracker.cpython-313.pyc100%  
+	    New File  		    1857	metadata.cpython-313.pyc100%  
+	    New File  		    1909	metadata_editable.cpython-313.pyc100%  
+	    New File  		    2992	metadata_legacy.cpython-313.pyc100%  
+	    New File  		    1710	wheel.cpython-313.pyc100%  
+	    New File  		    2051	wheel_editable.cpython-313.pyc100%  
+	    New File  		    4420	wheel_legacy.cpython-313.pyc100%  
+	    New File  		     204	__init__.cpython-313.pyc100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\operations\install\
+	    New File  		    1311	editable_legacy.py100%  
+	    New File  		   27956	wheel.py100%  
+	    New File  		      50	__init__.py100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\operations\install\__pycache__\
+	    New File  		    1860	editable_legacy.cpython-313.pyc100%  
+	    New File  		   34732	wheel.cpython-313.pyc100%  
+	    New File  		     264	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\operations\__pycache__\
+	    New File  		    7278	check.cpython-313.pyc100%  
+	    New File  		   10413	freeze.cpython-313.pyc100%  
+	    New File  		   27215	prepare.cpython-313.pyc100%  
+	    New File  		     198	__init__.cpython-313.pyc100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\req\
+	    New File  		   18320	constructors.py100%  
+	    New File  		    2618	req_dependency_group.py100%  
+	    New File  		   20161	req_file.py100%  
+	    New File  		   35718	req_install.py100%  
+	    New File  		    2828	req_set.py100%  
+	    New File  		   24099	req_uninstall.py100%  
+	    New File  		    3122	__init__.py100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\req\__pycache__\
+	    New File  		   21361	constructors.cpython-313.pyc100%  
+	    New File  		    4009	req_dependency_group.cpython-313.pyc100%  
+	    New File  		   24159	req_file.cpython-313.pyc100%  
+	    New File  		   39151	req_install.cpython-313.pyc100%  
+	    New File  		    5571	req_set.cpython-313.pyc100%  
+	    New File  		   32362	req_uninstall.cpython-313.pyc100%  
+	    New File  		    4213	__init__.cpython-313.pyc100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\resolution\
+	    New File  		     577	base.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\resolution\legacy\
+	    New File  		   24060	resolver.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\resolution\legacy\__pycache__\
+	    New File  		   22817	resolver.cpython-313.pyc100%  
+	    New File  		     205	__init__.cpython-313.pyc100%  
+	  New Dir          9	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\resolution\resolvelib\
+	    New File  		    5047	base.py100%  
+	    New File  		   20208	candidates.py100%  
+	    New File  		   32577	factory.py100%  
+	    New File  		    6018	found_candidates.py100%  
+	    New File  		   11144	provider.py100%  
+	    New File  		    3270	reporter.py100%  
+	    New File  		    8076	requirements.py100%  
+	    New File  		   13617	resolver.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          9	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\resolution\resolvelib\__pycache__\
+	    New File  		    8102	base.cpython-313.pyc100%  
+	    New File  		   29364	candidates.cpython-313.pyc100%  
+	    New File  		   33204	factory.cpython-313.pyc100%  
+	    New File  		    6814	found_candidates.cpython-313.pyc100%  
+	    New File  		   10989	provider.cpython-313.pyc100%  
+	    New File  		    5152	reporter.cpython-313.pyc100%  
+	    New File  		   15150	requirements.cpython-313.pyc100%  
+	    New File  		   12714	resolver.cpython-313.pyc100%  
+	    New File  		     209	__init__.cpython-313.pyc100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\resolution\__pycache__\
+	    New File  		    1231	base.cpython-313.pyc100%  
+	    New File  		     198	__init__.cpython-313.pyc100%  
+	  New Dir         26	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\utils\
+	    New File  		    1681	appdirs.py100%  
+	    New File  		    2514	compat.py100%  
+	    New File  		    6630	compatibility_tags.py100%  
+	    New File  		     241	datetime.py100%  
+	    New File  		    3696	deprecation.py100%  
+	    New File  		    3200	direct_url_helpers.py100%  
+	    New File  		    2459	egg_link.py100%  
+	    New File  		    3324	entrypoints.py100%  
+	    New File  		    4988	filesystem.py100%  
+	    New File  		     689	filetypes.py100%  
+	    New File  		    3726	glibc.py100%  
+	    New File  		    4998	hashes.py100%  
+	    New File  		   12108	logging.py100%  
+	    New File  		   23374	misc.py100%  
+	    New File  		    1601	packaging.py100%  
+	    New File  		    1461	retry.py100%  
+	    New File  		    4499	setuptools_build.py100%  
+	    New File  		    8983	subprocess.py100%  
+	    New File  		    9307	temp_dir.py100%  
+	    New File  		   11939	unpacking.py100%  
+	    New File  		    1601	urls.py100%  
+	    New File  		    3455	virtualenv.py100%  
+	    New File  		    4468	wheel.py100%  
+	    New File  		    3350	_jaraco_text.py100%  
+	    New File  		    1015	_log.py100%  
+	    New File  		       0	__init__.py
+	  New Dir         26	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\utils\__pycache__\
+	    New File  		    2466	appdirs.cpython-313.pyc100%  
+	    New File  		    3048	compat.cpython-313.pyc100%  
+	    New File  		    6695	compatibility_tags.cpython-313.pyc100%  
+	    New File  		     673	datetime.cpython-313.pyc100%  
+	    New File  		    4262	deprecation.cpython-313.pyc100%  
+	    New File  		    3635	direct_url_helpers.cpython-313.pyc100%  
+	    New File  		    3151	egg_link.cpython-313.pyc100%  
+	    New File  		    4143	entrypoints.cpython-313.pyc100%  
+	    New File  		    7320	filesystem.cpython-313.pyc100%  
+	    New File  		    1133	filetypes.cpython-313.pyc100%  
+	    New File  		    2379	glibc.cpython-313.pyc100%  
+	    New File  		    7559	hashes.cpython-313.pyc100%  
+	    New File  		   14185	logging.cpython-313.pyc100%  
+	    New File  		   32948	misc.cpython-313.pyc100%  
+	    New File  		    1844	packaging.cpython-313.pyc100%  
+	    New File  		    1982	retry.cpython-313.pyc100%  
+	    New File  		    4716	setuptools_build.cpython-313.pyc100%  
+	    New File  		    8738	subprocess.cpython-313.pyc100%  
+	    New File  		   12020	temp_dir.cpython-313.pyc100%  
+	    New File  		   13617	unpacking.cpython-313.pyc100%  
+	    New File  		    2132	urls.cpython-313.pyc100%  
+	    New File  		    4382	virtualenv.cpython-313.pyc100%  
+	    New File  		    5857	wheel.cpython-313.pyc100%  
+	    New File  		    4439	_jaraco_text.cpython-313.pyc100%  
+	    New File  		    1912	_log.cpython-313.pyc100%  
+	    New File  		     193	__init__.cpython-313.pyc100%  
+	  New Dir          6	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\vcs\
+	    New File  		    3734	bazaar.py100%  
+	    New File  		   19144	git.py100%  
+	    New File  		    5575	mercurial.py100%  
+	    New File  		   11787	subversion.py100%  
+	    New File  		   22502	versioncontrol.py100%  
+	    New File  		     596	__init__.py100%  
+	  New Dir          6	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\vcs\__pycache__\
+	    New File  		    5241	bazaar.cpython-313.pyc100%  
+	    New File  		   19699	git.cpython-313.pyc100%  
+	    New File  		    7759	mercurial.cpython-313.pyc100%  
+	    New File  		   12459	subversion.cpython-313.pyc100%  
+	    New File  		   28007	versioncontrol.cpython-313.pyc100%  
+	    New File  		     532	__init__.cpython-313.pyc100%  
+	  New Dir          9	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_internal\__pycache__\
+	    New File  		   16204	build_env.cpython-313.pyc100%  
+	    New File  		   12622	cache.cpython-313.pyc100%  
+	    New File  		   18472	configuration.cpython-313.pyc100%  
+	    New File  		   40320	exceptions.cpython-313.pyc100%  
+	    New File  		     627	main.cpython-313.pyc100%  
+	    New File  		    5150	pyproject.cpython-313.pyc100%  
+	    New File  		   10399	self_outdated_check.cpython-313.pyc100%  
+	    New File  		   13702	wheel_builder.cpython-313.pyc100%  
+	    New File  		     742	__init__.cpython-313.pyc100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\
+	    New File  		     343	vendor.txt100%  
+	    New File  		    4907	__init__.py100%  
+	  New Dir         10	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\cachecontrol\
+	    New File  		    6599	adapter.py100%  
+	    New File  		    1953	cache.py100%  
+	    New File  		   19101	controller.py100%  
+	    New File  		    4291	filewrapper.py100%  
+	    New File  		    4881	heuristics.py100%  
+	    New File  		       0	py.typed
+	    New File  		    5163	serialize.py100%  
+	    New File  		    1417	wrapper.py100%  
+	    New File  		    1737	_cmd.py100%  
+	    New File  		     677	__init__.py100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\cachecontrol\caches\
+	    New File  		    4117	file_cache.py100%  
+	    New File  		    1386	redis_cache.py100%  
+	    New File  		     303	__init__.py100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\cachecontrol\caches\__pycache__\
+	    New File  		    7165	file_cache.cpython-313.pyc100%  
+	    New File  		    2818	redis_cache.cpython-313.pyc100%  
+	    New File  		     437	__init__.cpython-313.pyc100%  
+	  New Dir          9	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\cachecontrol\__pycache__\
+	    New File  		    6852	adapter.cpython-313.pyc100%  
+	    New File  		    3929	cache.cpython-313.pyc100%  
+	    New File  		   16853	controller.cpython-313.pyc100%  
+	    New File  		    4435	filewrapper.cpython-313.pyc100%  
+	    New File  		    6771	heuristics.cpython-313.pyc100%  
+	    New File  		    5368	serialize.cpython-313.pyc100%  
+	    New File  		    1696	wrapper.cpython-313.pyc100%  
+	    New File  		    2677	_cmd.cpython-313.pyc100%  
+	    New File  		     899	__init__.cpython-313.pyc100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\certifi\
+	    New File  		  290057	cacert.pem 45%   90%  100%  
+	    New File  		    3442	core.py100%  
+	    New File  		       0	py.typed
+	    New File  		      94	__init__.py100%  
+	    New File  		     255	__main__.py100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\certifi\__pycache__\
+	    New File  		    2092	core.cpython-313.pyc100%  
+	    New File  		     320	__init__.cpython-313.pyc100%  
+	    New File  		     649	__main__.cpython-313.pyc100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\dependency_groups\
+	    New File  		       0	py.typed
+	    New File  		    8041	_implementation.py100%  
+	    New File  		    1710	_lint_dependency_groups.py100%  
+	    New File  		    1865	_pip_wrapper.py100%  
+	    New File  		     285	_toml_compat.py100%  
+	    New File  		     250	__init__.py100%  
+	    New File  		    1709	__main__.py100%  
+	  New Dir          6	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\dependency_groups\__pycache__\
+	    New File  		    9654	_implementation.cpython-313.pyc100%  
+	    New File  		    2881	_lint_dependency_groups.cpython-313.pyc100%  
+	    New File  		    3454	_pip_wrapper.cpython-313.pyc100%  
+	    New File  		     487	_toml_compat.cpython-313.pyc100%  
+	    New File  		     379	__init__.cpython-313.pyc100%  
+	    New File  		    2681	__main__.cpython-313.pyc100%  
+	  New Dir         11	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\distlib\
+	    New File  		   41467	compat.py100%  
+	    New File  		   10820	resources.py100%  
+	    New File  		   18612	scripts.py100%  
+	    New File  		   97792	t32.exe100%  
+	    New File  		  182784	t64-arm.exe 71%  100%  
+	    New File  		  108032	t64.exe100%  
+	    New File  		   66682	util.py100%  
+	    New File  		   91648	w32.exe100%  
+	    New File  		  168448	w64-arm.exe 77%  100%  
+	    New File  		  101888	w64.exe100%  
+	    New File  		     625	__init__.py100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\distlib\__pycache__\
+	    New File  		   45867	compat.cpython-313.pyc100%  
+	    New File  		   17659	resources.cpython-313.pyc100%  
+	    New File  		   20239	scripts.cpython-313.pyc100%  
+	    New File  		   90117	util.cpython-313.pyc100%  
+	    New File  		    1357	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\distro\
+	    New File  		   49430	distro.py100%  
+	    New File  		       0	py.typed
+	    New File  		     981	__init__.py100%  
+	    New File  		      64	__main__.py100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\distro\__pycache__\
+	    New File  		   52145	distro.cpython-313.pyc100%  
+	    New File  		     962	__init__.cpython-313.pyc100%  
+	    New File  		     296	__main__.cpython-313.pyc100%  
+	  New Dir          9	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\idna\
+	    New File  		    3422	codec.py100%  
+	    New File  		     316	compat.py100%  
+	    New File  		   13239	core.py100%  
+	    New File  		   78306	idnadata.py100%  
+	    New File  		    1898	intranges.py100%  
+	    New File  		      21	package_data.py100%  
+	    New File  		       0	py.typed
+	    New File  		  239289	uts46data.py 54%  100%  
+	    New File  		     868	__init__.py100%  
+	  New Dir          8	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\idna\__pycache__\
+	    New File  		    5312	codec.cpython-313.pyc100%  
+	    New File  		     898	compat.cpython-313.pyc100%  
+	    New File  		   16934	core.cpython-313.pyc100%  
+	    New File  		   99478	idnadata.cpython-313.pyc100%  
+	    New File  		    2611	intranges.cpython-313.pyc100%  
+	    New File  		     219	package_data.cpython-313.pyc100%  
+	    New File  		  159012	uts46data.cpython-313.pyc 82%  100%  
+	    New File  		     888	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\msgpack\
+	    New File  		    1081	exceptions.py100%  
+	    New File  		    5726	ext.py100%  
+	    New File  		   32390	fallback.py100%  
+	    New File  		    1109	__init__.py100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\msgpack\__pycache__\
+	    New File  		    2166	exceptions.cpython-313.pyc100%  
+	    New File  		    8095	ext.cpython-313.pyc100%  
+	    New File  		   42070	fallback.cpython-313.pyc100%  
+	    New File  		    1717	__init__.cpython-313.pyc100%  
+	  New Dir         15	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\packaging\
+	    New File  		   12049	markers.py100%  
+	    New File  		   34739	metadata.py100%  
+	    New File  		       0	py.typed
+	    New File  		    2947	requirements.py100%  
+	    New File  		   40079	specifiers.py100%  
+	    New File  		   22745	tags.py100%  
+	    New File  		    5050	utils.py100%  
+	    New File  		   16688	version.py100%  
+	    New File  		    3286	_elffile.py100%  
+	    New File  		    9596	_manylinux.py100%  
+	    New File  		    2694	_musllinux.py100%  
+	    New File  		   10221	_parser.py100%  
+	    New File  		    1431	_structures.py100%  
+	    New File  		    5310	_tokenizer.py100%  
+	    New File  		     494	__init__.py100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\packaging\licenses\
+	    New File  		   48398	_spdx.py100%  
+	    New File  		    5727	__init__.py100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\packaging\licenses\__pycache__\
+	    New File  		   47442	_spdx.cpython-313.pyc100%  
+	    New File  		    4313	__init__.cpython-313.pyc100%  
+	  New Dir         14	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\packaging\__pycache__\
+	    New File  		   13102	markers.cpython-313.pyc100%  
+	    New File  		   27371	metadata.cpython-313.pyc100%  
+	    New File  		    4636	requirements.cpython-313.pyc100%  
+	    New File  		   37668	specifiers.cpython-313.pyc100%  
+	    New File  		   24976	tags.cpython-313.pyc100%  
+	    New File  		    6760	utils.cpython-313.pyc100%  
+	    New File  		   19985	version.cpython-313.pyc100%  
+	    New File  		    5219	_elffile.cpython-313.pyc100%  
+	    New File  		   10006	_manylinux.cpython-313.pyc100%  
+	    New File  		    4625	_musllinux.cpython-313.pyc100%  
+	    New File  		   14189	_parser.cpython-313.pyc100%  
+	    New File  		    3355	_structures.cpython-313.pyc100%  
+	    New File  		    8112	_tokenizer.cpython-313.pyc100%  
+	    New File  		     560	__init__.cpython-313.pyc100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pkg_resources\
+	    New File  		  124451	__init__.py100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pkg_resources\__pycache__\
+	    New File  		  161608	__init__.cpython-313.pyc 81%  100%  
+	  New Dir          9	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\platformdirs\
+	    New File  		    9013	android.py100%  
+	    New File  		    9277	api.py100%  
+	    New File  		    6154	macos.py100%  
+	    New File  		       0	py.typed
+	    New File  		   10458	unix.py100%  
+	    New File  		     511	version.py100%  
+	    New File  		   10125	windows.py100%  
+	    New File  		   22344	__init__.py100%  
+	    New File  		    1505	__main__.py100%  
+	  New Dir          8	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\platformdirs\__pycache__\
+	    New File  		   10765	android.cpython-313.pyc100%  
+	    New File  		   13470	api.cpython-313.pyc100%  
+	    New File  		    8830	macos.cpython-313.pyc100%  
+	    New File  		   14770	unix.cpython-313.pyc100%  
+	    New File  		     668	version.cpython-313.pyc100%  
+	    New File  		   13786	windows.cpython-313.pyc100%  
+	    New File  		   19367	__init__.cpython-313.pyc100%  
+	    New File  		    1934	__main__.cpython-313.pyc100%  
+	  New Dir         15	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\
+	    New File  		    1718	console.py100%  
+	    New File  		    1910	filter.py100%  
+	    New File  		    4390	formatter.py100%  
+	    New File  		   35349	lexer.py100%  
+	    New File  		    1005	modeline.py100%  
+	    New File  		    1891	plugin.py100%  
+	    New File  		    3072	regexopt.py100%  
+	    New File  		    3092	scanner.py100%  
+	    New File  		    7981	sphinxext.py100%  
+	    New File  		    6420	style.py100%  
+	    New File  		    6226	token.py100%  
+	    New File  		   63208	unistring.py100%  
+	    New File  		   10031	util.py100%  
+	    New File  		    2983	__init__.py100%  
+	    New File  		     353	__main__.py100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\filters\
+	    New File  		   40392	__init__.py100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\filters\__pycache__\
+	    New File  		   37972	__init__.cpython-313.pyc100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\formatters\
+	    New File  		    4176	_mapping.py100%  
+	    New File  		    5385	__init__.py100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\formatters\__pycache__\
+	    New File  		    4218	_mapping.cpython-313.pyc100%  
+	    New File  		    6929	__init__.cpython-313.pyc100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\lexers\
+	    New File  		   53853	python.py100%  
+	    New File  		   77602	_mapping.py100%  
+	    New File  		   12115	__init__.py100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\lexers\__pycache__\
+	    New File  		   43047	python.cpython-313.pyc100%  
+	    New File  		   69847	_mapping.cpython-313.pyc100%  
+	    New File  		   14757	__init__.cpython-313.pyc100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\styles\
+	    New File  		    3312	_mapping.py100%  
+	    New File  		    2042	__init__.py100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\styles\__pycache__\
+	    New File  		    3651	_mapping.cpython-313.pyc100%  
+	    New File  		    2644	__init__.cpython-313.pyc100%  
+	  New Dir         15	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pygments\__pycache__\
+	    New File  		    2603	console.cpython-313.pyc100%  
+	    New File  		    3229	filter.cpython-313.pyc100%  
+	    New File  		    4560	formatter.cpython-313.pyc100%  
+	    New File  		   38480	lexer.cpython-313.pyc100%  
+	    New File  		    1576	modeline.cpython-313.pyc100%  
+	    New File  		    2550	plugin.cpython-313.pyc100%  
+	    New File  		    4107	regexopt.cpython-313.pyc100%  
+	    New File  		    4686	scanner.cpython-313.pyc100%  
+	    New File  		   12243	sphinxext.cpython-313.pyc100%  
+	    New File  		    6942	style.cpython-313.pyc100%  
+	    New File  		    8246	token.cpython-313.pyc100%  
+	    New File  		   33028	unistring.cpython-313.pyc100%  
+	    New File  		   14176	util.cpython-313.pyc100%  
+	    New File  		    3435	__init__.cpython-313.pyc100%  
+	    New File  		     715	__main__.cpython-313.pyc100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pyproject_hooks\
+	    New File  		       0	py.typed
+	    New File  		   14936	_impl.py100%  
+	    New File  		     691	__init__.py100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\
+	    New File  		   12216	_in_process.py100%  
+	    New File  		     557	__init__.py100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\__pycache__\
+	    New File  		   15512	_in_process.cpython-313.pyc100%  
+	    New File  		    1087	__init__.cpython-313.pyc100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\pyproject_hooks\__pycache__\
+	    New File  		   17732	_impl.cpython-313.pyc100%  
+	    New File  		     760	__init__.cpython-313.pyc100%  
+	  New Dir         18	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\requests\
+	    New File  		   27607	adapters.py100%  
+	    New File  		    6449	api.py100%  
+	    New File  		   10186	auth.py100%  
+	    New File  		     441	certs.py100%  
+	    New File  		    1822	compat.py100%  
+	    New File  		   18590	cookies.py100%  
+	    New File  		    4272	exceptions.py100%  
+	    New File  		    3813	help.py100%  
+	    New File  		     733	hooks.py100%  
+	    New File  		   35575	models.py100%  
+	    New File  		    1057	packages.py100%  
+	    New File  		   30495	sessions.py100%  
+	    New File  		    4322	status_codes.py100%  
+	    New File  		    2912	structures.py100%  
+	    New File  		   33225	utils.py100%  
+	    New File  		    1495	_internal_utils.py100%  
+	    New File  		    5057	__init__.py100%  
+	    New File  		     435	__version__.py100%  
+	  New Dir         18	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\requests\__pycache__\
+	    New File  		   27476	adapters.cpython-313.pyc100%  
+	    New File  		    6873	api.cpython-313.pyc100%  
+	    New File  		   14235	auth.cpython-313.pyc100%  
+	    New File  		     683	certs.cpython-313.pyc100%  
+	    New File  		    1987	compat.cpython-313.pyc100%  
+	    New File  		   25030	cookies.cpython-313.pyc100%  
+	    New File  		    8026	exceptions.cpython-313.pyc100%  
+	    New File  		    4264	help.cpython-313.pyc100%  
+	    New File  		    1097	hooks.cpython-313.pyc100%  
+	    New File  		   35945	models.cpython-313.pyc100%  
+	    New File  		    1317	packages.cpython-313.pyc100%  
+	    New File  		   27389	sessions.cpython-313.pyc100%  
+	    New File  		    6047	status_codes.cpython-313.pyc100%  
+	    New File  		    5650	structures.cpython-313.pyc100%  
+	    New File  		   36268	utils.cpython-313.pyc100%  
+	    New File  		    2021	_internal_utils.cpython-313.pyc100%  
+	    New File  		    5278	__init__.cpython-313.pyc100%  
+	    New File  		     587	__version__.cpython-313.pyc100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\resolvelib\
+	    New File  		    8914	providers.py100%  
+	    New File  		       0	py.typed
+	    New File  		    2037	reporters.py100%  
+	    New File  		    6420	structs.py100%  
+	    New File  		     541	__init__.py100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\resolvelib\resolvers\
+	    New File  		    1558	abstract.py100%  
+	    New File  		    1768	criterion.py100%  
+	    New File  		    1768	exceptions.py100%  
+	    New File  		   23994	resolution.py100%  
+	    New File  		     640	__init__.py100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\resolvelib\resolvers\__pycache__\
+	    New File  		    2506	abstract.cpython-313.pyc100%  
+	    New File  		    3300	criterion.cpython-313.pyc100%  
+	    New File  		    4294	exceptions.cpython-313.pyc100%  
+	    New File  		   25001	resolution.cpython-313.pyc100%  
+	    New File  		     742	__init__.cpython-313.pyc100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\resolvelib\__pycache__\
+	    New File  		    9363	providers.cpython-313.pyc100%  
+	    New File  		    3272	reporters.cpython-313.pyc100%  
+	    New File  		   12762	structs.cpython-313.pyc100%  
+	    New File  		     637	__init__.cpython-313.pyc100%  
+	  New Dir         78	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\rich\
+	    New File  		     890	abc.py100%  
+	    New File  		   10324	align.py100%  
+	    New File  		    6921	ansi.py100%  
+	    New File  		    3263	bar.py100%  
+	    New File  		   10686	box.py100%  
+	    New File  		    5130	cells.py100%  
+	    New File  		   18211	color.py100%  
+	    New File  		    1054	color_triplet.py100%  
+	    New File  		    7131	columns.py100%  
+	    New File  		  100849	console.py100%  
+	    New File  		    1288	constrain.py100%  
+	    New File  		    5502	containers.py100%  
+	    New File  		    6487	control.py100%  
+	    New File  		    8257	default_styles.py100%  
+	    New File  		    1025	diagnose.py100%  
+	    New File  		    2367	emoji.py100%  
+	    New File  		     642	errors.py100%  
+	    New File  		    2484	filesize.py100%  
+	    New File  		    1683	file_proxy.py100%  
+	    New File  		    9586	highlighter.py100%  
+	    New File  		    5031	json.py100%  
+	    New File  		    3252	jupyter.py100%  
+	    New File  		   14004	layout.py100%  
+	    New File  		   15180	live.py100%  
+	    New File  		    3521	live_render.py100%  
+	    New File  		   12468	logging.py100%  
+	    New File  		    8451	markup.py100%  
+	    New File  		    5305	measure.py100%  
+	    New File  		    4908	padding.py100%  
+	    New File  		     828	pager.py100%  
+	    New File  		    3396	palette.py100%  
+	    New File  		   11157	panel.py100%  
+	    New File  		   36391	pretty.py100%  
+	    New File  		   60408	progress.py100%  
+	    New File  		    8162	progress_bar.py100%  
+	    New File  		   12447	prompt.py100%  
+	    New File  		    1391	protocol.py100%  
+	    New File  		       0	py.typed
+	    New File  		     166	region.py100%  
+	    New File  		    4431	repr.py100%  
+	    New File  		    4602	rule.py100%  
+	    New File  		    2843	scope.py100%  
+	    New File  		    1591	screen.py100%  
+	    New File  		   24743	segment.py100%  
+	    New File  		    4214	spinner.py100%  
+	    New File  		    4424	status.py100%  
+	    New File  		   27059	style.py100%  
+	    New File  		    1258	styled.py100%  
+	    New File  		   36371	syntax.py100%  
+	    New File  		   40049	table.py100%  
+	    New File  		    3370	terminal_theme.py100%  
+	    New File  		   47552	text.py100%  
+	    New File  		    3771	theme.py100%  
+	    New File  		     102	themes.py100%  
+	    New File  		   35861	traceback.py100%  
+	    New File  		    9451	tree.py100%  
+	    New File  		   10209	_cell_widths.py100%  
+	    New File  		  140235	_emoji_codes.py 93%  100%  
+	    New File  		    1064	_emoji_replace.py100%  
+	    New File  		    2128	_export_format.py100%  
+	    New File  		     265	_extension.py100%  
+	    New File  		     799	_fileno.py100%  
+	    New File  		    9656	_inspect.py100%  
+	    New File  		    3225	_log_render.py100%  
+	    New File  		    1236	_loop.py100%  
+	    New File  		    1394	_null_file.py100%  
+	    New File  		    7063	_palettes.py100%  
+	    New File  		     423	_pick.py100%  
+	    New File  		    5325	_ratio.py100%  
+	    New File  		   19919	_spinners.py100%  
+	    New File  		     351	_stack.py100%  
+	    New File  		     417	_timer.py100%  
+	    New File  		   22755	_win32_console.py100%  
+	    New File  		    1925	_windows.py100%  
+	    New File  		    2783	_windows_renderer.py100%  
+	    New File  		    3404	_wrap.py100%  
+	    New File  		    6090	__init__.py100%  
+	    New File  		    7896	__main__.py100%  
+	  New Dir         77	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\rich\__pycache__\
+	    New File  		    1691	abc.cpython-313.pyc100%  
+	    New File  		   12426	align.cpython-313.pyc100%  
+	    New File  		    9263	ansi.cpython-313.pyc100%  
+	    New File  		    4336	bar.cpython-313.pyc100%  
+	    New File  		   11676	box.cpython-313.pyc100%  
+	    New File  		    5506	cells.cpython-313.pyc100%  
+	    New File  		   26533	color.cpython-313.pyc100%  
+	    New File  		    1708	color_triplet.cpython-313.pyc100%  
+	    New File  		    8719	columns.cpython-313.pyc100%  
+	    New File  		  114226	console.cpython-313.pyc100%  
+	    New File  		    2314	constrain.cpython-313.pyc100%  
+	    New File  		    9257	containers.cpython-313.pyc100%  
+	    New File  		   10769	control.cpython-313.pyc100%  
+	    New File  		    9698	default_styles.cpython-313.pyc100%  
+	    New File  		    1530	diagnose.cpython-313.pyc100%  
+	    New File  		    4120	emoji.cpython-313.pyc100%  
+	    New File  		    2050	errors.cpython-313.pyc100%  
+	    New File  		    2960	filesize.cpython-313.pyc100%  
+	    New File  		    3710	file_proxy.cpython-313.pyc100%  
+	    New File  		    9980	highlighter.cpython-313.pyc100%  
+	    New File  		    5921	json.cpython-313.pyc100%  
+	    New File  		    5393	jupyter.cpython-313.pyc100%  
+	    New File  		   20176	layout.cpython-313.pyc100%  
+	    New File  		   20703	live.cpython-313.pyc100%  
+	    New File  		    4726	live_render.cpython-313.pyc100%  
+	    New File  		   14032	logging.cpython-313.pyc100%  
+	    New File  		    9724	markup.cpython-313.pyc100%  
+	    New File  		    6201	measure.cpython-313.pyc100%  
+	    New File  		    6948	padding.cpython-313.pyc100%  
+	    New File  		    1888	pager.cpython-313.pyc100%  
+	    New File  		    5315	palette.cpython-313.pyc100%  
+	    New File  		   12708	panel.cpython-313.pyc100%  
+	    New File  		   41287	pretty.cpython-313.pyc100%  
+	    New File  		   74691	progress.cpython-313.pyc100%  
+	    New File  		   10452	progress_bar.cpython-313.pyc100%  
+	    New File  		   15811	prompt.cpython-313.pyc100%  
+	    New File  		    1871	protocol.cpython-313.pyc100%  
+	    New File  		     628	region.cpython-313.pyc100%  
+	    New File  		    6748	repr.cpython-313.pyc100%  
+	    New File  		    6622	rule.cpython-313.pyc100%  
+	    New File  		    3797	scope.cpython-313.pyc100%  
+	    New File  		    2553	screen.cpython-313.pyc100%  
+	    New File  		   28279	segment.cpython-313.pyc100%  
+	    New File  		    6003	spinner.cpython-313.pyc100%  
+	    New File  		    6029	status.cpython-313.pyc100%  
+	    New File  		   34396	style.cpython-313.pyc100%  
+	    New File  		    2190	styled.cpython-313.pyc100%  
+	    New File  		   40651	syntax.cpython-313.pyc100%  
+	    New File  		   44337	table.cpython-313.pyc100%  
+	    New File  		    3409	terminal_theme.cpython-313.pyc100%  
+	    New File  		   60288	text.cpython-313.pyc100%  
+	    New File  		    6325	theme.cpython-313.pyc100%  
+	    New File  		     317	themes.cpython-313.pyc100%  
+	    New File  		   36566	traceback.cpython-313.pyc100%  
+	    New File  		   11922	tree.cpython-313.pyc100%  
+	    New File  		    7875	_cell_widths.cpython-313.pyc100%  
+	    New File  		  205979	_emoji_codes.cpython-313.pyc 63%  100%  
+	    New File  		    1747	_emoji_replace.cpython-313.pyc100%  
+	    New File  		    2352	_export_format.cpython-313.pyc100%  
+	    New File  		     542	_extension.cpython-313.pyc100%  
+	    New File  		     844	_fileno.cpython-313.pyc100%  
+	    New File  		   12299	_inspect.cpython-313.pyc100%  
+	    New File  		    4328	_log_render.cpython-313.pyc100%  
+	    New File  		    1903	_loop.cpython-313.pyc100%  
+	    New File  		    3738	_null_file.cpython-313.pyc100%  
+	    New File  		    5163	_palettes.cpython-313.pyc100%  
+	    New File  		     722	_pick.cpython-313.pyc100%  
+	    New File  		    6454	_ratio.cpython-313.pyc100%  
+	    New File  		   13182	_spinners.cpython-313.pyc100%  
+	    New File  		    1030	_stack.cpython-313.pyc100%  
+	    New File  		     871	_timer.cpython-313.pyc100%  
+	    New File  		   28342	_win32_console.cpython-313.pyc100%  
+	    New File  		    2569	_windows.cpython-313.pyc100%  
+	    New File  		    3616	_windows_renderer.cpython-313.pyc100%  
+	    New File  		    3328	_wrap.cpython-313.pyc100%  
+	    New File  		    6877	__init__.cpython-313.pyc100%  
+	    New File  		    9466	__main__.cpython-313.pyc100%  
+	  New Dir          5	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\tomli\
+	    New File  		      26	py.typed100%  
+	    New File  		   25591	_parser.py100%  
+	    New File  		    3171	_re.py100%  
+	    New File  		     254	_types.py100%  
+	    New File  		     314	__init__.py100%  
+	  New Dir          4	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\tomli\__pycache__\
+	    New File  		   29584	_parser.cpython-313.pyc100%  
+	    New File  		    4030	_re.cpython-313.pyc100%  
+	    New File  		     369	_types.cpython-313.pyc100%  
+	    New File  		     341	__init__.cpython-313.pyc100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\tomli_w\
+	    New File  		      26	py.typed100%  
+	    New File  		    6961	_writer.py100%  
+	    New File  		     169	__init__.py100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\tomli_w\__pycache__\
+	    New File  		   10787	_writer.cpython-313.pyc100%  
+	    New File  		     330	__init__.cpython-313.pyc100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\truststore\
+	    New File  		       0	py.typed
+	    New File  		   11234	_api.py100%  
+	    New File  		   20503	_macos.py100%  
+	    New File  		    2324	_openssl.py100%  
+	    New File  		    1130	_ssl_constants.py100%  
+	    New File  		   17993	_windows.py100%  
+	    New File  		    1320	__init__.py100%  
+	  New Dir          6	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\truststore\__pycache__\
+	    New File  		   17155	_api.cpython-313.pyc100%  
+	    New File  		   19304	_macos.cpython-313.pyc100%  
+	    New File  		    2291	_openssl.cpython-313.pyc100%  
+	    New File  		    1102	_ssl_constants.cpython-313.pyc100%  
+	    New File  		   16248	_windows.cpython-313.pyc100%  
+	    New File  		    1491	__init__.cpython-313.pyc100%  
+	  New Dir         11	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\
+	    New File  		   20314	connection.py100%  
+	    New File  		   40408	connectionpool.py100%  
+	    New File  		    8217	exceptions.py100%  
+	    New File  		    8579	fields.py100%  
+	    New File  		    2440	filepost.py100%  
+	    New File  		   19990	poolmanager.py100%  
+	    New File  		    6691	request.py100%  
+	    New File  		   30641	response.py100%  
+	    New File  		   11372	_collections.py100%  
+	    New File  		      64	_version.py100%  
+	    New File  		    3333	__init__.py100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\contrib\
+	    New File  		   11036	appengine.py100%  
+	    New File  		    4528	ntlmpool.py100%  
+	    New File  		   17081	pyopenssl.py100%  
+	    New File  		   34446	securetransport.py100%  
+	    New File  		    7097	socks.py100%  
+	    New File  		     957	_appengine_environ.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\contrib\_securetransport\
+	    New File  		   17632	bindings.py100%  
+	    New File  		   13922	low_level.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\contrib\_securetransport\__pycache__\
+	    New File  		   17504	bindings.cpython-313.pyc100%  
+	    New File  		   14821	low_level.cpython-313.pyc100%  
+	    New File  		     218	__init__.cpython-313.pyc100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\contrib\__pycache__\
+	    New File  		   11771	appengine.cpython-313.pyc100%  
+	    New File  		    5739	ntlmpool.cpython-313.pyc100%  
+	    New File  		   24788	pyopenssl.cpython-313.pyc100%  
+	    New File  		   35983	securetransport.cpython-313.pyc100%  
+	    New File  		    7733	socks.cpython-313.pyc100%  
+	    New File  		    1879	_appengine_environ.cpython-313.pyc100%  
+	    New File  		     201	__init__.cpython-313.pyc100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\packages\
+	    New File  		   34665	six.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\packages\backports\
+	    New File  		    1417	makefile.py100%  
+	    New File  		    5343	weakref_finalize.py100%  
+	    New File  		       0	__init__.py
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\packages\backports\__pycache__\
+	    New File  		    1936	makefile.cpython-313.pyc100%  
+	    New File  		    7531	weakref_finalize.cpython-313.pyc100%  
+	    New File  		     212	__init__.cpython-313.pyc100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\packages\__pycache__\
+	    New File  		   42022	six.cpython-313.pyc100%  
+	    New File  		     202	__init__.cpython-313.pyc100%  
+	  New Dir         13	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\util\
+	    New File  		    4901	connection.py100%  
+	    New File  		    1605	proxy.py100%  
+	    New File  		     498	queue.py100%  
+	    New File  		    3997	request.py100%  
+	    New File  		    3510	response.py100%  
+	    New File  		   22050	retry.py100%  
+	    New File  		    6895	ssltransport.py100%  
+	    New File  		   17460	ssl_.py100%  
+	    New File  		    5758	ssl_match_hostname.py100%  
+	    New File  		   10168	timeout.py100%  
+	    New File  		   14296	url.py100%  
+	    New File  		    5403	wait.py100%  
+	    New File  		    1155	__init__.py100%  
+	  New Dir         13	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\util\__pycache__\
+	    New File  		    4780	connection.cpython-313.pyc100%  
+	    New File  		    1578	proxy.cpython-313.pyc100%  
+	    New File  		    1427	queue.cpython-313.pyc100%  
+	    New File  		    4147	request.cpython-313.pyc100%  
+	    New File  		    3046	response.cpython-313.pyc100%  
+	    New File  		   21553	retry.cpython-313.pyc100%  
+	    New File  		   10936	ssltransport.cpython-313.pyc100%  
+	    New File  		   15502	ssl_.cpython-313.pyc100%  
+	    New File  		    5221	ssl_match_hostname.cpython-313.pyc100%  
+	    New File  		   10681	timeout.cpython-313.pyc100%  
+	    New File  		   15938	url.cpython-313.pyc100%  
+	    New File  		    4580	wait.cpython-313.pyc100%  
+	    New File  		    1149	__init__.cpython-313.pyc100%  
+	  New Dir         11	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\urllib3\__pycache__\
+	    New File  		   20730	connection.cpython-313.pyc100%  
+	    New File  		   36062	connectionpool.cpython-313.pyc100%  
+	    New File  		   14182	exceptions.cpython-313.pyc100%  
+	    New File  		   10189	fields.cpython-313.pyc100%  
+	    New File  		    3998	filepost.cpython-313.pyc100%  
+	    New File  		   19988	poolmanager.cpython-313.pyc100%  
+	    New File  		    6970	request.cpython-313.pyc100%  
+	    New File  		   34278	response.cpython-313.pyc100%  
+	    New File  		   16435	_collections.cpython-313.pyc100%  
+	    New File  		     221	_version.cpython-313.pyc100%  
+	    New File  		    3356	__init__.cpython-313.pyc100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\_vendor\__pycache__\
+	    New File  		    4597	__init__.cpython-313.pyc100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip\__pycache__\
+	    New File  		     646	__init__.cpython-313.pyc100%  
+	    New File  		     846	__main__.cpython-313.pyc100%  
+	    New File  		    2283	__pip-runner__.cpython-313.pyc100%  
+	  New Dir          7	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\
+	    New File  		      87	entry_points.txt100%  
+	    New File  		       4	INSTALLER100%  
+	    New File  		    4744	METADATA100%  
+	    New File  		   67267	RECORD100%  
+	    New File  		       0	REQUESTED
+	    New File  		       4	top_level.txt100%  
+	    New File  		      91	WHEEL100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\
+	    New File  		   11385	AUTHORS.txt100%  
+	    New File  		    1093	LICENSE.txt100%  
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\
+	  New Dir          0	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\cachecontrol\
+	    New File  		     558	LICENSE.txt100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\certifi\
+	    New File  		     989	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\dependency_groups\
+	    New File  		    1099	LICENSE.txt100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\distlib\
+	    New File  		   14531	LICENSE.txt100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\distro\
+	    New File  		   11325	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\idna\
+	    New File  		    1541	LICENSE.md100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\msgpack\
+	    New File  		     614	COPYING100%  
+	  New Dir          3	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\packaging\
+	    New File  		     197	LICENSE100%  
+	    New File  		   10174	LICENSE.APACHE100%  
+	    New File  		    1344	LICENSE.BSD100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\pkg_resources\
+	    New File  		    1023	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\platformdirs\
+	    New File  		    1089	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\pygments\
+	    New File  		    1331	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\pyproject_hooks\
+	    New File  		    1081	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\requests\
+	    New File  		   10142	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\resolvelib\
+	    New File  		     751	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\rich\
+	    New File  		    1056	LICENSE100%  
+	  New Dir          2	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\tomli\
+	    New File  		    1072	LICENSE100%  
+	    New File  		     121	LICENSE-HEADER100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\tomli_w\
+	    New File  		    1072	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\truststore\
+	    New File  		    1086	LICENSE100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Lib\site-packages\pip-25.2.dist-info\licenses\src\pip\_vendor\urllib3\
+	    New File  		    1115	LICENSE.txt100%  
+	  New Dir         10	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\harriswildlands_ai_bridge\.venv\Scripts\
+	    New File  		    2212	activate100%  
+	    New File  		    1024	activate.bat100%  
+	    New File  		    2283	activate.fish100%  
+	    New File  		    9031	Activate.ps1100%  
+	    New File  		     393	deactivate.bat100%  
+	    New File  		  108395	pip.exe100%  
+	    New File  		  108395	pip3.13.exe100%  
+	    New File  		  108395	pip3.exe100%  
+	    New File  		  255320	python.exe 51%  100%  
+	    New File  		  251736	pythonw.exe 52%  100%  
+	  New Dir          1	C:\GRAVITY\05_REFERENCE\BRUCE_BRUCE\brucebruce codex\__pycache__\
+	    New File  		   21154	bruceops_mcp_server.cpython-312.pyc100%  
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :       176       175         1         0         0         0
+   Files :      1219      1219         0         0         0         0
+   Bytes :  240.05 m  240.05 m         0         0         0         0
+   Times :   0:00:06   0:00:06                       0:00:00   0:00:00
+
+
+   Speed :            41428412 Bytes/sec.
+   Speed :            2370.552 MegaBytes/min.
+   Ended : Thursday, January 29, 2026 10:16:45 PM
+
