@@ -183,8 +183,8 @@ class PatchApplier:
 
     def _apply_manually(self, diff: str) -> PatchResult:
         """
-        Apply diff manually by parsing hunks.
-        Simple implementation for single-file, simple diffs.
+        Apply diff manually by parsing hunks with context verification.
+        Rejects patches where context lines don't match the target file.
         """
         files_modified = []
         current_file = None
@@ -195,19 +195,21 @@ class PatchApplier:
         while i < len(lines):
             line = lines[i]
 
-            # New file header
             if line.startswith('+++ b/'):
-                # Apply previous file's hunks if any
                 if current_file and hunks:
                     success = self._apply_hunks(current_file, hunks)
-                    if success:
-                        files_modified.append(current_file)
+                    if not success:
+                        return PatchResult(
+                            success=False,
+                            message=f"Manual apply failed on {current_file}: context mismatch or hunk error",
+                            files_modified=files_modified,
+                        )
+                    files_modified.append(current_file)
                     hunks = []
-                current_file = line[6:]  # Remove '+++ b/'
+                current_file = line[6:]
                 i += 1
                 continue
 
-            # Hunk header
             if line.startswith('@@'):
                 hunk_lines = [line]
                 i += 1
@@ -219,11 +221,15 @@ class PatchApplier:
 
             i += 1
 
-        # Apply last file's hunks
         if current_file and hunks:
             success = self._apply_hunks(current_file, hunks)
-            if success:
-                files_modified.append(current_file)
+            if not success:
+                return PatchResult(
+                    success=False,
+                    message=f"Manual apply failed on {current_file}: context mismatch or hunk error",
+                    files_modified=files_modified,
+                )
+            files_modified.append(current_file)
 
         if files_modified:
             return PatchResult(
@@ -239,15 +245,14 @@ class PatchApplier:
             )
 
     def _apply_hunks(self, file_path: str, hunks: list) -> bool:
-        """Apply hunks to a single file."""
+        """Apply hunks to a single file with context line verification."""
         full_path = self.repo_root / file_path
 
-        # Handle new file creation
         if not full_path.exists():
             full_path.parent.mkdir(parents=True, exist_ok=True)
             new_content = []
             for hunk in hunks:
-                for line in hunk[1:]:  # Skip @@ header
+                for line in hunk[1:]:
                     if line.startswith('+') and not line.startswith('+++'):
                         new_content.append(line[1:])
                     elif not line.startswith('-'):
@@ -255,31 +260,44 @@ class PatchApplier:
             full_path.write_text('\n'.join(new_content), encoding='utf-8')
             return True
 
-        # Existing file - simple line-based patching
         try:
             content = full_path.read_text(encoding='utf-8').split('\n')
             for hunk in hunks:
-                # Parse hunk header: @@ -start,count +start,count @@
                 header = hunk[0]
-                match = re.match(r'@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@', header)
+                match = re.match(r'@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@', header)
                 if not match:
-                    continue
+                    return False
 
-                old_start = int(match.group(1)) - 1  # 0-indexed
+                old_start = int(match.group(1)) - 1
+
+                context_lines = [
+                    line[1:] for line in hunk[1:]
+                    if line.startswith(' ')
+                ]
+                old_lines_in_hunk = [
+                    line[1:] for line in hunk[1:]
+                    if line.startswith('-') or line.startswith(' ')
+                ]
+
+                if old_start + len(old_lines_in_hunk) > len(content):
+                    return False
+
+                for i, expected in enumerate(old_lines_in_hunk):
+                    if old_start + i < len(content) and content[old_start + i] != expected:
+                        return False
+
                 new_lines = []
-
                 for line in hunk[1:]:
                     if line.startswith('+'):
                         new_lines.append(line[1:])
                     elif line.startswith('-'):
-                        continue  # Remove this line
+                        continue
                     elif line.startswith(' '):
                         new_lines.append(line[1:])
                     else:
                         new_lines.append(line)
 
-                # Simple replacement (works for many cases)
-                old_count = sum(1 for l in hunk[1:] if l.startswith('-') or l.startswith(' '))
+                old_count = len(old_lines_in_hunk)
                 content[old_start:old_start + old_count] = new_lines
 
             full_path.write_text('\n'.join(content), encoding='utf-8')

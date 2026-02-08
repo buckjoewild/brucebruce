@@ -56,7 +56,8 @@ Bruce is an always-on NPC steward who wanders the world, observes, speaks, and l
 ### Verification Commands (in-game)
 - `dev heartbeat` — Show last 3 heartbeat entries (timestamp, room, snapshot)
 - `dev bruce tail <n>` — Show last N Bruce activity entries
-- `dev logsizes` — Show file sizes for all evidence logs
+- `dev logsizes` — Show evidence log file sizes
+- `dev verify heartbeat|activity|artifacts` — Verify sha256 hash integrity of evidence files
 
 ### What Is NOT Logged
 - Bruce's `look` command output text (only metadata: exits, NPC count, player count)
@@ -103,11 +104,9 @@ All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
 
 ## Evidence Log Retention Policy (Current)
 
-- Policy: **Unbounded growth for now** (no rotation or deletion)
-- Reason: current observed growth rates are low enough for short/medium term operation
-  - bruce_activity.jsonl: ~80 KB/hour (observed estimate)
-  - heartbeat.jsonl: ~400 B/hour (observed estimate)
-- Revisit threshold: when `bruce_activity.jsonl` approaches **5 MB** or when storage constraints are observed
+- Policy: **Automatic rotation at 5MB** (rotates to .1 file, logs rotation event)
+- Write failures set `logging_degraded` flag (visible fault state, no silent death)
+- All JSONL I/O specifies `encoding="utf-8"` for Windows compatibility
 - Governance: retention changes must be explicit, documented, and accompanied by a new proof-of-life capture
 
 ## Governance Notes
@@ -121,13 +120,15 @@ All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_ai_player.py` — 27 AI player tests (auth, gate, rate limit, audit)
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_heartbeat.py` — 13 heartbeat tests (sha256 consistency, JSONL write, tail parser, activity logging)
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_artifact_intake.py` — 15 artifact intake tests (accept/quarantine/refuse, hash verification, link/annotate)
-- **Total: 94 tests, all passing**
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_hardening.py` — 26 hardening tests (auth, timeout, shell injection, hash verify, rotation, UTF-8, patch safety, context)
+- **Total: 120 tests, all passing**
 
 ## Scripts
 - `python server.py` — Start the MUD server
 - `python ai_player.py` — Run AI player client (requires BOT_AUTH_TOKEN env)
 - `python ai_player.py --test-deny` — Run denial tests against live server
-- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (79 total)
+- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (120 total)
+- `bash scripts/smoke.sh` — Run smoke tests (pytest + live server handshake + duplicate name + auth checks)
 
 ## Deployment
 - Target: VM (persistent WebSocket connections)
@@ -150,6 +151,7 @@ All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
 - Edit `RUN_TESTS=0` in RUN_MUD.bat to skip tests for faster boot
 
 ## Recent Changes
+- 2026-02-08: audit hardening: explicit auth handshake, hash verification (dev verify), world lock for mutations, safe subprocess (no shell=True), build arm timeout (300s), log rotation (5MB), UTF-8 everywhere, patch context verification, context snippets for Codex, Bruce role=npc, duplicate name rejection, smoke.sh, MASTER_KEYSTONE.md — 120 tests pass
 - 2026-02-08: feat: Artifact Intake System — bruce intake/inspect/link/annotate commands, schema validation, sha256-signed JSONL logging, archive/quarantine storage, bot deny gate, 94 tests pass
 - 2026-02-08: governance: quarantined drift artifact (prove_bruce_alive.py), documented heartbeat cadence policy (15m dev / 60m prod), documented retention policy (unbounded, revisit at 5MB)
 - 2026-02-08: feat: Bruce observability — heartbeat every 15min (configurable via BRUCE_HEARTBEAT_MINUTES), per-action activity log, sha256-signed JSONL entries, dev commands (heartbeat/bruce tail/logsizes), 79 tests pass

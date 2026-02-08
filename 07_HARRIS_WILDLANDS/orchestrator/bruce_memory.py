@@ -67,7 +67,7 @@ class BruceMemory:
         if metadata:
             entry["metadata"] = metadata
 
-        with open(self.memory_path, "a") as f:
+        with open(self.memory_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")
 
         return entry
@@ -91,7 +91,7 @@ class BruceMemory:
             return []
 
         entries = []
-        with open(self.memory_path, "r") as f:
+        with open(self.memory_path, "r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if not line:
@@ -123,7 +123,7 @@ def format_build_fact_response(event_log_path: str, n: int = 5) -> str:
         return "The build log has no confirmed builds yet."
 
     facts = []
-    with open(path, "r") as f:
+    with open(path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:

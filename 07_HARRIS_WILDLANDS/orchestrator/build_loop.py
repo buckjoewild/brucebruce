@@ -209,27 +209,56 @@ class BuildOrchestrator:
             state.consume_build_cycle()
             return f"BUILD ERROR: {e}"
 
+    CONTEXT_KEY_FILES = [
+        "server.py",
+        "07_HARRIS_WILDLANDS/orchestrator/bot_security.py",
+        "07_HARRIS_WILDLANDS/orchestrator/mode_state.py",
+        "07_HARRIS_WILDLANDS/orchestrator/build_loop.py",
+        "07_HARRIS_WILDLANDS/orchestrator/heartbeat.py",
+        "replit.md",
+    ]
+    CONTEXT_MAX_LINES_PER_FILE = 80
+    CONTEXT_SECRET_PATTERNS = ["BOT_AUTH_TOKEN", "SECRET", "PASSWORD", "API_KEY"]
+
     def _gather_context(self) -> dict:
-        """Gather repository context for Codex."""
+        """Gather repository context for Codex, including file snippets."""
         file_tree = []
         for root, dirs, files in os.walk(self.repo_root):
-            # Skip hidden dirs and common ignores
-            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['node_modules', '__pycache__', 'venv']]
+            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['node_modules', '__pycache__', 'venv', '.pythonlibs']]
             for f in files:
                 if not f.startswith('.'):
                     rel_path = os.path.relpath(os.path.join(root, f), self.repo_root)
                     file_tree.append(rel_path)
-                    if len(file_tree) > 100:  # Limit for context window
+                    if len(file_tree) > 100:
                         break
             if len(file_tree) > 100:
                 break
 
+        snippets = {}
+        for rel_path in self.CONTEXT_KEY_FILES:
+            full_path = self.repo_root / rel_path
+            if full_path.exists():
+                try:
+                    lines = full_path.read_text(encoding="utf-8").split("\n")[:self.CONTEXT_MAX_LINES_PER_FILE]
+                    content = "\n".join(lines)
+                    for pattern in self.CONTEXT_SECRET_PATTERNS:
+                        if pattern in content:
+                            content = content.replace(pattern, "[REDACTED]")
+                    snippets[rel_path] = content
+                except Exception:
+                    snippets[rel_path] = "(read error)"
+
         return {
             "repo_root": str(self.repo_root),
-            "file_tree": file_tree[:50],  # Keep it small
-            "snippets": {},  # Could add key file contents
+            "file_tree": file_tree[:50],
+            "snippets": snippets,
             "failing_tests": [],
-            "invariants": ["Mode must be BUILD with armed + consented"],
+            "invariants": [
+                "Mode must be BUILD with armed + consented",
+                "Build arming expires after 300 seconds",
+                "No shell=True for AI test commands",
+                "Bots cannot escalate to human role",
+            ],
         }
 
     def _validate_diff(self, diff: str) -> Optional[str]:
@@ -287,27 +316,44 @@ class BuildOrchestrator:
             return str(venv_python)
         return None
 
+    ALLOWED_TEST_COMMANDS = [
+        "python -m pytest",
+        "python -m pytest -q",
+        "python -m pytest -v",
+        "python -m pytest -x",
+        "python -m pytest --tb=short",
+    ]
+
+    def _is_safe_test_cmd(self, cmd: str) -> bool:
+        """Check if test command matches the whitelist (prefix match)."""
+        for allowed in self.ALLOWED_TEST_COMMANDS:
+            if cmd == allowed or cmd.startswith(allowed + " "):
+                return True
+        return False
+
     def _run_tests(self, cmds: list[str]) -> "TestResult":
-        """Run test commands and return result. Uses venv Python if available."""
-        # Check for venv Python
+        """Run test commands safely without shell=True. Uses venv Python if available."""
         venv_python = self._get_venv_python()
+        default_cmd = "python -m pytest -v"
 
         for cmd in cmds:
+            if not self._is_safe_test_cmd(cmd):
+                self._log_audit_event("test_cmd_rejected", {"rejected": cmd, "fallback": default_cmd})
+                cmd = default_cmd
+
             try:
-                # Replace 'python' with venv Python if available
-                if venv_python and cmd.startswith("python "):
-                    cmd = f'"{venv_python}" {cmd[7:]}'
-                elif venv_python and "python -m" in cmd:
-                    cmd = cmd.replace("python -m", f'"{venv_python}" -m')
+                cmd_parts = cmd.split()
+                if venv_python and cmd_parts[0] == "python":
+                    cmd_parts[0] = venv_python
 
                 result = subprocess.run(
-                    cmd,
-                    shell=True,
+                    cmd_parts,
+                    shell=False,
                     capture_output=True,
                     text=True,
                     timeout=60,
                     cwd=self.repo_root,
-                    errors='replace',  # Handle encoding issues
+                    errors='replace',
                 )
                 stdout = result.stdout or ""
                 stderr = result.stderr or ""
@@ -321,6 +367,21 @@ class BuildOrchestrator:
                 return TestResult(success=False, output=str(e))
 
         return TestResult(success=True, output="No tests specified")
+
+    def _log_audit_event(self, event_type: str, detail: dict) -> None:
+        """Log a security audit event to the event log."""
+        import uuid as _uuid
+        event = BuildEvent(
+            ts=datetime.now(timezone.utc).isoformat(),
+            id=f"audit_{_uuid.uuid4().hex[:12]}",
+            actor="system",
+            mode="AUDIT",
+            verb=event_type,
+            args=detail,
+            result="logged",
+            durable=False,
+        )
+        self._log_event(event)
 
     def _log_event(self, event: BuildEvent) -> None:
         """Append event to the JSONL log."""

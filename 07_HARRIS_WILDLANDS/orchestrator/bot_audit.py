@@ -80,7 +80,7 @@ class BotAuditLogger:
             "reason": reason,
         }
         
-        with open(self.audit_path, "a") as f:
+        with open(self.audit_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")
         
         return entry

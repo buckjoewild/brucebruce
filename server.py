@@ -20,7 +20,7 @@ from orchestrator.build_loop import BuildOrchestrator
 from orchestrator.bruce_memory import BruceMemory, format_build_fact_response
 from orchestrator.bot_audit import BotAuditLogger
 from orchestrator.bot_security import authorize, check_bot_interlock, DENIED_BOT_COMMANDS, DENIED_BOT_SUBCOMMANDS
-from orchestrator.heartbeat import HeartbeatLogger, ActivityLogger, get_evidence_sizes, HEARTBEAT_INTERVAL_MINUTES
+from orchestrator.heartbeat import HeartbeatLogger, ActivityLogger, get_evidence_sizes, HEARTBEAT_INTERVAL_MINUTES, verify_jsonl_hashes
 from orchestrator.artifacts import intake as artifact_intake, load_artifact, link_artifacts, annotate_artifact, ensure_dirs as ensure_artifact_dirs
 
 import websockets
@@ -142,6 +142,7 @@ class MUDWorld:
         self.bot_audit = BotAuditLogger(str(EVIDENCE_DIR))
         self.heartbeat_logger = HeartbeatLogger(str(EVIDENCE_DIR))
         self.activity_logger = ActivityLogger(str(EVIDENCE_DIR))
+        self.world_lock = asyncio.Lock()
         if not self.load_world():
             self.init_world()
 
@@ -256,7 +257,7 @@ class MUDWorld:
             return f"Unknown command: '{cmd}'. Type 'help' for available commands."
 
     async def handle_bruce_command(self, player: Player, args: List[str]) -> str:
-        if player.role != "human":
+        if player.role not in ("human", "npc"):
             return "Permission denied: only human players can run bruce commands."
         if not args:
             return "Bruce commands: intake <type> <source> [id], inspect <id>, link <id_a> <id_b> [note], annotate <id> <text>"
@@ -420,6 +421,29 @@ class MUDWorld:
                     f" @ {rm.get('name', '?')}{detail_str}"
                 )
             return "\n".join(lines)
+        elif sub == "verify":
+            if len(args) < 2:
+                return "Usage: dev verify heartbeat|activity|artifacts"
+            target = args[1].lower()
+            file_map = {
+                "heartbeat": str(EVIDENCE_DIR / "heartbeat.jsonl"),
+                "activity": str(EVIDENCE_DIR / "bruce_activity.jsonl"),
+                "artifacts": str(EVIDENCE_DIR / "artifacts" / "intake.jsonl"),
+            }
+            if target not in file_map:
+                return f"Unknown verify target: {target}. Options: heartbeat, activity, artifacts"
+            result = verify_jsonl_hashes(file_map[target])
+            status = "PASS" if result["invalid"] == 0 else "FAIL"
+            lines = [
+                f"Verify {target}: {status}",
+                f"  Total entries: {result['total']}",
+                f"  Valid: {result['valid']}",
+                f"  Invalid: {result['invalid']}",
+                f"  Skipped (no hash): {result['skipped']}",
+            ]
+            if result["first_invalid_line"] is not None:
+                lines.append(f"  First invalid at line: {result['first_invalid_line']}")
+            return "\n".join(lines)
         elif sub == "logsizes":
             sizes = get_evidence_sizes(str(EVIDENCE_DIR))
             lines = ["Evidence log sizes:"]
@@ -433,7 +457,7 @@ class MUDWorld:
                     lines.append(f"  {name}: (not created yet)")
             return "\n".join(lines)
         else:
-            return "Dev commands: status, buildstub, log tail <n>, heartbeat, bruce tail <n>, logsizes"
+            return "Dev commands: status, buildstub, log tail <n>, heartbeat, bruce tail <n>, logsizes, verify <target>"
 
     async def cmd_look(self, player: Player) -> str:
         room = self.rooms.get(player.room_id)
@@ -466,10 +490,11 @@ class MUDWorld:
         if direction not in room.exits:
             return f"You can't go {direction} from here."
         new_room_id = room.exits[direction]
-        room.players.discard(player.name)
-        player.room_id = new_room_id
-        new_room = self.rooms[new_room_id]
-        new_room.players.add(player.name)
+        async with self.world_lock:
+            room.players.discard(player.name)
+            player.room_id = new_room_id
+            new_room = self.rooms[new_room_id]
+            new_room.players.add(player.name)
         await self.broadcast(f"{player.name} arrives from the {self.opposite_dir(direction)}.", new_room_id, exclude=player.name)
         return f"You go {direction}.\n{await self.cmd_look(player)}"
 
@@ -513,9 +538,10 @@ class MUDWorld:
             return f"There's already something to the {direction}!"
         room_id = f"room_{int(datetime.now().timestamp())}_{random.randint(1000,9999)}"
         new_room = Room(room_id, room_name, "A newly formed space in the wilderness. It smells of possibility.")
-        current_room.exits[direction] = room_id
-        new_room.exits[self.opposite_dir(direction)] = player.room_id
-        self.rooms[room_id] = new_room
+        async with self.world_lock:
+            current_room.exits[direction] = room_id
+            new_room.exits[self.opposite_dir(direction)] = player.room_id
+            self.rooms[room_id] = new_room
         await self.broadcast(f"The world shifts! A new area opens to the {direction}!", player.room_id)
         return f"You create a new realm: {room_name}\nIt lies to the {direction}."
 
@@ -526,8 +552,9 @@ class MUDWorld:
         npc_id = f"npc_{int(datetime.now().timestamp())}_{random.randint(1000,9999)}"
         npc = NPC(npc_id, npc_name, f"A mysterious figure named {npc_name}", "wanderer")
         npc.room_id = player.room_id
-        self.npcs[npc_id] = npc
-        self.rooms[player.room_id].npcs.append(npc)
+        async with self.world_lock:
+            self.npcs[npc_id] = npc
+            self.rooms[player.room_id].npcs.append(npc)
         await self.broadcast(f"A shimmering form coalesces into {npc_name}!", player.room_id)
         return f"You summon {npc_name} into existence."
 
@@ -629,54 +656,93 @@ class MUDServer:
             }))
             first_msg = await websocket.recv()
             role = "human"
-            
+
             try:
                 data = json.loads(first_msg)
-                
-                if data.get("type") == "auth":
-                    if not BOT_ENABLED:
-                        await websocket.send(json.dumps({
-                            "type": "error",
-                            "text": "Bot connections disabled.",
-                        }))
-                        await websocket.close()
-                        return
-
-                    interlock_ok, interlock_reason = check_bot_interlock()
-                    if not interlock_ok:
-                        await websocket.send(json.dumps({
-                            "type": "error",
-                            "text": f"Bot connection refused: {interlock_reason}",
-                        }))
-                        await websocket.close()
-                        return
-                    
-                    token = data.get("token", "")
-                    if not BOT_AUTH_TOKEN or token != BOT_AUTH_TOKEN:
-                        await websocket.send(json.dumps({
-                            "type": "error",
-                            "text": "Authentication failed.",
-                        }))
-                        await websocket.close()
-                        return
-                    
-                    name = data.get("name", "AIPlayer").strip()
-                    if not name:
-                        name = "AIPlayer"
-                    role = "bot"
-                    print(f"Bot authenticated: {name}")
-                else:
-                    name = data.get("command", "Wanderer").strip()
             except (json.JSONDecodeError, AttributeError):
-                name = str(first_msg).strip() or "Wanderer"
-            
-            if not name:
-                name = "Wanderer"
-            
+                data = None
+
+            if data is None or not isinstance(data, dict):
+                await websocket.send(json.dumps({
+                    "type": "error",
+                    "text": "Invalid handshake. Send {\"type\":\"join\",\"name\":\"YourName\"} or {\"type\":\"auth\",...} as first message.",
+                }))
+                await websocket.close()
+                return
+
+            msg_type = data.get("type", "")
+
+            if msg_type == "auth":
+                if not BOT_ENABLED:
+                    await websocket.send(json.dumps({
+                        "type": "error",
+                        "text": "Bot connections disabled.",
+                    }))
+                    await websocket.close()
+                    return
+
+                interlock_ok, interlock_reason = check_bot_interlock()
+                if not interlock_ok:
+                    await websocket.send(json.dumps({
+                        "type": "error",
+                        "text": f"Bot connection refused: {interlock_reason}",
+                    }))
+                    await websocket.close()
+                    return
+
+                token = data.get("token", "")
+                if not BOT_AUTH_TOKEN or token != BOT_AUTH_TOKEN:
+                    await websocket.send(json.dumps({
+                        "type": "error",
+                        "text": "Authentication failed.",
+                    }))
+                    await websocket.close()
+                    return
+
+                name = data.get("name", "AIPlayer").strip()
+                if not name:
+                    name = "AIPlayer"
+                role = "bot"
+                print(f"Bot authenticated: {name}")
+
+            elif msg_type == "join":
+                name = data.get("name", "").strip()
+                if not name:
+                    await websocket.send(json.dumps({
+                        "type": "error",
+                        "text": "Name required. Send {\"type\":\"join\",\"name\":\"YourName\"}.",
+                    }))
+                    await websocket.close()
+                    return
+                role = "human"
+
+            elif msg_type == "command":
+                name = data.get("command", "").strip()
+                if not name:
+                    name = "Wanderer"
+                role = "human"
+
+            else:
+                await websocket.send(json.dumps({
+                    "type": "error",
+                    "text": "Unknown handshake type. Send {\"type\":\"join\",\"name\":\"YourName\"} or {\"type\":\"auth\",...}.",
+                }))
+                await websocket.close()
+                return
+
+            if name in self.world.players:
+                await websocket.send(json.dumps({
+                    "type": "error",
+                    "text": f"Name '{name}' is already in use. Please choose another.",
+                }))
+                await websocket.close()
+                return
+
             player = Player(name, role=role)
             player.websocket = websocket
-            self.world.players[name] = player
-            self.world.connections.add(websocket)
+            async with self.world.world_lock:
+                self.world.players[name] = player
+                self.world.connections.add(websocket)
             
             agent_tag = "[BOT]" if role == "bot" else ""
             welcome = f"Welcome, {name}! {agent_tag}\nType 'help' for commands."
@@ -720,12 +786,14 @@ class MUDServer:
         finally:
             if name and name in self.world.players:
                 player = self.world.players[name]
-                room = self.world.rooms.get(player.room_id)
-                if room:
-                    room.players.discard(name)
-                del self.world.players[name]
-                self.world.connections.discard(websocket)
-                await self.world.broadcast(f"{name} fades into the mist...", player.room_id)
+                room_id = player.room_id
+                async with self.world.world_lock:
+                    room = self.world.rooms.get(room_id)
+                    if room:
+                        room.players.discard(name)
+                    del self.world.players[name]
+                    self.world.connections.discard(websocket)
+                await self.world.broadcast(f"{name} fades into the mist...", room_id)
                 print(f"Player disconnected: {name}")
 
     async def bruce_autopilot(self):
@@ -734,10 +802,11 @@ class MUDServer:
         name = "Bruce"
         player = self.world.players.get(name)
         if not player:
-            player = Player(name, role="human")
-            self.world.players[name] = player
-            if player.room_id in self.world.rooms:
-                self.world.rooms[player.room_id].players.add(name)
+            player = Player(name, role="npc")
+            async with self.world.world_lock:
+                self.world.players[name] = player
+                if player.room_id in self.world.rooms:
+                    self.world.rooms[player.room_id].players.add(name)
             print(f"Bruce autopilot online")
 
         hb_entry = self.world.heartbeat_logger.run_heartbeat_tick(self.world, player)
@@ -999,9 +1068,12 @@ TERMINAL_HTML = r'''<!DOCTYPE html>
                 statusBar.className = 'connected';
             };
 
+            websocket.firstMessage = true;
+
             websocket.onclose = function() {
                 statusBar.textContent = '\u25CF DISCONNECTED';
                 statusBar.className = 'disconnected';
+                joined = false;
                 addLine('Connection lost. Reconnecting in 5 seconds...', 'system-message');
                 setTimeout(connect, 5000);
             };
@@ -1022,17 +1094,29 @@ TERMINAL_HTML = r'''<!DOCTYPE html>
                 if (command) {
                     addLine('> ' + command);
                     if (websocket && websocket.readyState === WebSocket.OPEN) {
-                        websocket.send(JSON.stringify({ command: command }));
+                        if (!joined) {
+                            doJoin(command);
+                        } else {
+                            websocket.send(JSON.stringify({ command: command }));
+                        }
                     }
                     input.value = '';
                 }
             }
         });
 
+        var joined = false;
         window.onload = function() {
             connect();
             input.focus();
         };
+
+        function doJoin(playerName) {
+            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                websocket.send(JSON.stringify({ type: 'join', name: playerName }));
+                joined = true;
+            }
+        }
 
         document.addEventListener('click', function() {
             input.focus();

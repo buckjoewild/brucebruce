@@ -24,10 +24,10 @@ def authorize(player, cmd_text: str) -> tuple:
     """
     Authorization choke point. Returns (allowed: bool, reason: str).
     Runs BEFORE any command parsing/execution.
-    Humans always pass. Bots are denied privileged commands.
+    Humans and NPCs always pass. Bots are denied privileged commands.
     """
-    if player.role != "bot":
-        return (True, "human")
+    if player.role in ("human", "npc"):
+        return (True, player.role)
 
     parts = cmd_text.strip().split()
     if not parts:

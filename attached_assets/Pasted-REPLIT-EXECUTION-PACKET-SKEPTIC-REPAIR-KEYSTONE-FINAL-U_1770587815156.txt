@@ -1,0 +1,190 @@
+REPLIT EXECUTION PACKET — “SKEPTIC REPAIR + KEYSTONE” (FINAL UPDATE)
+Repo: github.com/buckjoewild/brucebruce
+Goal: Apply the audit’s TRUE findings as hardening fixes, keep scope tight (no new features), end with everything operational + smoke tested + docs updated + pushed.
+
+NON-NEGOTIABLES
+- Do not add new gameplay features.
+- Every fix must be covered by a test (or a smoke script if it’s hard to unit test).
+- Anything we claim in docs must be enforced by runtime checks.
+- If a fix is uncertain, mark as TODO in a “Known Limitations” box (don’t over-claim).
+- Preserve existing governance loop patterns (/build on, /consent yes) as-is unless the fix is directly about them.
+
+TARGET OUTCOME / DoD
+✅ Server boots, accepts only explicit auth handshakes, rejects unauthenticated “command-only” first packets
+✅ Bots cannot impersonate humans (no fallback-to-human)
+✅ Bruce autopilot cannot bypass bot security (Bruce must have an explicit role and be subject to the same gates)
+✅ No shell injection path from AI-provided test commands (no shell=True for AI-originated cmds; whitelist)
+✅ Build arming expires (timeout enforced)
+✅ Hash verification exists and is used (dev verify + verify-on-tail where reasonable)
+✅ Basic concurrency safety (world mutations protected by a lock)
+✅ Player names are unique (no overwrite corruption)
+✅ UTF-8 encoding specified for JSONL read/write on Windows compatibility
+✅ Evidence logs rotate or at least have caps + explicit error handling (no silent death)
+✅ Docs: PROOF_OF_LIFE.md and replit.md updated; new MASTER_KEYSTONE.md summarizing invariants + limits
+✅ All tests pass; smoke test passes; push to GitHub; verify deploy still runs
+
+========================================
+TASK LIST (IN PRIORITY ORDER)
+========================================
+
+A) AUTH + ROLE ENFORCEMENT (Fix C1 / H3 / M7)
+1) Remove “default-to-human fallback” in server auth path:
+   - First inbound message MUST be explicit auth/join type.
+   - If missing/invalid: close connection with a clear error.
+   - Ensure role is always set explicitly.
+2) Enforce unique player names on connect:
+   - Reject duplicates or auto-suffix; prefer reject with message “name in use”.
+   - Ensure disconnect cleanup doesn’t delete the wrong player.
+3) Bruce autopilot must not be role="human":
+   - Give Bruce an explicit “bruce” or “bot” role, then apply bot security appropriately.
+   - If you need Bruce to do privileged operations, do it via a “human-only command” pathway that’s not reachable by network bots.
+
+Add tests:
+- test_auth_requires_explicit_first_message
+- test_bot_cannot_skip_auth_and_gain_human_role
+- test_duplicate_name_rejected
+- test_bruce_role_not_human (or equivalent)
+
+B) BUILD GOVERNANCE SAFETY (Fix H2)
+4) Armed timeout:
+   - Implement timeout check in PlayerBuildState.can_build() (or the correct enforcement point).
+   - Expiry must clear armed + consent flags.
+Add tests:
+- test_build_arm_timeout_expires
+
+C) SHELL INJECTION CLOSURE (Fix C2)
+5) build_loop.py:
+   - Remove shell=True where cmd originates from AI output.
+   - Hard whitelist allowed test commands:
+     - “python -m pytest”
+     - “python -m pytest -q”
+     - “python -m pytest -v”
+   - If patch proposal includes tests outside whitelist: ignore and run default safe tests; log an audit event.
+Add tests:
+- test_ai_tests_command_rejected_or_ignored
+- test_subprocess_invoked_without_shell
+
+D) HASH VERIFICATION REALITY (Fix M2 + clean up claims)
+6) Implement verification function:
+   - Reads JSONL line-by-line
+   - For each entry: remove sha256 field, canonicalize JSON dumps (separators=(',',':'), sort_keys=True), compute sha256, compare.
+   - Returns counts, first failing line number, etc.
+7) Expose as:
+   - dev verify heartbeat
+   - dev verify activity
+   - dev verify artifacts (if present)
+8) Add “verify-on-read” where safe:
+   - For “tail” commands, do optional verify on the returned last N lines (cheap).
+Add tests:
+- test_verify_detects_tamper
+- test_verify_passes_on_clean_log
+
+E) CONCURRENCY LOCKING (Fix C3)
+9) Add a world lock:
+   - An asyncio.Lock held during mutations of players/rooms/room.players/npcs.
+   - Keep lock scope tight; do not hold it across slow I/O.
+Add tests:
+- Minimal concurrency test (two moves + broadcast doesn’t crash / doesn’t leave inconsistent state).
+If unit testing concurrency is painful, add a smoke test that runs two clients concurrently.
+
+F) LOGGING SAFETY / ROTATION / ERROR HANDLING (Fix M3)
+10) Evidence file writes:
+   - Must catch exceptions and surface a visible fault state (e.g., log error + in-memory “logging_degraded” flag).
+11) Add rotation or caps:
+   - Simple approach acceptable: if file exceeds MAX_BYTES, rotate to .1 and start fresh; log rotation event.
+   - Do not delete without documenting retention policy.
+Add tests:
+- test_rotation_occurs_at_threshold
+- test_write_failure_sets_degraded_flag (mock open/write)
+
+G) UTF-8 FILE I/O (Fix M6)
+12) Ensure all JSONL open() calls specify encoding="utf-8" for read and append.
+Add tests:
+- test_non_ascii_name_logged_roundtrip (basic)
+
+H) PATCH APPLIER SAFETY (Fix H5)
+13) patch_apply.py:
+   - Either remove manual apply fallback OR add robust bounds/context checks.
+   - Minimum acceptable: after apply, verify expected context lines appear; otherwise fail hard (no silent corruption).
+Add tests:
+- test_multi_hunk_patch_rejected_if_context_mismatch (or similar)
+
+I) FIX EMPTY CONTEXT FOR CODEX (Fix M4)
+14) _gather_context() should include actual snippet contents for key files (bounded size):
+   - server.py, orchestrator/*, bot_security.py, mode_state.py, replit.md, PROOF_OF_LIFE.md
+   - Enforce size caps per file; redact secrets.
+Add tests:
+- test_gather_context_includes_snippets
+
+========================================
+DOCS + “MASTER KEYSTONE” (Wrap Up)
+========================================
+
+Create docs/MASTER_KEYSTONE.md (or MASTER_KEYSTONE.md at repo root) that contains:
+1) What Exists (facts)
+2) Threat model in plain language (bots, humans, auth, build)
+3) Enforced Invariants (each mapped to code location + test name)
+   - Explicit auth required
+   - No bot→human escalation
+   - Build arming timeout
+   - Hash verification exists and is used
+   - No AI shell execution
+   - Player uniqueness
+   - World lock for mutations
+   - Evidence rotation + failure visibility
+4) Known Limitations (honest):
+   - World state can be mutated by allowed commands (this is gameplay)
+   - Logs prove activity + integrity (when verified), not intent
+   - Long-running operational needs (disk space, rotation thresholds)
+5) Verification: Copy/paste smoke tests (see below)
+6) Change log entry for this update
+
+Update PROOF_OF_LIFE.md:
+- Remove/replace any over-claims (“cryptographic integrity”) unless verification is shipped and referenced.
+- Add explicit statement: “Build/consent gates protect code mutation, not ordinary world simulation actions.”
+- Add “Known Limitations” section.
+
+Update replit.md:
+- Add “Repair packet complete” summary, test count, new commands (dev verify), smoke test instructions.
+
+========================================
+SMOKE TEST SCRIPTS (REQUIRED)
+========================================
+
+Add scripts/smoke.sh (Replit/Linux):
+- Start server in background
+- Run:
+  - pytest -q
+  - unauthenticated client should be rejected (expect error)
+  - authenticated human join works
+  - bot auth works but bot cannot run /build or bruce commands
+  - dev verify heartbeat returns verified count (or at least exits 0)
+- Exit non-zero on any failure
+
+Optional: scripts/smoke.ps1 (Windows-friendly) and/or .bat if you want:
+- Mirror the above steps with python -m pytest and a tiny websocket test client.
+
+========================================
+EXECUTION / WRAP-UP
+========================================
+
+After implementing:
+1) Run full test suite
+2) Run smoke.sh
+3) Boot server and do a 60-second manual check:
+   - Connect via browser terminal
+   - Confirm join flow requires explicit auth/join message
+   - Confirm /build gate behavior and timeout
+   - Confirm dev verify works
+4) Update docs + counts
+5) Commit with message: “audit hardening: explicit auth, verify hashes, lock mutations, safe subprocess, timeouts”
+6) Push to GitHub
+7) Report back with:
+   - list of changed files
+   - test count + pass summary
+   - smoke output (paste)
+   - any Known Limitations that remain
+
+START NOW.
+
+If you paste that into Replit, it’s a clean “do the work, prove it worked, ship the receipts” packet. 🧾🔒

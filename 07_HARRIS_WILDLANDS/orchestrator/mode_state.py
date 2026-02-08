@@ -26,9 +26,20 @@ class PlayerBuildState:
     last_plan_text: Optional[str] = None
     armed_at: Optional[float] = None
 
+    ARM_TIMEOUT_SECONDS: float = 300.0
+
     def can_build(self) -> bool:
-        """Returns True only if in BUILD mode with armed + consented."""
-        return self.mode == Mode.BUILD and self.armed and self.consented
+        """Returns True only if in BUILD mode with armed + consented and not timed out."""
+        if not (self.mode == Mode.BUILD and self.armed and self.consented):
+            return False
+        if self.armed_at is not None:
+            elapsed = time.time() - self.armed_at
+            if elapsed > self.ARM_TIMEOUT_SECONDS:
+                self.armed = False
+                self.consented = False
+                self.armed_at = None
+                return False
+        return True
 
     def arm(self) -> str:
         """Arms one build operation."""
