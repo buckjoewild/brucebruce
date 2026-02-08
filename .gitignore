@@ -57,5 +57,7 @@ HW_ENV/repo/structure/
 *.laz
 
 # Runtime evidence (append-only, regenerated at runtime)
-07_HARRIS_WILDLANDS/evidence/bruce_memory.jsonl
-07_HARRIS_WILDLANDS/evidence/event_log.jsonl
+07_HARRIS_WILDLANDS/evidence/*.jsonl
+07_HARRIS_WILDLANDS/evidence/*.jsonl.1
+07_HARRIS_WILDLANDS/evidence/artifacts/archive/
+07_HARRIS_WILDLANDS/evidence/artifacts/quarantine/
