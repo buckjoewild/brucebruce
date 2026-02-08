@@ -1,0 +1,2 @@
+websockets>=16.0
+pytest>=9.0

@@ -13,6 +13,9 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 
 ## Key Files
 - `server.py` — Main server (HTTP + WebSocket MUD + orchestrator integration)
+- `requirements.txt` — Python dependencies (websockets, pytest)
+- `RUN_MUD.bat` — Windows one-click launcher (venv, deps, tests, server) with IDLE_MODE=1 safe default
+- `RUN_MUD_UNSAFE_BUILD.bat` — Windows launcher with IDLE_MODE=0 (builds allowed, use when present)
 - `Dockerfile` — Docker escape pod (python:3.12-slim, websockets only)
 - `docker-compose.yml` — Single-service compose with full env passthrough
 - `docs/hosting.md` — Caddy/Nginx reverse proxy configs, DNS notes, production checklist
@@ -48,7 +51,13 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `IDLE_MODE` — Set to `1` to block all build operations (safe unattended mode)
 - `MUD_BRUCE_AUTOPILOT` — Set to `false` to disable Bruce NPC (default: `true`)
 
+## Windows Launch
+- `RUN_MUD.bat` — Safe mode (IDLE_MODE=1): creates venv, installs deps, runs tests, starts server
+- `RUN_MUD_UNSAFE_BUILD.bat` — Build mode (IDLE_MODE=0): same flow but allows in-game builds
+- Edit `RUN_TESTS=0` in RUN_MUD.bat to skip tests for faster boot
+
 ## Recent Changes
+- 2026-02-08: feat: Windows .bat launchers (RUN_MUD.bat + RUN_MUD_UNSAFE_BUILD.bat) + requirements.txt
 - 2026-02-08: fix: single source of truth — bruce_memory.jsonl stores only player_chat/bruce_observation, build facts read from event_log.jsonl, source validation enforced, 35 tests pass
 - 2026-02-08: feat: ASCII login banner — full art displayed on WebSocket connect before name prompt, 32 tests pass
 - 2026-02-08: feat: Bruce memory v1 — append-only JSONL in evidence/, player chat logging, Bruce cites only confirmed builds, 26 tests pass
