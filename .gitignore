@@ -55,3 +55,7 @@ nul
 HW_ENV/repo/structure/
 *.tar.gz
 *.laz
+
+# Runtime evidence (append-only, regenerated at runtime)
+07_HARRIS_WILDLANDS/evidence/bruce_memory.jsonl
+07_HARRIS_WILDLANDS/evidence/event_log.jsonl

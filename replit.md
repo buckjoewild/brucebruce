@@ -22,7 +22,9 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `07_HARRIS_WILDLANDS/orchestrator/patch_apply.py` — PatchApplier for applying diffs
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/rooms.json` — Room definitions
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/npcs.json` — NPC definitions
+- `07_HARRIS_WILDLANDS/orchestrator/bruce_memory.py` — BruceMemory (append-only JSONL, fact readback)
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_build_loop.py` — 15 orchestrator tests
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_bruce_memory.py` — 11 Bruce memory tests
 
 ## MUD Commands
 - Movement: `north/south/east/west/up/down` (or `n/s/e/w/u/d`)
@@ -32,7 +34,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 
 ## Scripts
 - `python server.py` — Start the MUD server
-- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/test_build_loop.py -v` — Run orchestrator tests
+- `python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -v` — Run all tests (26 total)
 
 ## Deployment
 - Target: VM (persistent WebSocket connections)
@@ -46,6 +48,7 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `MUD_BRUCE_AUTOPILOT` — Set to `false` to disable Bruce NPC (default: `true`)
 
 ## Recent Changes
+- 2026-02-08: feat: Bruce memory v1 — append-only JSONL in evidence/, player chat logging, Bruce cites only confirmed builds, 26 tests pass
 - 2026-02-08: feat: Docker escape pod + hosting docs (Dockerfile, docker-compose.yml, docs/hosting.md with Caddy/Nginx/DNS)
 - 2026-02-08: feat: host-agnostic runtime (HOST/PORT env vars) + IDLE_MODE safety flag blocks arm/consent/build when active, 15 tests pass
 - 2026-02-08: Created unified server.py with HTTP+WebSocket multiplexing, integrated orchestrator, CRT terminal UI, 10-room world, Bruce autopilot NPC

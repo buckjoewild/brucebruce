@@ -17,6 +17,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "07_HARRIS_WILDLANDS"))
 
 from orchestrator.mode_state import ModeStateManager
 from orchestrator.build_loop import BuildOrchestrator
+from orchestrator.bruce_memory import BruceMemory
 
 import websockets
 from websockets.http11 import Response
@@ -96,6 +97,7 @@ class MUDWorld:
         self.connections: Set = set()
         self.mode_manager = mode_manager
         self.orchestrator = orchestrator
+        self.bruce_memory = BruceMemory(str(EVIDENCE_DIR))
         if not self.load_world():
             self.init_world()
 
@@ -264,7 +266,28 @@ class MUDWorld:
         if not args:
             return "Say what?"
         message = " ".join(args)
+        self.bruce_memory.append_entry(
+            "player_chat",
+            message,
+            player=player.name,
+            room=player.room_id,
+        )
         await self.broadcast(f'{player.name} says: "{message}"', player.room_id, exclude=player.name)
+
+        lower_msg = message.lower()
+        if any(phrase in lower_msg for phrase in ["what happened", "what's been built", "build history", "build log"]):
+            bruce_in_room = any(
+                npc.name == "Bruce" for npc in self.rooms.get(player.room_id, Room("", "", "")).npcs
+            ) or "Bruce" in self.rooms.get(player.room_id, Room("", "", "")).players
+            if bruce_in_room:
+                fact_response = self.bruce_memory.format_fact_response()
+                self.bruce_memory.append_entry(
+                    "bruce_observation",
+                    fact_response,
+                    room=player.room_id,
+                )
+                await self.broadcast(f'Bruce says: "{fact_response}"', player.room_id)
+
         return f'You say: "{message}"'
 
     async def cmd_create(self, player: Player, args: List[str]) -> str:
@@ -461,7 +484,14 @@ class MUDServer:
                 elif roll < 0.8:
                     cmd = random.choice(directions)
                 elif roll < 0.95:
-                    cmd = f"say {random.choice(sayings)}"
+                    saying = random.choice(sayings)
+                    cmd = f"say {saying}"
+                    self.world.bruce_memory.append_entry(
+                        "bruce_observation",
+                        saying,
+                        player="Bruce",
+                        room=player.room_id,
+                    )
                 else:
                     cmd = "spawn Mysterious Wanderer"
                 await self.world.handle_command(player, cmd)
