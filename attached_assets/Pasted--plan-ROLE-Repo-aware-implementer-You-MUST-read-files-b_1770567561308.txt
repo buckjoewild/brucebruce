@@ -1,0 +1,68 @@
+/plan
+
+ROLE: Repo-aware implementer. You MUST read files before claiming where to change anything.
+
+GOAL: Integrate the new HARRIS WILDLANDS ASCII LOGIN BANNER so it appears as the first “landing” output when a user connects to the MUD (web terminal via WebSocket). Keep it purely cosmetic: NO gameplay, orchestrator, or governance changes.
+
+BANNER (exact text to add; keep spacing):
+          <|
+           A
+          /.\
+     \<|  [""W#
+      A   | #                    HARRIS WILDLANDS
+     /. \[""W#                         [mud.harriswildlands.com]
+    [""W# | #   U"U#U
+     | #  | #    \.:/     A Persistent Text Realm
+     | #  | #____| #     Built Slowly. Logged Carefully.
+     | "--'      .-"
+   |"-"-"-"-"-#-#-##      Truth is observed, not declared.
+   |     # ## ######
+           \.::::'/      Governed Build Loop: PLAN → CONSENT → BUILD
+           \::::'/
+   :8a|    # # ##         Bruce™ stands witness here —
+   ::88a      ###         not ruler, not oracle,
+  ::::888a  8a ##::.                   but steward.
+  ::::::888a88a[]::::
+ :::::::::WITNESSa8a::::. ..
+ :::::8::::888:Y8888:::::::::...
+::':::88::::888::Y88a______________________________________________________
+:: ::::88a::::88a:Y88a                               __---__-- __
+' .: ::Y88a:::::8a:Y88a                         __----_-- -------_-__
+  :' ::::8P::::::::::88aa.                _ _- --  --_ --- __  --- __--
+,::  :::::::::::::::::::Y88as88a...s88aa.
+
+Under what name shall your deeds be recorded?
+
+REQUIREMENTS:
+1) Show banner to each connecting client BEFORE the name prompt appears.
+2) Must work for the web CRT terminal (WebSocket path “/ws”) using the current JSON protocol.
+3) Must NOT break existing clients or tests.
+4) Keep server.py as the canonical entrypoint; do not restructure folders.
+
+TASKS:
+A) Locate the exact code path that:
+   - accepts a new WebSocket client
+   - sends the first “welcome / prompt” messages
+   - asks for player name
+   Provide file path + function name + line references in your response.
+
+B) Implementation plan (no edits yet):
+   1) Add a constant string LOGIN_BANNER (triple-quoted) in the appropriate file (prefer server.py unless there is a dedicated “messages/banner” module already).
+   2) On new connection, send LOGIN_BANNER as a single message or as multiple lines (whichever matches the existing message format) immediately before the name prompt.
+   3) If the protocol expects JSON, wrap it exactly like existing outgoing messages (do not invent a new schema).
+
+C) Add/Update tests:
+   - Add 1 orchestrator-independent test OR a minimal unit test that validates:
+     “first outbound message to a new session contains ‘HARRIS WILDLANDS’ and ‘Under what name shall your deeds be recorded?’”
+   - If the repo has no test harness for websocket sessions, propose the smallest feasible test (e.g., factor a ‘get_initial_messages()’ helper and test that).
+
+DELIVERABLE FORMAT (PLAN MODE OUTPUT):
+1) “Where to change” (exact file paths + functions)
+2) “Exact diff summary” (what will be added/modified)
+3) “Tests to run”
+4) “Edge cases” (e.g., reconnect, multiple clients, IDLE_MODE impact)
+
+STOP. Do not implement until I type:
+/build on
+(and after your OFFER)
+/consent yes
