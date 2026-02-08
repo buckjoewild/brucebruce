@@ -1,0 +1,63 @@
+/plan
+
+PHASE: Final Hardening Update — “Single Source of Truth” for bot security + safety interlock
+
+GOAL:
+Eliminate silent drift risk by extracting bot security logic (authorize/denylist/ratelimit/audit) into one importable module.
+Ensure BOTH server.py and tests import the exact same code path.
+Add safety interlock: bots blocked when IDLE_MODE=0 unless explicitly overridden.
+
+NON-NEGOTIABLES:
+- No world JSON edits.
+- No gameplay changes.
+- No governance changes except the interlock rule.
+- Keep server.py as canonical entrypoint.
+- All tests must import and exercise the real production security code (no redefined authorize logic).
+- Maintain existing env flags:
+  - IDLE_MODE
+  - MUD_BOT_ENABLED
+  - BOT_AUTH_TOKEN
+
+DELIVERABLES:
+1) Create a new module (choose ONE location and be consistent):
+   Preferred: 07_HARRIS_WILDLANDS/orchestrator/bot_security.py
+   It must contain:
+   - DENIED_BOT_COMMANDS (or equivalent)
+   - authorize(actor, cmd_text) -> (allowed: bool, reason: str)
+   - RateLimiter class
+   - BotAuditLogger class
+   - constants for caps (max message bytes, max cmd length, rate window)
+
+2) Update server.py:
+   - Remove inline bot security logic and import from bot_security module.
+   - Ensure the authorization gate is called BEFORE any command parsing/execution.
+   - Ensure denied/rate-limited attempts still write to bot_audit.jsonl via BotAuditLogger.
+
+3) Update tests:
+   - Remove any regex/extract/exec or “redefine authorize” patterns.
+   - Tests must import directly from 07_HARRIS_WILDLANDS.orchestrator.bot_security (or exact chosen module path).
+   - Keep existing behavior coverage:
+     - auth required for bot
+     - role assigned server-side
+     - bot cannot /build on, /consent yes, dev build verbs, create/spawn
+     - rate limit enforced
+     - audit log written for allowed + denied
+
+4) Add SAFETY INTERLOCK:
+   - Rule: if IDLE_MODE=0 then bot connections are refused by default.
+   - Add env override: MUD_BOT_ALLOW_WHEN_ACTIVE=1 to bypass interlock when you explicitly want it.
+   - Tests must cover:
+     a) IDLE_MODE=0 + allow flag missing -> bot denied
+     b) IDLE_MODE=0 + allow flag set -> bot allowed (still gated by token/auth)
+     c) IDLE_MODE=1 -> interlock allows bot (subject to MUD_BOT_ENABLED and token)
+
+PLAN OUTPUT FORMAT:
+A) Exact files to change/add (paths)
+B) Diff summary (what moves where)
+C) Tests to run (single command)
+D) DoD checklist (must be measurable)
+
+STOP after plan. Do not implement until I type:
+/build on
+(and after your OFFER)
+/consent yes

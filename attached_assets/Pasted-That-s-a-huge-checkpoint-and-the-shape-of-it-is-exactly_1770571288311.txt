@@ -1,0 +1,167 @@
+That’s a huge checkpoint ✅ — and the shape of it is exactly what you wanted: AI inside the world, governed by one choke point, with an emergency brake.
+
+That said, there’s one place I’m going to be annoyingly pedantic (because this is where “physics” turns back into “almost-physics”):
+
+⚠️ The only red-flag: tests that “redefine authorize” instead of importing it
+
+From your transcript: the integration tests struggled importing from server.py, so the tests ended up “directly defining and testing authorize logic.”
+
+That creates a classic trap:
+
+You can accidentally change authorize() in the server…
+
+…and the tests still pass because they’re testing a copy of the logic, not the real function.
+
+The fix (small, worth it)
+
+Refactor the bot/security pieces into a module you can import cleanly:
+
+Create: 07_HARRIS_WILDLANDS/orchestrator/bot_security.py (or mud_server/bot_security.py) containing:
+
+DENIED_BOT_COMMANDS
+
+authorize(actor, cmd_text)
+
+RateLimiter
+
+BotAuditLogger
+
+Then server.py imports those.
+Tests import those too.
+Now tests and runtime share exact same code path.
+
+If you only do one follow-up commit, do this one.
+
+Publish posture (recommended defaults) 🔒
+
+Since you already published:
+
+Keep public safe by default
+
+Set these env vars in production:
+
+IDLE_MODE=1 ✅ (blocks build loop)
+
+MUD_BOT_ENABLED=0 ✅ (bots blocked until you’re ready)
+
+MUD_BRUCE_AUTOPILOT=true ✅ (Bruce lives)
+
+BOT_AUTH_TOKEN=<strong token> ✅ (needed when you enable bots)
+
+This means:
+
+Humans can play.
+
+Bruce can roam/chat.
+
+No build execution.
+
+No bot connections until you flip one flag.
+
+When you’re ready to test the external AI player:
+
+set MUD_BOT_ENABLED=1 temporarily
+
+keep IDLE_MODE=1 (still safest)
+
+run ai_player.py from your own machine
+
+Can you “connect to it” now?
+
+I can’t directly connect from this chat (no persistent socket, no external network client here). But your ai_player.py absolutely can, if it runs on a machine with network access.
+
+Quick “does the bot connect” checklist
+
+Confirm your published URL loads the CRT terminal.
+
+Confirm /ws is the websocket path (it is).
+
+Enable bots:
+
+MUD_BOT_ENABLED=1
+
+Set token:
+
+BOT_AUTH_TOKEN=...
+
+Run client locally:
+
+Example (you’ll adapt flags to your script):
+
+python ai_player.py --url wss://brucebruce-brosephharris.replit.app/ws --name BruceBot --token YOUR_TOKEN
+
+
+Then try:
+
+python ai_player.py --url wss://brucebruce-brosephharris.replit.app/ws --token YOUR_TOKEN --test-deny
+
+
+You should see:
+
+/build on denied
+
+/consent yes denied
+
+audit log records those denials
+
+Verification you should do today (5 minutes, high value) 🧪
+In production logs / evidence
+
+07_HARRIS_WILDLANDS/evidence/bot_audit.jsonl exists
+
+It logs:
+
+allowed bot say / movement
+
+denied /build on
+
+denied /consent yes
+
+rate-limit events (if you spam)
+
+In-world behavior
+
+bot can:
+
+move
+
+speak
+
+“plan” (read-only)
+
+bot cannot:
+
+trigger mode changes
+
+run build verbs
+
+hit any dev build stub
+
+One more safety note (worth enforcing)
+
+Never allow bot connections when IDLE_MODE=0 unless you’re actively supervising.
+Even if bots can’t build, humans can, and you don’t want emergent “social engineering” into consent workflows.
+
+A nice hard rule:
+
+If IDLE_MODE=0, require MUD_BOT_ENABLED=0 (bots off) unless explicitly overridden.
+
+What you’ve achieved (clean summary)
+
+External AI player exists ✅
+
+Role is server-assigned ✅
+
+One authorize choke point ✅
+
+Rate limiting + caps ✅
+
+Append-only provenance audit log ✅
+
+Kill switch exists ✅
+
+Published ✅
+
+That’s a real platform now.
+
+If you want the next “big but safe” step, it’s not “more AI.” It’s making the gate/test relationship bulletproof by refactoring the bot/security code into an importable module so the tests can’t drift from runtime. That turns this from “working demo” into “stable substrate.”
