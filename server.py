@@ -27,6 +27,40 @@ from websockets.datastructures import Headers
 WORLD_DIR = PROJECT_ROOT / "07_HARRIS_WILDLANDS" / "structure" / "mud-server" / "world"
 EVIDENCE_DIR = PROJECT_ROOT / "07_HARRIS_WILDLANDS" / "evidence"
 
+LOGIN_BANNER = r"""
+          <|
+           A
+          /.\
+     \<|  [""W#
+      A   | #                    HARRIS WILDLANDS
+     /. \[""W#                         [mud.harriswildlands.com]
+    [""W# | #   U"U#U
+     | #  | #    \.:/     A Persistent Text Realm
+     | #  | #____| #     Built Slowly. Logged Carefully.
+     | "--'      .-"
+   |"-"-"-"-"-#-#-##      Truth is observed, not declared.
+   |     # ## ######
+           \.::::'/      Governed Build Loop: PLAN → CONSENT → BUILD
+           \::::'/
+   :8a|    # # ##         Bruce™ stands witness here —
+   ::88a      ###         not ruler, not oracle,
+  ::::888a  8a ##::.                   but steward.
+  ::::::888a88a[]::::
+ :::::::::WITNESSa8a::::. ..
+ :::::8::::888:Y8888:::::::::...
+::':::88::::888::Y88a______________________________________________________
+:: ::::88a::::88a:Y88a                               __---__-- __
+' .: ::Y88a:::::8a:Y88a                         __----_-- -------_-__
+  :' ::::8P::::::::::88aa.                _ _- --  --_ --- __  --- __--
+,::  :::::::::::::::::::Y88as88a...s88aa.
+
+Under what name shall your deeds be recorded?
+"""
+
+
+def get_banner() -> str:
+    return LOGIN_BANNER
+
 
 class Room:
     def __init__(self, id: str, name: str, description: str):
@@ -399,7 +433,7 @@ class MUDServer:
         try:
             await websocket.send(json.dumps({
                 "type": "system",
-                "text": "=== HARRIS WILDLANDS MUD ===\nEnter your name:",
+                "text": LOGIN_BANNER,
             }))
             name_msg = await websocket.recv()
             try:
