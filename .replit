@@ -45,3 +45,7 @@ IDLE_MODE = "1"
 MUD_BRUCE_AUTOPILOT = "true"
 USE_CODEX = "0"
 CODEX_DRYRUN = "1"
+
+[userenv.shared]
+MUD_BOT_ENABLED = "false"
+MUD_BOT_ALLOW_WHEN_ACTIVE = "0"

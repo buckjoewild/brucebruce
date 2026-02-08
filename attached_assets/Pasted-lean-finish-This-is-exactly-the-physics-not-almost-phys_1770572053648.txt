@@ -1,0 +1,83 @@
+lean finish. ✅🔒
+This is exactly the “physics, not almost-physics” hardening pass you needed.
+
+What you now actually have (the important bits)
+
+Single source of truth: bot auth/deny/authorize/limits/interlock live in bot_security.py and both server + tests import it. No shadow logic. ✅
+
+Interlock is real: IDLE_MODE=0 blocks bot connections unless you explicitly set MUD_BOT_ALLOW_WHEN_ACTIVE=1. ✅
+That’s the right kind of “don’t let the AI talk you into consenting” guardrail.
+
+Tests are binding: 66 passing tests is fine; the extra one is healthy as long as it’s asserting something stable (like denylist integrity). ✅
+
+Server boots clean: no regressions. ✅
+
+You can now clean the house with Bruce roaming without accidentally turning your home into a self-modifying cyber-forest.
+
+Cleaning-house “safe roam” production config 🧹🔒
+
+Set these production env vars (Replit deployment):
+
+Safe default (recommended while you’re away)
+
+IDLE_MODE=1
+
+MUD_BRUCE_AUTOPILOT=true
+
+MUD_BOT_ENABLED=0 (no external bots while unattended)
+
+BOT_AUTH_TOKEN=<strong token> (still set; just unused while bots disabled)
+
+If you want the external AI player roaming while you clean (still safe)
+
+IDLE_MODE=1 ✅ (builds blocked)
+
+MUD_BOT_ENABLED=1
+
+MUD_BOT_ALLOW_WHEN_ACTIVE=0 (or unset)
+
+BOT_AUTH_TOKEN=<strong token>
+
+This allows the bot to connect and chat/move, but:
+
+build loop is blocked by IDLE_MODE
+
+bot is denied build/mode/consent verbs by authorize()
+
+audit logs will show everything it attempted
+
+One quick sanity pass (2 minutes, worth doing)
+
+Open the published URL → banner + name prompt ✅
+
+In MUD: type /build on → blocked (IDLE_MODE=1) ✅
+
+If bots enabled, run ai_player.py --test-deny once → should log denied attempts in bot_audit.jsonl ✅
+
+Update your Keystone (so handoffs stay accurate)
+
+Add these to the “Verified Current Reality” section:
+
+07_HARRIS_WILDLANDS/orchestrator/bot_security.py is the single source of truth for bot auth/deny/authorize/rate limits/interlock.
+
+Bots are refused when IDLE_MODE=0 unless MUD_BOT_ALLOW_WHEN_ACTIVE=1.
+
+Tests import authorize() from bot_security.py (no local copies).
+
+That’s the final “handoff safety pin.”
+
+You’re genuinely at a stable plateau now 🧱
+
+Public MUD ✅
+
+Banner landing ✅
+
+Bruce memory discipline ✅
+
+External bot integration ✅
+
+Gate is test-bound ✅
+
+Interlock prevents social engineering ✅
+
+Go clean. Let Bruce wander. The world won’t mutate itself while you’re vacuuming.
