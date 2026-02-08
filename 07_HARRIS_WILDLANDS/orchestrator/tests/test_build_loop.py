@@ -15,10 +15,12 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from orchestrator.mode_state import ModeStateManager, Mode
+from orchestrator.mode_state import ModeStateManager, Mode, IDLE_MODE
 from orchestrator.codex_adapter import propose_patch_stub, STUB_DIFFS, get_patch
 from orchestrator.patch_apply import PatchApplier
 from orchestrator.build_loop import BuildOrchestrator, create_orchestrator
+import orchestrator.mode_state as mode_state_mod
+import orchestrator.build_loop as build_loop_mod
 
 
 class TestModeState:
@@ -190,6 +192,55 @@ class TestBuildOrchestrator:
             # Second build should be blocked
             result = orchestrator.execute_build("player1", "test", {})
             assert "BLOCKED" in result
+
+
+class TestIdleMode:
+    """Test IDLE_MODE blocks builds but allows read-only actions."""
+
+    def test_idle_mode_blocks_build_when_consented(self, monkeypatch):
+        monkeypatch.setattr(mode_state_mod, "IDLE_MODE", True)
+        monkeypatch.setattr(build_loop_mod, "IDLE_MODE", True)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orchestrator = BuildOrchestrator(tmpdir, tmpdir)
+
+            state = orchestrator.mode_manager.get_state("player1")
+            state.mode = Mode.BUILD
+            state.armed = True
+            state.consented = True
+
+            result = orchestrator.execute_build(
+                player_id="player1",
+                verb="build room",
+                args={"name": "Cabin"},
+            )
+            assert "IDLE_MODE" in result
+
+            events = orchestrator.get_event_log_tail(1)
+            assert len(events) == 1
+            assert events[0]["result"] == "blocked"
+            assert events[0]["mode"] == "IDLE"
+
+    def test_idle_mode_allows_plan_rejects_arm(self, monkeypatch):
+        monkeypatch.setattr(mode_state_mod, "IDLE_MODE", True)
+
+        manager = ModeStateManager()
+        state = manager.get_state("player1")
+
+        plan_result = state.set_plan("Add a new trail")
+        assert "Plan logged" in plan_result
+
+        arm_result = state.arm()
+        assert "IDLE_MODE" in arm_result
+        assert not state.armed
+
+        consent_result = state.consent()
+        assert "IDLE_MODE" in consent_result
+        assert not state.consented
+
+        build_result = state.enter_build_mode()
+        assert "IDLE_MODE" in build_result
+        assert state.mode == Mode.PLAN
 
 
 if __name__ == "__main__":

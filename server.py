@@ -719,9 +719,12 @@ def process_request(connection, request):
 
 
 async def main():
+    HOST = os.environ.get("HOST", "0.0.0.0")
+    PORT = int(os.environ.get("PORT", "5000"))
+
     print("============================================")
     print("  HARRIS WILDLANDS MUD SERVER")
-    print("  Unified HTTP + WebSocket on port 5000")
+    print(f"  Unified HTTP + WebSocket on port {PORT}")
     print("============================================")
 
     mode_manager = ModeStateManager()
@@ -739,12 +742,12 @@ async def main():
 
     async with websockets.serve(
         server.handle_client,
-        "0.0.0.0",
-        5000,
+        HOST,
+        PORT,
         process_request=process_request,
     ):
-        print("Server running on http://0.0.0.0:5000")
-        print("WebSocket at ws://0.0.0.0:5000/ws")
+        print(f"Server running on http://{HOST}:{PORT}")
+        print(f"WebSocket at ws://{HOST}:{PORT}/ws")
         await asyncio.Future()
 
 

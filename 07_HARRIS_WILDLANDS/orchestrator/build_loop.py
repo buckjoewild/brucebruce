@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Optional
 from dataclasses import dataclass, field, asdict
 
-from .mode_state import ModeStateManager, PlayerBuildState
+from .mode_state import ModeStateManager, PlayerBuildState, IDLE_MODE
 from .codex_adapter import get_patch
 from .patch_apply import PatchApplier, PatchResult
 
@@ -82,6 +82,20 @@ class BuildOrchestrator:
         Returns:
             Result message to send back to the player
         """
+        if IDLE_MODE:
+            event = BuildEvent(
+                ts=datetime.now(timezone.utc).isoformat(),
+                id=f"evt_{uuid.uuid4().hex[:12]}",
+                actor=player_id,
+                mode="IDLE",
+                verb=verb,
+                args=args,
+                result="blocked",
+                durable=False,
+            )
+            self._log_event(event)
+            return "IDLE_MODE: builds disabled"
+
         state = self.mode_manager.get_state(player_id)
 
         # 1) Validate mode gate

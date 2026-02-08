@@ -1,0 +1,68 @@
+/plan
+
+ROLE: You are the repo auditor + deployment architect for Harris Wildlands MUD.
+GOAL: Verify what this repo actually is, then produce an executable plan to host a standalone MUD at harriswildlands.com with minimal dependency on Replit, while preserving a governed closed-loop build system (PLAN/BUILD/CONSENT, Spec→Patch→Test→Log).
+
+HARD RULES:
+- PLAN MODE ONLY: do NOT modify files yet. No code changes. No “subagent implemented X”.
+- You must base claims on files you actually read in this repo. Quote filenames + paths for every key claim.
+- Produce: (1) repo truth map, (2) run instructions, (3) deployment-neutralization plan, (4) domain routing plan, (5) Bruce interaction/learning v1 plan.
+- Assume WebSockets must work through the domain (upgrade headers, same port if possible).
+- Preserve governance: no unattended patch+commit. Idle mode should allow PLAN+TEST+LOG only.
+
+TASKS (in order):
+
+A) REPO TRUTH MAP (no guesses)
+1) Locate the canonical runtime entrypoint(s):
+   - HTTP server that serves the web terminal HTML
+   - WebSocket server endpoint used by the terminal
+   - Telnet server (if exists)
+   - Orchestrator integration points (mode checks, consent checks, patch/test/log)
+2) Output a diagram-style map:
+   - entrypoint file(s) + what each does
+   - terminal location + how it connects (URL/port/path)
+   - world seed location (rooms/npcs/items)
+   - persistence location (save/load)
+   - orchestrator loop location (Spec/Patch/Test/Log) + where tests live
+3) List required dependencies and how they are installed (requirements.txt / pyproject / pip commands).
+
+B) RUN IT LOCALLY + IN REPLIT (instructions only)
+1) Provide exact commands to run in Replit VM.
+2) Provide exact commands to run on a generic Linux box.
+3) Confirm required env vars (PORT, HOST, etc.) and where they are read.
+
+C) “STANDALONE CAPABLE” CHANGES (plan only; no edits yet)
+Create a minimal change plan to make the app host-agnostic:
+1) One canonical start command: python -m <module> OR python <entrypoint.py>
+2) Bind to 0.0.0.0 and respect PORT env var.
+3) Add Docker escape pod:
+   - Dockerfile
+   - optional docker-compose.yml
+4) Add docs/hosting.md with:
+   - Nginx or Caddy reverse proxy config (including WebSocket upgrade)
+   - systemd service example (if applicable)
+5) Add an “IDLE_MODE” flag so unattended operation only allows PLAN+TEST+LOG and blocks PATCH+COMMIT.
+
+D) DOMAIN PLAN (harriswildlands.com)
+Give two options with steps + pros/cons:
+Option 1: Replit hosts (now) + domain points to it (prefer using mud.harriswildlands.com).
+Option 2: VPS self-host (future) + domain points to VPS (Docker + reverse proxy + TLS).
+For each option, specify DNS record types and what they point to (A/CNAME), and what URL should serve the terminal.
+
+E) BRUCE INTERACTION/LEARNING V1 (safe and grounded)
+Propose v1 of “Bruce learns and interacts” without hallucination:
+- what “learning” means v1 (chat memory vs world memory vs build memory)
+- where it is stored (event log first; optional later Neo4j)
+- how it is read back into responses
+- how it avoids promoting unverified statements to canon
+- define the commands Bruce can use in-world while in IDLE_MODE
+
+DELIVERABLE FORMAT:
+1) Repo Truth Map (with file paths cited)
+2) Current Runbook (Replit + local)
+3) Change Plan (bullet list of PR-sized steps)
+4) Hosting Plan (Option 1 + Option 2)
+5) Governance Guarantees (what is enforced and by what tests)
+6) “Next 3 commits” outline (commit names + what changes)
+
+STOP after producing the plan. Do not implement changes until I explicitly switch to /build on and /consent yes.

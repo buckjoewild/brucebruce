@@ -2,10 +2,13 @@
 Mode state management for MUD build operations.
 Implements PLAN vs BUILD mode with explicit arming + consent.
 """
+import os
 from enum import Enum
 from dataclasses import dataclass, field
 from typing import Optional
 import time
+
+IDLE_MODE = os.environ.get("IDLE_MODE", "0") == "1"
 
 
 class Mode(Enum):
@@ -29,6 +32,8 @@ class PlayerBuildState:
 
     def arm(self) -> str:
         """Arms one build operation."""
+        if IDLE_MODE:
+            return "IDLE_MODE active: builds disabled."
         if self.mode != Mode.BUILD:
             return "Must be in BUILD mode to arm. Use /build on first."
         self.armed = True
@@ -37,6 +42,8 @@ class PlayerBuildState:
 
     def consent(self) -> str:
         """Gives consent for the armed operation."""
+        if IDLE_MODE:
+            return "IDLE_MODE active: builds disabled."
         if not self.armed:
             return "Nothing armed. Use /build on first."
         self.consented = True
@@ -51,6 +58,8 @@ class PlayerBuildState:
 
     def enter_build_mode(self) -> str:
         """Switch to BUILD mode."""
+        if IDLE_MODE:
+            return "IDLE_MODE active: builds disabled."
         self.mode = Mode.BUILD
         return "BUILD mode active. Use /build on to arm an operation."
 
