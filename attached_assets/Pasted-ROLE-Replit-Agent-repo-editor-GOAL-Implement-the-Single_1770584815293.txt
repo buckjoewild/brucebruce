@@ -1,0 +1,140 @@
+ROLE: Replit Agent (repo editor)
+GOAL: Implement the “Single Artifact Intake Flow” in one pass with minimum diff, preserving Bruce’s witness-first design.
+STYLE: No hype. Small edits. Additive only. Append-only evidence. Deterministic behavior. Tests included.
+
+NON-NEGOTIABLES
+- Only Bruce speaks inside the MUD.
+- External thinkers/tools NEVER speak directly in the MUD.
+- Bruce may only reason about artifacts that were explicitly submitted, hashed, and logged.
+- No hidden actions. No network calls. No DB required. Plain files only.
+- Append-only JSONL. Never rewrite evidence.
+
+DELIVERABLES (ALL REQUIRED)
+1) Artifact intake module (schema + validation + storage + logging)
+2) MUD command surface additions for artifact intake + review
+3) Evidence files on disk:
+   - /evidence/artifacts/intake.jsonl
+   - /evidence/artifacts/archive/<artifact_id>.json
+   - /evidence/artifacts/quarantine/<artifact_id>.json
+4) One unit test proving:
+   - accepted artifacts are archived and logged
+   - quarantined artifacts are logged and stored separately
+   - hashes match stored content
+5) Documentation update: brief section in existing docs (or new docs/artifact_intake.md)
+
+ASSUMPTIONS (adjust paths to match repo)
+- There is a MUD server entrypoint that processes player commands (e.g., server.py process_command()).
+- There is already an /evidence directory and Bruce heartbeat/activity logging.
+- Use Python stdlib only (hashlib, json, os, datetime, uuid).
+
+IMPLEMENTATION PLAN (MINIMUM DIFF)
+
+A) Create module: core/artifacts.py (or artifacts/intake.py if you already have a package)
+Provide:
+- ArtifactType enum (TEXT, JSON, MARKDOWN, LOG, DIFF, NOTE, ANALYSIS)
+- ArtifactStatus enum (ACCEPTED, REFUSED, QUARANTINED, FLAGGED_SCOPE)
+- dataclass ArtifactMeta:
+  - artifact_id: str (uuid4 hex or provided)
+  - artifact_type: str
+  - source: str (human/codex/openclaw/script/unknown)
+  - timestamp_received: str (ISO8601)
+  - content_hash: str (sha256 of raw content bytes)
+  - claimed_purpose: Optional[str]
+  - related_artifacts: Optional[list[str]]
+- functions:
+  - sha256_bytes(data: bytes) -> str
+  - now_iso() -> str
+  - ensure_dirs(base: str) -> dict of paths
+  - validate_artifact(meta, content_bytes, max_bytes=1_000_000) -> (ok: bool, reason: str)
+  - store_artifact(meta, content_bytes, base_dir="evidence/artifacts") -> (status, archive_path)
+  - append_intake_event(event_dict, base_dir="evidence/artifacts") -> None
+  - intake(meta_dict, content_str_or_bytes, base_dir=...) -> (status, artifact_id, reason)
+
+Validation rules (boring + safe):
+- bounded: content_bytes <= max_bytes
+- readable: artifact_type in allowed list
+- provenance declared: source non-empty
+- always compute hash from received content; ignore provided hash if present (store computed)
+
+Storage rules:
+- ACCEPTED:
+  - write archive file: /archive/<artifact_id>.json containing {meta..., content_b64 or content_text, content_hash}
+  - append intake.jsonl line with status=ACCEPTED and archive_path
+- QUARANTINED:
+  - write /quarantine/<artifact_id>.json same structure
+  - append intake.jsonl with status=QUARANTINED and reason
+- REFUSED:
+  - do not store content (optional: store minimal record only)
+  - append intake.jsonl with status=REFUSED and reason
+
+B) Add MUD commands (Bruce-only)
+In your command handler, add commands that only Bruce can run (or only a privileged identity).
+
+Commands (names can be adjusted to match your command grammar):
+1) bruce intake <type> <source> <artifact_id_optional>
+   - then accept multiline payload until a terminator token (e.g., “<<EOF” … “EOF”)
+   - call artifacts.intake(...)
+   - Bruce says in MUD: “INTAKE <status>: <artifact_id> (<reason>) hash=<hash>”
+   - ALSO log to bruce_activity.jsonl as action_type="artifact_intake"
+
+2) bruce inspect <artifact_id>
+   - load archived artifact JSON if exists
+   - print a short summary (type, source, timestamp, hash, size, first 200 chars)
+   - log action_type="artifact_inspect"
+
+3) bruce link <artifact_id_a> <artifact_id_b> <note_optional>
+   - append a link event to intake.jsonl (event_type="LINK")
+   - no graph DB; just an event
+
+4) bruce annotate <artifact_id> <text>
+   - append annotation event to intake.jsonl (event_type="ANNOTATE")
+
+No “interpret” tool calls in this patch.
+We are only building the intake dock + witness statements.
+Interpretation can be a later connector.
+
+C) Evidence format (JSONL)
+Each line in /evidence/artifacts/intake.jsonl is a JSON object with:
+- event_type: "INTAKE" | "LINK" | "ANNOTATE"
+- timestamp
+- actor: "bruce"
+- artifact_id
+- status (for INTAKE)
+- artifact_type
+- source
+- content_hash
+- bytes
+- reason (if not accepted)
+- archive_path (if accepted/quarantined)
+- related_artifacts (optional)
+- sha256_of_event_line (optional but nice: hash the JSON line itself)
+
+D) Tests
+Create tests/test_artifact_intake.py (pytest)
+- test_accept_stores_archive_and_logs_intake
+- test_quarantine_on_unknown_type_or_oversize
+- test_hash_matches_content
+
+Use tmp_path fixture; point base_dir to tmp_path/"evidence"/"artifacts"
+
+E) Docs
+Add docs/artifact_intake.md with:
+- flow summary (Artifact Created → Submitted → Intake Check → Witnessed Statement → Archived)
+- command examples
+- file locations
+- falsification checks (file grows, hashes verify)
+
+ACCEPTANCE CHECKLIST (YOU MUST VERIFY BEFORE FINISHING)
+- `pytest` passes
+- running server still starts
+- evidence/artifacts directories are created at runtime if missing
+- intake.jsonl appends; never rewrites
+- Bruce command restrictions enforced (non-Bruce cannot run intake/inspect/link/annotate)
+- all new code is stdlib-only
+
+OUTPUT FORMAT
+- Provide a short summary of files changed/added
+- Provide any command examples to manually test in MUD
+- No extra features beyond what’s listed
+
+BEGIN WORK NOW.

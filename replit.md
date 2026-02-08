@@ -30,6 +30,8 @@ A Python-based Multi-User Dungeon (MUD) text adventure game with a closed-loop A
 - `07_HARRIS_WILDLANDS/orchestrator/codex_adapter.py` — Codex patch generator (stub/real modes)
 - `07_HARRIS_WILDLANDS/orchestrator/patch_apply.py` — PatchApplier for applying diffs
 - `07_HARRIS_WILDLANDS/orchestrator/bruce_memory.py` — BruceMemory (append-only JSONL, fact readback from event_log.jsonl)
+- `07_HARRIS_WILDLANDS/orchestrator/artifacts.py` — Artifact intake: schema, validation, storage, append-only JSONL logging
+- `docs/artifact_intake.md` — Artifact intake system documentation
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/rooms.json` — Room definitions
 - `07_HARRIS_WILDLANDS/structure/mud-server/world/npcs.json` — NPC definitions
 
@@ -67,11 +69,12 @@ Bruce is an always-on NPC steward who wanders the world, observes, speaks, and l
 - Build System: `/plan <text>`, `/build on|off`, `/consent yes`
 - Dev Tools: `dev status`, `dev buildstub`, `dev log tail <n>`
 - Bruce Observability: `dev heartbeat`, `dev bruce tail <n>`, `dev logsizes`
+- Artifact Intake: `bruce intake <type> <source> [id] <content>`, `bruce inspect <id>`, `bruce link <a> <b> [note]`, `bruce annotate <id> <text>`
 
 ## AI Player System
 - **Auth**: Bot must send `{"type":"auth","token":"...","name":"..."}` as first message
 - **Role**: Server assigns `role="bot"` — never from client payload
-- **Permission Gate**: `authorize(player, cmd)` blocks bots from: `/build`, `/consent`, `create`, `spawn`, `dev buildstub`
+- **Permission Gate**: `authorize(player, cmd)` blocks bots from: `/build`, `/consent`, `create`, `spawn`, `bruce`, `dev buildstub`
 - **Rate Limit**: 5 commands per 10 seconds (sliding window), 2KB message cap, 500 char command cap
 - **Audit**: All bot commands logged to `evidence/bot_audit.jsonl` (allowed + denied + rate_limited)
 - **Kill Switch**: Set `MUD_BOT_ENABLED=false` to disable all bot connections
@@ -86,6 +89,9 @@ All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
 - `event_log.jsonl` — Build event log (UTC timestamps)
 - `bot_audit.jsonl` — Bot command audit trail (UTC timestamps)
 - `patches/` — Applied patch files
+- `artifacts/intake.jsonl` — Artifact intake event log (sha256-signed)
+- `artifacts/archive/` — Accepted artifact storage
+- `artifacts/quarantine/` — Quarantined artifact storage
 
 ## Heartbeat Cadence Policy (Governance)
 
@@ -114,7 +120,8 @@ All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_banner.py` — 6 banner content tests
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_ai_player.py` — 27 AI player tests (auth, gate, rate limit, audit)
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_heartbeat.py` — 13 heartbeat tests (sha256 consistency, JSONL write, tail parser, activity logging)
-- **Total: 79 tests, all passing**
+- `07_HARRIS_WILDLANDS/orchestrator/tests/test_artifact_intake.py` — 15 artifact intake tests (accept/quarantine/refuse, hash verification, link/annotate)
+- **Total: 94 tests, all passing**
 
 ## Scripts
 - `python server.py` — Start the MUD server
@@ -143,6 +150,7 @@ All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
 - Edit `RUN_TESTS=0` in RUN_MUD.bat to skip tests for faster boot
 
 ## Recent Changes
+- 2026-02-08: feat: Artifact Intake System — bruce intake/inspect/link/annotate commands, schema validation, sha256-signed JSONL logging, archive/quarantine storage, bot deny gate, 94 tests pass
 - 2026-02-08: governance: quarantined drift artifact (prove_bruce_alive.py), documented heartbeat cadence policy (15m dev / 60m prod), documented retention policy (unbounded, revisit at 5MB)
 - 2026-02-08: feat: Bruce observability — heartbeat every 15min (configurable via BRUCE_HEARTBEAT_MINUTES), per-action activity log, sha256-signed JSONL entries, dev commands (heartbeat/bruce tail/logsizes), 79 tests pass
 - 2026-02-08: docs: Freeze→Measure spec (UPDATE_FREEZE_TO_MEASURE_v1.md) — evidence-driven hardening template with filled evidence pack (timestamp map, log analysis, session gaps, denial coverage, known pain points)

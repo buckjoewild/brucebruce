@@ -21,6 +21,7 @@ from orchestrator.bruce_memory import BruceMemory, format_build_fact_response
 from orchestrator.bot_audit import BotAuditLogger
 from orchestrator.bot_security import authorize, check_bot_interlock, DENIED_BOT_COMMANDS, DENIED_BOT_SUBCOMMANDS
 from orchestrator.heartbeat import HeartbeatLogger, ActivityLogger, get_evidence_sizes, HEARTBEAT_INTERVAL_MINUTES
+from orchestrator.artifacts import intake as artifact_intake, load_artifact, link_artifacts, annotate_artifact, ensure_dirs as ensure_artifact_dirs
 
 import websockets
 from websockets.http11 import Response
@@ -29,6 +30,7 @@ from websockets.datastructures import Headers
 
 WORLD_DIR = PROJECT_ROOT / "07_HARRIS_WILDLANDS" / "structure" / "mud-server" / "world"
 EVIDENCE_DIR = PROJECT_ROOT / "07_HARRIS_WILDLANDS" / "evidence"
+ARTIFACT_DIR = str(EVIDENCE_DIR / "artifacts")
 BOT_AUTH_TOKEN = os.environ.get("BOT_AUTH_TOKEN", "")
 BOT_ENABLED = os.environ.get("MUD_BOT_ENABLED", "true").lower() == "true"
 
@@ -227,7 +229,9 @@ class MUDWorld:
         cmd = parts[0].lower()
         args = parts[1:]
 
-        if cmd == "dev":
+        if cmd == "bruce":
+            return await self.handle_bruce_command(player, args)
+        elif cmd == "dev":
             return await self.handle_dev_command(player, args)
         elif cmd == "look":
             return await self.cmd_look(player)
@@ -250,6 +254,93 @@ class MUDWorld:
             return await self.cmd_status(player)
         else:
             return f"Unknown command: '{cmd}'. Type 'help' for available commands."
+
+    async def handle_bruce_command(self, player: Player, args: List[str]) -> str:
+        if player.role != "human":
+            return "Permission denied: only human players can run bruce commands."
+        if not args:
+            return "Bruce commands: intake <type> <source> [id], inspect <id>, link <id_a> <id_b> [note], annotate <id> <text>"
+
+        sub = args[0].lower()
+
+        if sub == "intake":
+            if len(args) < 3:
+                return "Usage: bruce intake <type> <source> [artifact_id]\\nThen provide content on next line(s). Types: TEXT, JSON, MARKDOWN, LOG, DIFF, NOTE, ANALYSIS. Sources: human, codex, openclaw, script, unknown."
+            artifact_type = args[1].upper()
+            source = args[2].lower()
+            artifact_id = args[3] if len(args) >= 4 else None
+            content = " ".join(args[4:]) if len(args) > 4 else ""
+            if not content:
+                content = f"(empty intake submitted by {player.name})"
+            status, aid, reason = artifact_intake(
+                artifact_type=artifact_type,
+                source=source,
+                content=content,
+                base_dir=ARTIFACT_DIR,
+                artifact_id=artifact_id,
+            )
+            from orchestrator.artifacts import sha256_bytes
+            content_hash = sha256_bytes(content.encode("utf-8"))
+            self.activity_logger.log_action(
+                "artifact_intake", player.room_id,
+                self.rooms.get(player.room_id, Room("", "unknown", "")).name,
+                {"artifact_id": aid, "status": str(status), "artifact_type": artifact_type, "source": source},
+            )
+            return f'INTAKE {status}: {aid} ({reason}) hash={content_hash[:16]}...'
+
+        elif sub == "inspect":
+            if len(args) < 2:
+                return "Usage: bruce inspect <artifact_id>"
+            artifact_id = args[1]
+            record = load_artifact(artifact_id, ARTIFACT_DIR)
+            if not record:
+                return f"Artifact {artifact_id} not found in archive or quarantine."
+            content_preview = record.get("content_text", "")[:200]
+            self.activity_logger.log_action(
+                "artifact_inspect", player.room_id,
+                self.rooms.get(player.room_id, Room("", "unknown", "")).name,
+                {"artifact_id": artifact_id},
+            )
+            return (
+                f"Artifact: {artifact_id}\n"
+                f"  Type: {record.get('artifact_type', '?')}\n"
+                f"  Source: {record.get('source', '?')}\n"
+                f"  Stored: {record.get('timestamp_stored', '?')}\n"
+                f"  Hash: {record.get('content_hash', '?')}\n"
+                f"  Size: {record.get('bytes', '?')} bytes\n"
+                f"  Status: {record.get('status', '?')}\n"
+                f"  Preview: {content_preview}"
+            )
+
+        elif sub == "link":
+            if len(args) < 3:
+                return "Usage: bruce link <artifact_id_a> <artifact_id_b> [note]"
+            id_a = args[1]
+            id_b = args[2]
+            note = " ".join(args[3:]) if len(args) > 3 else None
+            link_artifacts(id_a, id_b, ARTIFACT_DIR, note=note)
+            self.activity_logger.log_action(
+                "artifact_link", player.room_id,
+                self.rooms.get(player.room_id, Room("", "unknown", "")).name,
+                {"artifact_id_a": id_a, "artifact_id_b": id_b, "note": note},
+            )
+            return f"LINK recorded: {id_a} <-> {id_b}" + (f" ({note})" if note else "")
+
+        elif sub == "annotate":
+            if len(args) < 3:
+                return "Usage: bruce annotate <artifact_id> <text>"
+            artifact_id = args[1]
+            text = " ".join(args[2:])
+            annotate_artifact(artifact_id, text, ARTIFACT_DIR)
+            self.activity_logger.log_action(
+                "artifact_annotate", player.room_id,
+                self.rooms.get(player.room_id, Room("", "unknown", "")).name,
+                {"artifact_id": artifact_id, "text": text},
+            )
+            return f"ANNOTATE recorded for {artifact_id}: {text}"
+
+        else:
+            return "Bruce commands: intake <type> <source> [id], inspect <id>, link <id_a> <id_b> [note], annotate <id> <text>"
 
     async def handle_dev_command(self, player: Player, args: List[str]) -> str:
         if not args:
@@ -479,6 +570,13 @@ Bruce Observability:
 dev heartbeat    - Show last 3 heartbeat entries
 dev bruce tail <n> - Show last N Bruce activity entries
 dev logsizes     - Show evidence log file sizes
+
+Artifact Intake (human only):
+------------------
+bruce intake <type> <source> [id] <content> - Submit artifact
+bruce inspect <id>    - View archived artifact
+bruce link <a> <b> [note] - Link two artifacts
+bruce annotate <id> <text> - Annotate an artifact
         """
 
     async def cmd_status(self, player: Player) -> str:
