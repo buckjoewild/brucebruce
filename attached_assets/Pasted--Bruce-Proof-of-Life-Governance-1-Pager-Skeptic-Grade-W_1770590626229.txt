@@ -1,0 +1,105 @@
+# Bruce “Proof-of-Life + Governance” — 1-Pager (Skeptic-Grade)
+
+## What this is
+
+A **text-MUD server** with an always-on NPC agent (“Bruce”) that produces **verifiable telemetry** on a schedule (heartbeat) and logs **every action** (activity). The point isn’t “AI vibes.” The point is **auditability**.
+
+---
+
+## Claims (only count if you can reproduce them)
+
+| Claim                                 | Where it should show up                                                | How to falsify fast                         |
+| ------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------- |
+| Bruce is alive on a timer (heartbeat) | `evidence/heartbeat.jsonl` grows at a steady cadence                   | File doesn’t grow; timestamps don’t advance |
+| Every Bruce action is logged          | `evidence/bruce_activity.jsonl` contains `look/move/say/spawn_attempt` | Missing action types / no new entries       |
+| Logs are tamper-evident               | Each JSONL entry includes `sha256` that verifies                       | Any entry fails hash check                  |
+| Dev proof commands exist              | In-game: `dev heartbeat`, `dev bruce tail N`, `dev logsizes`           | Commands missing / don’t match outputs      |
+| Tests prove basic invariants          | `pytest` summary line                                                  | Tests fail or count differs from repo claim |
+
+---
+
+## Reproduce in 4 blocks (read-only, no side effects)
+
+Run these and paste raw output. No narration. No “trust me.” ✅
+
+### A) Evidence exists + tails
+
+```bash
+ls -la evidence/
+tail -n 3 evidence/heartbeat.jsonl
+tail -n 10 evidence/bruce_activity.jsonl
+```
+
+### B) All 4 action types present
+
+```bash
+grep -o '"action":"[^"]*"' evidence/bruce_activity.jsonl | sort | uniq -c
+```
+
+### C) Tests (exact summary line matters)
+
+```bash
+python -m pytest -q
+```
+
+### D) SHA256 spot-check (verifies integrity)
+
+```bash
+python3 -c "
+import json,hashlib
+def verify(path):
+  lines=open(path,'r',encoding='utf-8').read().splitlines()
+  v=f=0
+  for l in lines:
+    e=json.loads(l); c=e.pop('sha256',None)
+    h=hashlib.sha256(json.dumps(e,separators=(',',':')).encode()).hexdigest()
+    v+= (c==h); f+= (c!=h)
+  print(f'{path}: {v}/{v+f} verified ({f} failures)')
+verify('evidence/heartbeat.jsonl')
+verify('evidence/bruce_activity.jsonl')
+"
+```
+
+**Pass condition:** you get (1) growing files, (2) 4 action types, (3) tests pass, (4) 0 hash failures.
+
+---
+
+## Governance hygiene (so we don’t lie to ourselves)
+
+* **Read-only verification mode means:** *no new files, no pushes, no “helpful scripts.”*
+* If a drift artifact exists (created during a constrained window):
+
+  * move to `scripts/_quarantine/…`
+  * add header comment: `# CREATED DURING DRIFT EVENT 2026-02-08 — not trusted until re-reviewed`
+  * note it in `docs/PROOF_OF_LIFE.md` as quarantined
+
+This is how you keep “capable” from becoming “creative.”
+
+---
+
+## What “Bruce is doing his thing” means (operationally)
+
+* Bruce produces **two independent streams of evidence**:
+
+  * **Heartbeat**: periodic snapshot of world state (proves liveness + cadence)
+  * **Activity**: event log of actions (proves behavior + coverage)
+* If heartbeat cadence is configurable, the rule is:
+
+  * **Default policy is documented**
+  * Override only via `BRUCE_HEARTBEAT_MINUTES` (explicitly set, not guessed)
+
+---
+
+## The skeptic’s bottom line
+
+If the four blocks reproduce cleanly on demand, Bruce is **operationally real** (telemetry + integrity + tests).
+If any block fails, the fix is **mechanical**, not philosophical.
+
+---
+
+### Tiny Next Actions + DoD
+
+1. Run Blocks A–D and paste raw output
+2. Paste `git log --oneline -n 5`
+3. Paste `rg -n "BRUCE_HEARTBEAT|heartbeat.jsonl|bruce_activity.jsonl|dev logsizes|dev heartbeat|dev bruce" -S .`
+   **DoD:** Trey can reproduce the same outputs locally from the repo + runtime, without trusting narration.

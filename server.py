@@ -1177,10 +1177,20 @@ async def main():
     if os.environ.get("MUD_BRUCE_AUTOPILOT", "true").lower() == "true":
         asyncio.create_task(server.bruce_autopilot())
 
+    import socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    except (AttributeError, OSError):
+        pass
+    sock.bind((HOST, PORT))
+    sock.listen()
+    sock.setblocking(False)
+
     async with websockets.serve(
         server.handle_client,
-        HOST,
-        PORT,
+        sock=sock,
         process_request=process_request,
     ):
         print(f"Server running on http://{HOST}:{PORT}")
