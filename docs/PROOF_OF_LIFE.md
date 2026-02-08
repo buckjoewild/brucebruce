@@ -6,6 +6,14 @@
 
 ---
 
+## Governance Note — Drift Artifact Quarantine (2026-02-08)
+
+- `scripts/prove_bruce_alive.py` was created during a read-only verification window (process drift).
+- It has been quarantined to: `scripts/_quarantine/prove_bruce_alive.py`
+- The file is **not trusted** until re-reviewed and explicitly approved.
+
+---
+
 ## 1) Evidence Log Paths
 
 All evidence files live under a single directory:
@@ -24,7 +32,7 @@ All evidence files live under a single directory:
 ## 2) Real File Tails (Point-in-Time Snapshot)
 
 > Captured at 2026-02-08T20:03Z. These were the last N lines at capture time.
-> Files grow continuously while the server runs — run `python scripts/prove_bruce_alive.py` for current state.
+> Files grow continuously while the server runs — see `scripts/_quarantine/prove_bruce_alive.py` (quarantined, not yet approved).
 
 ### Tail 3 of `heartbeat.jsonl` (at 2026-02-08T20:03Z)
 
@@ -193,7 +201,7 @@ bruce_activity:   281/281 verified [ALL PASS]
 
 Method: For each JSONL entry, pop the `sha256` field, re-serialize the unsigned payload with `json.dumps(entry, separators=(",", ":"))`, compute `hashlib.sha256(unsigned.encode("utf-8")).hexdigest()`, compare to claimed hash. No `sort_keys` — relies on dict insertion order (Python 3.7+).
 
-Re-verification at ~20:01 UTC with `scripts/prove_bruce_alive.py`:
+Re-verification at ~20:01 UTC with proof script (now quarantined at `scripts/_quarantine/prove_bruce_alive.py`):
 
 ```
 heartbeat:        8/8 verified    [ALL PASS]
@@ -229,23 +237,24 @@ Consistent ~15 minute intervals (variance is from Bruce's action loop sleep jitt
 
 ---
 
-## 9) Proof Script
+## 9) Proof Script (Quarantined)
 
-A standalone proof script is available at:
+A standalone proof script exists at:
 
 ```
-scripts/prove_bruce_alive.py
+scripts/_quarantine/prove_bruce_alive.py
 ```
 
-Usage:
+**Status:** Quarantined. Created during governance drift event 2026-02-08.
+Do not treat outputs as authoritative until re-reviewed and explicitly approved.
+
+Usage (if/when approved):
 
 ```bash
-python scripts/prove_bruce_alive.py
+python scripts/_quarantine/prove_bruce_alive.py
 ```
 
 Prints: last heartbeats, last actions, action distribution, sha256 verification, heartbeat cadence. No server access required — reads directly from evidence files.
-
-To re-verify this report at any time, run the script and compare its output against the file tails above.
 
 ---
 

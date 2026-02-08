@@ -1,7 +1,10 @@
+# CREATED DURING DRIFT EVENT 2026-02-08 — not trusted until re-reviewed
+# NOTE: This script was created in a read-only verification window (governance violation).
+# STATUS: Quarantined. Do not treat outputs as authoritative until reviewed + approved.
 #!/usr/bin/env python3
 """
 Bruce Proof-of-Life — prints a dashboard from evidence files.
-Usage: python scripts/prove_bruce_alive.py
+Usage: python scripts/_quarantine/prove_bruce_alive.py
 """
 import json
 import hashlib
@@ -10,7 +13,7 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-EVIDENCE_DIR = Path(__file__).resolve().parent.parent / "07_HARRIS_WILDLANDS" / "evidence"
+EVIDENCE_DIR = Path(__file__).resolve().parent.parent.parent / "07_HARRIS_WILDLANDS" / "evidence"
 
 FILES = {
     "heartbeat": EVIDENCE_DIR / "heartbeat.jsonl",

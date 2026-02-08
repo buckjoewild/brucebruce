@@ -87,6 +87,27 @@ All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
 - `bot_audit.jsonl` — Bot command audit trail (UTC timestamps)
 - `patches/` — Applied patch files
 
+## Heartbeat Cadence Policy (Governance)
+
+- Default cadence (dev): **15 minutes** (code default in `heartbeat.py`)
+- Default cadence (production): **60 minutes** (set via env var at deployment)
+- Override mechanism: **BRUCE_HEARTBEAT_MINUTES** environment variable only
+- Rationale: 15m supports rapid verification during active development; 60m reduces log churn in long-running production
+- Any change to cadence must be evidence-backed (log intervals + proof output)
+
+## Evidence Log Retention Policy (Current)
+
+- Policy: **Unbounded growth for now** (no rotation or deletion)
+- Reason: current observed growth rates are low enough for short/medium term operation
+  - bruce_activity.jsonl: ~80 KB/hour (observed estimate)
+  - heartbeat.jsonl: ~400 B/hour (observed estimate)
+- Revisit threshold: when `bruce_activity.jsonl` approaches **5 MB** or when storage constraints are observed
+- Governance: retention changes must be explicit, documented, and accompanied by a new proof-of-life capture
+
+## Governance Notes
+
+- `scripts/_quarantine/prove_bruce_alive.py` — created during drift event 2026-02-08 (read-only verification window). Quarantined, not trusted until re-reviewed and approved.
+
 ## Tests
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_build_loop.py` — 15 orchestrator tests
 - `07_HARRIS_WILDLANDS/orchestrator/tests/test_bruce_memory.py` — 14 Bruce memory tests
@@ -122,6 +143,7 @@ All evidence lives in `07_HARRIS_WILDLANDS/evidence/`:
 - Edit `RUN_TESTS=0` in RUN_MUD.bat to skip tests for faster boot
 
 ## Recent Changes
+- 2026-02-08: governance: quarantined drift artifact (prove_bruce_alive.py), documented heartbeat cadence policy (15m dev / 60m prod), documented retention policy (unbounded, revisit at 5MB)
 - 2026-02-08: feat: Bruce observability — heartbeat every 15min (configurable via BRUCE_HEARTBEAT_MINUTES), per-action activity log, sha256-signed JSONL entries, dev commands (heartbeat/bruce tail/logsizes), 79 tests pass
 - 2026-02-08: docs: Freeze→Measure spec (UPDATE_FREEZE_TO_MEASURE_v1.md) — evidence-driven hardening template with filled evidence pack (timestamp map, log analysis, session gaps, denial coverage, known pain points)
 - 2026-02-08: refactor: single source of truth for bot security — extracted authorize/denylist/interlock into bot_security.py, tests import real production code, added IDLE_MODE safety interlock (bots blocked when builds active), 66 tests pass
