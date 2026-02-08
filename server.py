@@ -771,6 +771,19 @@ TERMINAL_HTML = r'''<!DOCTYPE html>
 def process_request(connection, request):
     if request.path == "/ws":
         return None
+
+    if request.path == "/health":
+        body = b'{"status":"ok"}'
+        return Response(
+            200,
+            "OK",
+            Headers([
+                ("Content-Type", "application/json"),
+                ("Content-Length", str(len(body))),
+            ]),
+            body,
+        )
+
     html_bytes = TERMINAL_HTML.encode("utf-8")
     return Response(
         200,

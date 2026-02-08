@@ -36,7 +36,6 @@ externalPort = 80
 [deployment]
 deploymentTarget = "vm"
 run = ["python", "server.py"]
-build = ["bash", "-c", "cd '05_EXPORT/BRUCE_BRUCE__CODEX/harriswildlands.com github repo/harriswildlands.com-main' && npm run build"]
 
 [userenv]
 
