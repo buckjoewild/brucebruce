@@ -1,0 +1,137 @@
+Perfect — here is a single, clean copy-paste block you can drop straight into Replit → Deployment → Adjust settings and then click Publish with confidence.
+
+This assumes safe public launch (MUD live, Bruce active, builds locked).
+
+✅ COPY-PASTE: Replit Publish Setup (SAFE DEFAULT)
+1️⃣ Environment Variables (Secrets / Env tab)
+
+Paste each line as its own key/value:
+
+HOST=0.0.0.0
+PORT=80
+IDLE_MODE=1
+MUD_BRUCE_AUTOPILOT=true
+USE_CODEX=0
+CODEX_DRYRUN=1
+
+
+Why:
+
+PORT=80 matches Replit’s external forwarding
+
+IDLE_MODE=1 guarantees no unattended builds
+
+AUTOPILOT=true lets Bruce roam/chat safely
+
+Codex disabled by default (no surprise code edits)
+
+2️⃣ Build Command
+
+Leave EMPTY
+
+❌ Do not use:
+
+npm run build
+
+
+This is a Python MUD. No build step.
+
+3️⃣ Run Command
+
+Set exactly:
+
+python server.py
+
+4️⃣ Ports Configuration
+
+KEEP only this:
+
+Host: 0.0.0.0
+External Port: 80
+
+
+❌ Remove / disable:
+
+0.0.0.0 :3000
+
+
+(That’s leftover web-app baggage and can break routing.)
+
+5️⃣ Deployment Type
+
+Reserved VM ✅
+(Required for WebSockets + persistent sessions)
+
+Machine:
+
+0.5 vCPU / 2 GiB RAM ✅ (perfect)
+
+6️⃣ App Access
+
+Choose one:
+
+✅ Anyone on the internet can access your app (recommended)
+
+OR restrict to team if you want a quiet alpha
+
+7️⃣ Security Scan
+
+Leave ON ✅
+(No reason to disable.)
+
+🚀 FINAL STEP
+
+After all the above is set:
+
+👉 Click Publish
+
+✅ What “success” looks like after publish
+
+Visit:
+
+https://brucebruce-brosephharris.replit.app
+
+
+You should see:
+
+CRT terminal loads
+
+HARRIS WILDLANDS ASCII banner
+
+Bruce steward text
+
+Prompt:
+
+Under what name shall your deeds be recorded?
+
+
+WebSocket connects automatically
+
+/build on ❌ blocked (IDLE_MODE)
+
+/plan hello ✅ works
+
+That means:
+
+Hosting is correct
+
+Ports are correct
+
+WebSockets are correct
+
+Safety posture is correct
+
+🧭 After Publish (no rush)
+
+Next clean steps, when you feel like it:
+
+Add custom domain (harriswildlands.com or mud.harriswildlands.com)
+
+Test local Docker run (escape pod)
+
+Add a simple in-world /status command (IDLE_MODE, last event, memory size)
+
+But right now?
+
+Yes. You are publish-ready.
+Click the button.

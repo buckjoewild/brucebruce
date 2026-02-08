@@ -37,3 +37,12 @@ externalPort = 80
 deploymentTarget = "vm"
 run = ["python", "server.py"]
 build = ["bash", "-c", "cd '05_EXPORT/BRUCE_BRUCE__CODEX/harriswildlands.com github repo/harriswildlands.com-main' && npm run build"]
+
+[userenv]
+
+[userenv.production]
+HOST = "0.0.0.0"
+IDLE_MODE = "1"
+MUD_BRUCE_AUTOPILOT = "true"
+USE_CODEX = "0"
+CODEX_DRYRUN = "1"
