@@ -1,0 +1,118 @@
+Yep. That’s the right posture. ✅
+
+Two things:
+
+1. Your “lie detector” blocks are solid (reads only, no side effects).
+2. On **prove_bruce_alive.py**: don’t decide by vibes—decide by rule.
+
+---
+
+## Governance boundary call 🧱
+
+Given your system goals (Canon > Observed > Hypothesis, evidence-first, no silent drift), the clean rule is:
+
+### **Quarantine it, don’t delete it**
+
+* **Keep** the file because it’s useful *and already exists* (deleting is also a side-effect and can erase valuable provenance).
+* **Move it into a clearly labeled quarantine zone** and mark it as “created during governance violation.”
+
+That way:
+
+* You preserve forensic truth.
+* You stop it from quietly becoming “official tooling.”
+* You can later re-adopt it through an explicit consent step (“promote from quarantine → supported tool”).
+
+**Suggested path change (later, when you’re allowed to modify repo):**
+
+* `scripts/_quarantine/prove_bruce_alive.py`
+* Add a header comment: `CREATED DURING DRIFT EVENT YYYY-MM-DD — not trusted until re-reviewed`
+
+For *this moment*, since you said **no new code / no side effects**, we just decide policy: **quarantine on next allowed change window**.
+
+---
+
+## Tightened “Proof-of-Life” read-only checklist (copy/paste)
+
+Your blocks are good. Here’s the same thing, slightly hardened:
+
+### A) Evidence exists + tails
+
+```bash
+ls -la 07_HARRIS_WILDLANDS/evidence/
+wc -l 07_HARRIS_WILDLANDS/evidence/heartbeat.jsonl 07_HARRIS_WILDLANDS/evidence/bruce_activity.jsonl
+tail -n 3 07_HARRIS_WILDLANDS/evidence/heartbeat.jsonl
+tail -n 10 07_HARRIS_WILDLANDS/evidence/bruce_activity.jsonl
+```
+
+### B) Action types distribution
+
+```bash
+grep -o '"action":"[^"]*"' 07_HARRIS_WILDLANDS/evidence/bruce_activity.jsonl | sort | uniq -c
+```
+
+### C) Tests (exact summary line)
+
+```bash
+python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -q
+```
+
+### D) SHA256 verify (heartbeat + activity)
+
+Your heartbeat verifier is good. I’d add activity too (still no files):
+
+```bash
+python3 - <<'PY'
+import json,hashlib,sys
+
+def verify(path):
+    v=f=0
+    with open(path,'rb') as fh:
+        for raw in fh:
+            raw = raw.strip()
+            if not raw: 
+                continue
+            e=json.loads(raw.decode('utf-8'))
+            c=e.pop('sha256', None)
+            if c is None:
+                f+=1
+                continue
+            h=hashlib.sha256(json.dumps(e,separators=(',',':')).encode()).hexdigest()
+            if h==c: v+=1
+            else: f+=1
+    print(f"{path}: {v}/{v+f} verified ({f} failures)")
+
+verify('07_HARRIS_WILDLANDS/evidence/heartbeat.jsonl')
+verify('07_HARRIS_WILDLANDS/evidence/bruce_activity.jsonl')
+PY
+```
+
+---
+
+## One more read-only check that kills a common illusion 🔪
+
+Make sure the *scheduler* isn’t just “startup logging” by checking timestamps are spaced:
+
+```bash
+python3 - <<'PY'
+import json,datetime
+p='07_HARRIS_WILDLANDS/evidence/heartbeat.jsonl'
+ts=[]
+for line in open(p,'r',encoding='utf-8'):
+    e=json.loads(line)
+    t=e.get('ts') or e.get('timestamp') or e.get('created_at')
+    if t: ts.append(t)
+print("last_ts_fields:", ts[-3:])
+PY
+```
+
+(If you have an exact timestamp field name, replace the guesses, but this is still read-only.)
+
+---
+
+## Bottom line
+
+* **Keep** `prove_bruce_alive.py` but **quarantine** it next allowed edit window.
+* Run the proof blocks; if they pass, you’ve got **verifiable heartbeat + activity telemetry**.
+* Then (and only then) you decide the ops policy: 15m vs 60m heartbeat and log retention.
+
+Footer doesn’t apply here because you’re not asking me to build a system right now—this is verification + governance.

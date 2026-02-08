@@ -1,0 +1,87 @@
+Nice. That’s **Observed** with receipts. 🧾✅
+The key detail is the **~15-minute cadence plus SHA256 verification**—that’s the “not vibes” line in the sand.
+
+## What you have *now* (no hype)
+
+* **Bruce is alive** in a measurable way: heartbeat snapshots are landing on schedule.
+* **Bruce is accountable**: *every* action type is leaving a trace.
+* **Telemetry is tamper-evident**: hashes match across the whole log set.
+* **Test harness is green**: the system is at least internally consistent.
+
+That’s already the minimum viable “Bruce exists outside your imagination” milestone. 🤖📌
+
+---
+
+## Next move (practical, low-risk): lock down ops policy
+
+Since you’re *already* running, the next work isn’t “more features.” It’s **operational discipline** so it doesn’t rot.
+
+### 1) Quarantine drift artifact (next edit window)
+
+Your plan is correct:
+
+* move `scripts/prove_bruce_alive.py` → `scripts/_quarantine/prove_bruce_alive.py`
+* header comment with drift stamp
+* note in `docs/PROOF_OF_LIFE.md`
+
+This preserves provenance and stops “oops it became official.”
+
+### 2) Heartbeat interval decision
+
+Given your stated preference (“at least hourly, rather 15m”) and your environment (Replit-ish / always-on-ish), the sane default is:
+
+* **15m in dev**
+* **60m in production**
+* **override via env var only**
+* **documented defaults** (so nobody “helpfully” changes it)
+
+Why: 15m is great for *confidence* while building; 60m is kinder long-term to file growth and noise.
+
+### 3) Retention policy (don’t overthink it, but don’t ignore it)
+
+Pick one of these:
+
+**Option A — Unbounded for now (fastest)**
+
+* Accept log growth until it becomes annoying.
+* Add a “size watch” threshold later.
+
+**Option B — Rotate by size (best default)**
+
+* When `bruce_activity.jsonl` > e.g. 5MB, rotate to `bruce_activity.jsonl.1`
+* Keep last N rotations.
+* Same for heartbeat, but much slower growth.
+
+Rotation is boring—and boring is holy in ops.
+
+---
+
+## Reality check on “Bruce making plans and notes”
+
+Telemetry proves **activity and observation**, not “planning intelligence.”
+
+If you want “plans and notes” in a verifiable way *without opening mutation pathways*, the next *measured* step is:
+
+* **add a read-only “note” channel** that logs *interpretations* separately from observations
+  (e.g., `evidence/bruce_notes.jsonl`, explicitly labeled as “Hypothesis/Plan” not Canon)
+
+But that’s a **feature**, so it belongs after the quarantine window, and only if it stays inside the governance rails.
+
+---
+
+## Recommendation: do the quarantine window first, then set defaults
+
+Order matters because you’re enforcing “no drift” culturally and mechanically:
+
+1. **Quarantine prove script + note drift**
+2. **Set heartbeat defaults: 15m dev / 60m prod**
+3. **Choose retention: rotate-by-size**
+
+After that, we can talk about “notes/plans” as a constrained layer (separate log, separate truth tier, zero world mutation).
+
+**Next Actions (≤30m):**
+
+1. Run `git status` + `git log --oneline -n 5` (confirm clean baseline)
+2. In next edit window: quarantine + doc note
+3. Set and document heartbeat defaults + pick retention option
+   **DoD:** Drift artifact quarantined + defaults documented + retention decision written down.

@@ -1,0 +1,136 @@
+Locked. ✅ This is exactly the kind of “boring = reliable” change set that keeps Bruce from turning into a folklore creature.
+
+Below is a **copy-paste execution packet** for the next edit window. It assumes you’re in the repo root.
+
+---
+
+## EDIT WINDOW PACKET (3 items, no new features)
+
+### 0) Preflight (prove we’re clean before touching anything)
+
+```bash
+git status
+git log --oneline -n 5
+```
+
+---
+
+## 1) Quarantine the drift artifact
+
+### A) Move the file (create folder if needed)
+
+```bash
+mkdir -p scripts/_quarantine
+git mv scripts/prove_bruce_alive.py scripts/_quarantine/prove_bruce_alive.py
+```
+
+### B) Add drift header comment (top of file)
+
+Use your editor, or do a simple prepend. If you want a safe manual edit, open the file and add this at line 1:
+
+```python
+# CREATED DURING DRIFT EVENT 2026-02-08 — not trusted until re-reviewed
+# NOTE: This script was created in a read-only verification window (governance violation).
+# STATUS: Quarantined. Do not treat outputs as authoritative until reviewed + approved.
+```
+
+### C) Note it in `docs/PROOF_OF_LIFE.md`
+
+Add a small section near the top (or in an “Integrity / Governance Notes” section):
+
+```md
+## Governance Note — Drift Artifact Quarantine (2026-02-08)
+
+- `scripts/prove_bruce_alive.py` was created during a read-only verification window (process drift).
+- It has been quarantined to: `scripts/_quarantine/prove_bruce_alive.py`
+- The file is **not trusted** until re-reviewed and explicitly approved.
+```
+
+---
+
+## 2) Set + document heartbeat defaults (15m dev / 60m prod)
+
+### A) Code: confirm default behavior matches policy
+
+Goal: **no new behavior**, just ensuring reality matches the stated defaults.
+
+* Dev default: 15 minutes
+* Prod default: 60 minutes
+* Override: `BRUCE_HEARTBEAT_MINUTES` only
+
+If your code already uses `BRUCE_HEARTBEAT_MINUTES`, don’t add anything new—just confirm the fallback value(s). If it doesn’t have a “dev vs prod” notion yet, the minimal governance-safe move is:
+
+* Keep one default in code (pick **15** if that’s what’s currently running), and
+* Treat “prod = 60” as **deployment config** (env var), not a new code feature.
+
+### B) Document in `replit.md`
+
+Drop in a crisp policy block:
+
+```md
+## Heartbeat cadence policy (governance)
+
+- Default cadence (dev): **15 minutes**
+- Default cadence (production): **60 minutes**
+- Override mechanism: **BRUCE_HEARTBEAT_MINUTES** environment variable only.
+- Rationale: 15m supports rapid verification during active development; 60m reduces log churn in long-running production.
+```
+
+Also add one sentence warning that any change to cadence must be **evidence-backed** (log intervals + proof output).
+
+---
+
+## 3) Retention policy (Option A: unbounded for now)
+
+### A) Document decision + revisit threshold (in `replit.md` and/or `docs/PROOF_OF_LIFE.md`)
+
+Use this block:
+
+```md
+## Evidence log retention policy (current)
+
+- Policy: **Unbounded growth for now** (no rotation or deletion).
+- Reason: current observed growth rates are low enough for short/medium term operation.
+  - bruce_activity.jsonl: ~80 KB/hour (observed estimate)
+  - heartbeat.jsonl: ~400 B/hour (observed estimate)
+- Revisit threshold: when `bruce_activity.jsonl` approaches **5 MB** or when storage constraints are observed.
+- Governance: retention changes must be explicit, documented, and accompanied by a new proof-of-life capture.
+```
+
+---
+
+## Verify + Commit (single tidy commit)
+
+### A) Verification
+
+```bash
+git diff
+python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests/ -q
+```
+
+### B) Commit
+
+```bash
+git status
+git commit -am "Quarantine drift proof script; document heartbeat defaults and retention policy"
+# If docs edits + mv include new paths, use:
+git add -A
+git commit -m "Quarantine drift proof script; document heartbeat defaults and retention policy"
+```
+
+### C) Final sanity
+
+```bash
+git log --oneline -n 3
+```
+
+---
+
+## Definition of Done
+
+* `scripts/_quarantine/prove_bruce_alive.py` exists, original path removed, header added.
+* `docs/PROOF_OF_LIFE.md` explicitly notes the quarantine + governance violation.
+* `replit.md` documents heartbeat defaults + override rule + retention policy + revisit threshold.
+* Tests pass with the same summary line format you’ve been using.
+
+When you run this, you’ll have tightened the “Truth Hierarchy” culture of the repo itself—**the code can drift, but the governance trail won’t**.

@@ -1,0 +1,188 @@
+What I think: that “report” reads **too competent to trust** unless *you* (or a tool with real repo access) can reproduce it from first principles. 🧪🧾
+
+Right now, you’ve pasted a **narrated success log** that includes **new code changes** (“proof script”, “deprecation warning fix”, “pushed to GitHub”) despite the initial constraint **“Do NOT implement anything new yet.”** That’s a governance violation on its face. Even if the code is good, the process drift matters because it’s exactly how “Bruce becomes a talented liar” systems happen.
+
+So: treat the whole thing as *plausible*, not *proven*, until you can rerun the proof steps yourself and get the same artifacts.
+
+---
+
+## What’s solid about the approach (if true)
+
+If the repo truly has:
+
+* `evidence/heartbeat.jsonl` growing on a schedule
+* `evidence/bruce_activity.jsonl` logging *every* action type
+* **sha256 per entry** that verifies from raw bytes (not copy/paste)
+* `dev heartbeat`, `dev bruce tail`, `dev logsizes` pulling from files (not RAM)
+* tests passing with a consistent `pytest` summary
+* git history reflecting the change
+
+…then you’ve crossed the line from “Bruce roleplay” to **Bruce telemetry**. That’s the correct direction.
+
+---
+
+## The 3 red flags in what you pasted 🚩
+
+1. **“Now let me build the proof script…”**
+   That is explicitly implementing something new.
+
+2. **“Now let me push these to GitHub…”**
+   That’s an external side effect. Unless you saw it in `git log` + remote, it’s not verified.
+
+3. **“79 passed in 2.42s” + detailed counts**
+   This is easy to hallucinate convincingly. It must be tied to *actual* command output you can reproduce.
+
+---
+
+## Minimal reality-check you can run in 5 minutes (no new code)
+
+Run these **yourself** in the repo root. These commands are the lie-detector.
+
+### A) Evidence files exist + are changing
+
+```bash
+# list evidence files and sizes
+ls -la evidence
+
+# show tails
+tail -n 3 evidence/heartbeat.jsonl
+tail -n 10 evidence/bruce_activity.jsonl
+
+# byte sizes
+wc -c evidence/heartbeat.jsonl evidence/bruce_activity.jsonl
+```
+
+### B) Heartbeat scheduling proof (fast)
+
+Temporarily set to 1 minute **just to prove wiring**:
+
+```bash
+# windows powershell
+$env:BRUCE_HEARTBEAT_MINUTES="1"
+
+# restart server, wait ~75 sec, then:
+python scripts/prove_bruce_alive.py  # ONLY if it already exists
+tail -n 5 evidence/heartbeat.jsonl
+```
+
+If you don’t already have `scripts/prove_bruce_alive.py`, skip it. **Don’t create it** yet.
+
+### C) Tests + git truth
+
+```bash
+# tests
+python -m pytest -q
+
+# last 5 commits
+git log -5 --oneline
+git status
+```
+
+If those four blocks match the story, you’re real.
+
+---
+
+## Best next action: demand a point-in-time report you can regenerate
+
+Even if `docs/PROOF_OF_LIFE.md` exists, it should be explicitly a **snapshot** with:
+
+* capture timestamp
+* exact commands used
+* raw pasted outputs
+* file paths resolved from repo root
+* git commit hash of the snapshot
+
+### Template: `docs/PROOF_OF_LIFE.md` (you can paste this and fill outputs)
+
+````md
+# PROOF OF LIFE (Point-in-time snapshot)
+
+Captured at: YYYY-MM-DD HH:MM:SS (local)
+Repo root: <absolute path>
+Commit: <git rev-parse --short HEAD>
+
+## 1) Evidence log paths
+- Heartbeat: evidence/heartbeat.jsonl
+- Activity: evidence/bruce_activity.jsonl
+
+## 2) Real file tails (captured)
+### heartbeat.jsonl (last 3)
+```text
+<paste tail output>
+````
+
+### bruce_activity.jsonl (last 10)
+
+```text
+<paste tail output>
+```
+
+## 3) File sizes
+
+```text
+<paste: wc -c ...>
+```
+
+## 4) Code locations (grep-based)
+
+### schedule heartbeat ticks
+
+```text
+<paste: ripgrep/grep results>
+```
+
+### write heartbeat entry
+
+```text
+<paste grep results>
+```
+
+### write bruce activity entry
+
+```text
+<paste grep results>
+```
+
+### dev commands: heartbeat / bruce tail / logsizes
+
+```text
+<paste grep results>
+```
+
+## 5) Test suite
+
+```text
+<paste: pytest summary line>
+```
+
+## 6) Git commits (last 5)
+
+```text
+<paste: git log -5 --oneline>
+```
+
+````
+
+For code locations, use:
+```bash
+rg -n "BRUCE_HEARTBEAT|heartbeat|bruce_activity|logsizes|dev heartbeat|dev bruce" .
+````
+
+This avoids “trust me bro” line numbers.
+
+---
+
+## My verdict (based on what you pasted)
+
+* **Concept direction: correct.**
+* **Process discipline: violated.**
+* **Truth status: unverified** until you run the commands above and see the outputs yourself.
+
+Once you do that, we can lock it in as “Observed” (your Truth Hierarchy), and then decide whether the heartbeat should be **15 minutes** or **hourly** by default (I’d keep 15 for dev, 60 for production unless you’re okay with log growth).
+
+---
+
+SBVS: Spec—define proof outputs | Build—none (verify only) | Verify—run tails/tests/git | Ship—PROOF_OF_LIFE.md snapshot
+Reality: Known—claims + narrative | Likely—some wiring exists | Risk—hallucinated metrics/commits
+Next (≤30m): 1) `ls -la evidence` 2) `tail` both logs 3) `pytest -q` + `git log -5`
+DoD: Outputs match story + files grow on schedule + git history confirms changes
