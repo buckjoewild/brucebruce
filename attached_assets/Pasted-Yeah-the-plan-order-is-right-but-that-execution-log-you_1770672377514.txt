@@ -1,0 +1,128 @@
+Yeah—**the plan/order is right**, but that “execution log” you pasted is *not evidence*. It’s exactly the kind of narrated-success that Trey’s audit is trying to kill. 😄🔒
+
+Two hard truths:
+
+1. **I can’t push to GitHub or publish your Replit for you** from here.
+2. **You shouldn’t trust that completion report unless you can reproduce it locally** (or in Replit) with commands + diffs + logs.
+
+So here’s the **minimum “make it real” push/publish sequence** you (or Trey) can run. This turns “feels magical” into **provable magic**.
+
+---
+
+## 1) Prove the changes exist (not just claimed)
+
+### A) Confirm you’re on the expected commit base
+
+```bash
+git rev-parse --short HEAD
+git status
+git log -5 --oneline
+```
+
+### B) Show what actually changed
+
+```bash
+git diff --stat origin/main...HEAD
+git diff origin/main...HEAD
+```
+
+### C) Re-run the audit commands (the same ones Trey ran)
+
+```bash
+python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests -q
+npm audit --package-lock-only --omit=dev
+pip-audit -r requirements.txt
+```
+
+If the new tests are real, you should also see a higher test count (or at least more test files) and your `git diff --stat` should reflect it.
+
+---
+
+## 2) Make the “hardening” claims true (spot-check the criticals)
+
+### A) Auth: unauth clients can’t run commands
+
+Look for these invariants in code (and test it live):
+
+* default role ≠ `human`
+* no “command as first message ⇒ human”
+* only `/help` `/auth` `/join` (or equivalent) before auth
+
+### B) Artifacts: path traversal blocked
+
+Verify **artifact_id** is either:
+
+* generated server-side, OR
+* regex validated and rejects `..`, slashes, drive letters, `:`, etc.
+
+### C) Evidence wording
+
+If you didn’t implement adversarial integrity (HMAC), **docs must say “checksummed,” not “signed.”**
+
+---
+
+## 3) Commit cleanly (don’t dump a mystery blob)
+
+```bash
+git add -A
+git commit -m "Hardening + world growth budget (auth gate, artifact sanitization, revert cleanup, growth budget commands + tests)"
+```
+
+Optional but smart: include the audit in the repo as evidence.
+
+```bash
+mkdir -p docs/audits
+# paste Trey's audit into docs/audits/trey-audit-2026-02-09.md
+git add docs/audits/trey-audit-2026-02-09.md
+git commit -m "Add Trey audit notes (2026-02-09)"
+```
+
+---
+
+## 4) Push to GitHub ✅
+
+```bash
+git push origin main
+```
+
+Then verify it’s actually there:
+
+```bash
+git ls-remote --heads origin main
+```
+
+(If you’re using PRs, do `git push origin HEAD:hardening-growth-budget` and open a PR.)
+
+---
+
+## 5) Publish / Deploy (Replit reality)
+
+This depends on whether you’re using **Replit Deployments** or just running the repl.
+
+### A) Basic “published” check
+
+* Replit: confirm the repl is public (if intended) and the **web app is reachable**
+* Confirm the running process matches the **blessed entrypoint** (the secure one)
+
+### B) Smoke-test the magic loop (live)
+
+From a client session:
+
+1. `/growth status`
+2. `/growth propose` (offer appears, no mutation)
+3. `/build on`
+4. `/consent yes`
+5. `/growth apply` (or your apply verb)
+6. `/growth status` (budget decremented)
+7. `/growth history 10` (events logged)
+
+If any of those steps works without auth from a fresh client, you *still have the hole*.
+
+---
+
+## The real “today we make it magical” rule ✨
+
+**Magic = small change + proof.**
+One new room/NPC/item per day, with a log entry you can point at, and tests that keep you honest.
+
+If you want, I’ll format a **release note** you can paste into GitHub (what changed, why, how to verify) using whatever your actual diff shows—but don’t trust the narrated report until the commands above reproduce it.
