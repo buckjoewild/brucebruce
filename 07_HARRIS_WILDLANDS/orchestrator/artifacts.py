@@ -14,8 +14,10 @@ stdlib-only.  No DB.  No network calls.
 """
 
 import hashlib
+import hmac
 import json
 import os
+import re
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
@@ -42,6 +44,8 @@ class ArtifactStatus(str, Enum):
 ALLOWED_TYPES = {t.value for t in ArtifactType}
 ALLOWED_SOURCES = {"human", "codex", "openclaw", "script", "unknown"}
 DEFAULT_MAX_BYTES = 1_000_000
+SAFE_ID_RE = re.compile(r'^[a-zA-Z0-9._-]{1,80}$')
+EVIDENCE_HMAC_KEY = os.environ.get("EVIDENCE_HMAC_KEY", "")
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -90,6 +94,8 @@ def append_intake_event(event_dict: dict, base_dir: str) -> None:
     event_with_hash = dict(event_dict)
     unsigned = json.dumps(event_dict, separators=(",", ":"))
     event_with_hash["sha256"] = hashlib.sha256(unsigned.encode("utf-8")).hexdigest()
+    if EVIDENCE_HMAC_KEY:
+        event_with_hash["hmac"] = hmac.new(EVIDENCE_HMAC_KEY.encode(), unsigned.encode(), hashlib.sha256).hexdigest()
     _write_jsonl(intake_path, event_with_hash)
 
 
@@ -105,6 +111,8 @@ def store_artifact(
     related_artifacts: Optional[list] = None,
 ) -> str:
     paths = ensure_dirs(base_dir)
+    if not SAFE_ID_RE.match(artifact_id):
+        raise ValueError(f"unsafe artifact_id: {artifact_id!r}")
     if status == ArtifactStatus.QUARANTINED:
         dest_dir = paths["quarantine"]
     else:
@@ -125,7 +133,6 @@ def store_artifact(
         record["claimed_purpose"] = claimed_purpose
     if related_artifacts:
         record["related_artifacts"] = related_artifacts
-
     with open(archive_path, "w", encoding="utf-8") as f:
         json.dump(record, f, indent=2)
 
@@ -142,8 +149,8 @@ def intake(
     related_artifacts: Optional[list] = None,
     max_bytes: int = DEFAULT_MAX_BYTES,
 ) -> tuple:
-    if artifact_id is None:
-        artifact_id = uuid.uuid4().hex
+    user_label = artifact_id
+    artifact_id = uuid.uuid4().hex
 
     content_bytes = content.encode("utf-8") if isinstance(content, str) else content
     content_hash = sha256_bytes(content_bytes)
@@ -173,6 +180,8 @@ def intake(
             "bytes": len(content_bytes),
             "reason": reason,
         }
+        if user_label:
+            event["user_label"] = user_label
         if archive_path:
             event["archive_path"] = archive_path
         if related_artifacts:
@@ -199,6 +208,8 @@ def intake(
         "reason": "ok",
         "archive_path": archive_path,
     }
+    if user_label:
+        event["user_label"] = user_label
     if related_artifacts:
         event["related_artifacts"] = related_artifacts
     append_intake_event(event, base_dir)
@@ -239,6 +250,8 @@ def annotate_artifact(
 
 
 def load_artifact(artifact_id: str, base_dir: str) -> Optional[dict]:
+    if not SAFE_ID_RE.match(artifact_id):
+        return None
     paths = ensure_dirs(base_dir)
     for subdir in [paths["archive"], paths["quarantine"]]:
         filepath = os.path.join(subdir, f"{artifact_id}.json")

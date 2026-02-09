@@ -14,6 +14,7 @@ This is the core loop that:
 """
 import os
 import json
+import re
 import uuid
 import subprocess
 from datetime import datetime, timezone
@@ -234,6 +235,12 @@ class BuildOrchestrator:
             if len(file_tree) > 100:
                 break
 
+        secret_value_re = re.compile(r'(TOKEN|KEY|SECRET|PASSWORD)', re.IGNORECASE)
+        secret_values = []
+        for env_key, env_val in os.environ.items():
+            if secret_value_re.search(env_key) and env_val:
+                secret_values.append(env_val)
+
         snippets = {}
         for rel_path in self.CONTEXT_KEY_FILES:
             full_path = self.repo_root / rel_path
@@ -244,6 +251,9 @@ class BuildOrchestrator:
                     for pattern in self.CONTEXT_SECRET_PATTERNS:
                         if pattern in content:
                             content = content.replace(pattern, "[REDACTED]")
+                    for sv in secret_values:
+                        if sv in content:
+                            content = content.replace(sv, "[REDACTED_VALUE]")
                     snippets[rel_path] = content
                 except Exception:
                     snippets[rel_path] = "(read error)"
@@ -277,7 +287,6 @@ class BuildOrchestrator:
             return f"Diff too large: {diff_size} bytes (max: {MAX_DIFF_SIZE})"
 
         # Parse file paths from diff
-        import re
         file_paths = []
         for match in re.finditer(r'^(?:---|\+\+\+)\s+[ab]/(.+)$', diff, re.MULTILINE):
             path = match.group(1)

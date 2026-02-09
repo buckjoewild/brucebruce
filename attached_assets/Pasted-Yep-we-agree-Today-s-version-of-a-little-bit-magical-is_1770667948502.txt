@@ -1,0 +1,147 @@
+Yep — we agree. 😈✨
+Today’s version of “a little bit magical” is **trustable magic**: *the world grows*, but only through the sacred choke point, and nobody can scribble on your disk from the outside.
+
+Here’s a **tight Replit task list** that matches the audit + your goal, in the right order, with crisp “done means done.”
+
+---
+
+## ✅ Replit Task List (Hardening → Growth Budget → Ship)
+
+### 1) Restrict guest access, require login for commands
+
+**Do:**
+
+* Default connections start as `role="guest"` (or `unauth"`)
+* Only allow `/help` + `/auth` + `/join` until authenticated
+* Remove any path where `type="command"` as first message assigns `role="human"`
+
+**DoD:** Unauth client cannot execute any world/build commands.
+
+---
+
+### 2) Clean up artifact names, add checks
+
+**Do:**
+
+* Stop using user-supplied `artifact_id` in filesystem paths
+* Generate `artifact_id` server-side (UUID-ish)
+* If a user passes a label, store it as metadata only
+* Reject any artifact label containing separators, `..`, `:`, etc.
+
+**DoD:** No path traversal possible; artifacts always land inside evidence/artifacts/*.
+
+---
+
+### 3) Secure evidence with codes, update docs
+
+Pick one (recommended: HMAC):
+
+**Option A (recommended): HMAC integrity**
+
+* Add `EVIDENCE_HMAC_KEY` env
+* Each JSONL entry writes: `sha256` + `hmac`
+* Verify checks HMAC (sha256 alone is not “signed”)
+
+**Option B: rename claims**
+
+* Rename “signed” → “checksummed” everywhere
+
+**DoD:** Docs match implementation *exactly*.
+
+---
+
+### 4) Clean up files when reverting changes
+
+**Do:**
+
+* Patch apply tracks created files
+* Revert deletes created files + restores backups
+
+**DoD:** A failed build leaves the repo identical to pre-build (including no new files).
+
+---
+
+### 5) Hide sensitive information values
+
+**Do:**
+
+* Redact *values* of env vars whose keys match `TOKEN|KEY|SECRET|PASSWORD`
+* Mask in any context gathering/snippets sent to Codex
+
+**DoD:** A known secret value cannot appear in exported context text.
+
+---
+
+### 6) Clarify server start file, warn users
+
+**Do:**
+
+* Declare one “blessed” entrypoint (the secure one)
+* Add warnings / disable insecure alt servers by default
+* Update docs to point to the blessed entrypoint only
+
+**DoD:** The repo has one obvious, documented “run this” path.
+
+---
+
+## 🌱 Now the magic: World Growth Budget
+
+### 7) Add world growth budget tracking
+
+**Do:**
+
+* `growth.json` config + tiny persisted state file
+* Window = per day (or per session), budget_total default 2
+
+**DoD:** `/growth status` reports remaining/total + window key.
+
+---
+
+### 8) Add growth commands to server
+
+**Do:**
+
+* `/growth propose` creates offer (no mutation)
+* `/growth history N` shows last N growth events
+
+**DoD:** You can propose repeatedly, but only apply within budget.
+
+---
+
+### 9) Apply growth rules and log
+
+**Do:**
+
+* Apply only through `/build on` → `/consent yes` (one-cycle)
+* Offer contains exactly 1 op
+* On success: decrement budget atomically; clear offer
+
+**DoD:** One consent cycle = at most one world mutation; budget decrements only on success.
+
+---
+
+### 10) Add growth documentation and tests
+
+**Do:**
+
+* Add doc `docs/GROWTH_BUDGET.md`
+* Add smoke test covering propose → consent → apply → verify decrement
+
+**DoD:** `pytest ...` stays green, and test proves “bigger when I come back.”
+
+---
+
+### 11) Final checks and push code
+
+**Do:**
+
+* Run pytest suite
+* Run npm/pip audit steps as before
+* Confirm deployed entrypoint is the secure one
+
+**DoD:** Trey’s top 2 criticals are closed + growth loop works.
+
+---
+
+**That list is correct.** It gets you *safe enchantment*—the best kind. 🧙‍♂️🔒
+Next time you log in and there’s one new room with a reason, it’ll hit exactly the vibe you want: **small, consistent, earned growth.**

@@ -4,9 +4,11 @@ Bruce heartbeat + activity logger — append-only JSONL evidence files.
 Heartbeat: periodic snapshot of Bruce's world state (every N minutes).
 Activity: per-action log of every Bruce action (look/move/say/spawn).
 
-Both produce sha256-signed JSONL entries for tamper evidence.
+Both produce sha256-checksummed JSONL entries for tamper evidence.
+HMAC-signed when EVIDENCE_HMAC_KEY is set.
 """
 import hashlib
+import hmac
 import json
 import os
 import uuid
@@ -17,10 +19,15 @@ from typing import Optional
 
 HEARTBEAT_INTERVAL_MINUTES = int(os.environ.get("BRUCE_HEARTBEAT_MINUTES", "15"))
 DEFAULT_MAX_LOG_BYTES = 5 * 1024 * 1024  # 5MB
+EVIDENCE_HMAC_KEY = os.environ.get("EVIDENCE_HMAC_KEY", "")
 
 
 def _sha256(data: str) -> str:
     return hashlib.sha256(data.encode("utf-8")).hexdigest()
+
+
+def _hmac_sha256(data: str) -> str:
+    return hmac.new(EVIDENCE_HMAC_KEY.encode(), data.encode(), hashlib.sha256).hexdigest()
 
 
 def _make_id(prefix: str) -> str:
@@ -67,7 +74,8 @@ def verify_jsonl_hashes(filepath: str) -> dict:
       first_invalid_line: 1-based line number of first failure (or None)
       skipped: entries without sha256 field
     """
-    result = {"total": 0, "valid": 0, "invalid": 0, "first_invalid_line": None, "skipped": 0}
+    result = {"total": 0, "valid": 0, "invalid": 0, "first_invalid_line": None, "skipped": 0,
+              "hmac_checked": 0, "hmac_valid": 0, "hmac_invalid": 0}
     path = Path(filepath)
     if not path.exists():
         return result
@@ -94,6 +102,7 @@ def verify_jsonl_hashes(filepath: str) -> dict:
 
             unsigned = dict(entry)
             del unsigned["sha256"]
+            stored_hmac = unsigned.pop("hmac", None)
             canonical = json.dumps(unsigned, separators=(",", ":"))
             computed = _sha256(canonical)
 
@@ -103,6 +112,14 @@ def verify_jsonl_hashes(filepath: str) -> dict:
                 result["invalid"] += 1
                 if result["first_invalid_line"] is None:
                     result["first_invalid_line"] = line_num
+
+            if stored_hmac and EVIDENCE_HMAC_KEY:
+                result["hmac_checked"] += 1
+                computed_hmac = _hmac_sha256(canonical)
+                if computed_hmac == stored_hmac:
+                    result["hmac_valid"] += 1
+                else:
+                    result["hmac_invalid"] += 1
 
     return result
 
@@ -148,6 +165,8 @@ class HeartbeatLogger:
 
         line = json.dumps(entry, separators=(",", ":"))
         entry["sha256"] = _sha256(line)
+        if EVIDENCE_HMAC_KEY:
+            entry["hmac"] = _hmac_sha256(line)
 
         signed_line = json.dumps(entry, separators=(",", ":"))
         self._safe_append(self.heartbeat_path, signed_line)
@@ -208,6 +227,8 @@ class ActivityLogger:
 
         line = json.dumps(entry, separators=(",", ":"))
         entry["sha256"] = _sha256(line)
+        if EVIDENCE_HMAC_KEY:
+            entry["hmac"] = _hmac_sha256(line)
 
         signed_line = json.dumps(entry, separators=(",", ":"))
         self._safe_append(self.activity_path, signed_line)

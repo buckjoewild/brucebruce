@@ -14,7 +14,7 @@ import subprocess
 import hashlib
 from datetime import datetime
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 
@@ -26,6 +26,7 @@ class PatchResult:
     files_modified: list[str]
     backup_path: Optional[str] = None
     sha256: Optional[str] = None
+    created_files: list[str] = field(default_factory=list)
 
 
 class PatchApplier:
@@ -81,25 +82,35 @@ class PatchApplier:
                 backup_path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(full_path, backup_path)
 
+        # Track which files are newly created (didn't exist before)
+        created_files = []
+        for file_path in files:
+            full_path = self.repo_root / file_path
+            if not full_path.exists():
+                created_files.append(file_path)
+
         # Try git apply first (preferred)
         result = self._apply_via_git(diff)
         if result.success:
             result.backup_path = str(backup_dir)
             result.sha256 = sha256
+            result.created_files = created_files
             return result
 
         # Fall back to manual patch parsing
         result = self._apply_manually(diff)
         result.backup_path = str(backup_dir)
         result.sha256 = sha256
+        result.created_files = created_files
         return result
 
-    def revert(self, backup_path: str) -> PatchResult:
+    def revert(self, backup_path: str, created_files: Optional[list[str]] = None) -> PatchResult:
         """
         Revert changes using a backup directory.
 
         Args:
             backup_path: Path to backup directory
+            created_files: Optional list of files created by the patch to delete
 
         Returns:
             PatchResult indicating revert status
@@ -120,6 +131,17 @@ class PatchApplier:
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(backup_file, target)
                 reverted.append(str(rel_path))
+
+        if created_files:
+            for cf in created_files:
+                target = self.repo_root / cf
+                try:
+                    resolved = target.resolve()
+                    if resolved.is_relative_to(self.repo_root.resolve()) and target.exists():
+                        target.unlink()
+                        reverted.append(f"(deleted) {cf}")
+                except Exception:
+                    pass
 
         return PatchResult(
             success=True,

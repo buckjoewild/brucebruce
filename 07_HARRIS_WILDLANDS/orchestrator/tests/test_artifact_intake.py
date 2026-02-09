@@ -199,7 +199,7 @@ class TestValidation:
             ok, reason = validate_artifact(t, "human", b"test")
             assert ok, f"type {t} should be valid"
 
-    def test_custom_artifact_id(self, base_dir):
+    def test_custom_artifact_id_becomes_label(self, base_dir):
         status, aid, reason = intake(
             artifact_type="TEXT",
             source="human",
@@ -207,8 +207,10 @@ class TestValidation:
             base_dir=base_dir,
             artifact_id="my-custom-id",
         )
-        assert aid == "my-custom-id"
-        assert load_artifact("my-custom-id", base_dir) is not None
+        assert aid != "my-custom-id"
+        assert len(aid) == 32
+        loaded = load_artifact(aid, base_dir)
+        assert loaded is not None
 
     def test_ensure_dirs_creates_structure(self, tmp_path):
         base = str(tmp_path / "new_evidence" / "artifacts")

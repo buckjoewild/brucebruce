@@ -1,0 +1,196 @@
+This audit is gold because it cleanly separates what we claimed from what’s actually enforced. Right now, a few “physics” guarantees are still “poetry,” and Trey found the exact cracks. 🧰🔒
+
+Below is a practical fix order + repo-shaped patch plan you can paste into Replit/Codex as a single “hardening update.” I’m going to be blunt: do these before World Growth Budget if the server is reachable by anyone you don’t fully trust.
+
+
+---
+
+What matters most (triage)
+
+🚨 Critical #1: “Bot impersonates human” is real
+
+If any client can become role="human" without auth, then bot gates don’t exist in practice.
+
+Fix intent:
+
+Default role should be guest/unauth
+
+Require auth before any command
+
+Remove “command-as-first-message” shortcut that assigns human
+
+
+Minimum behavior change:
+
+First message must be an explicit join (or auth+join)
+
+No more “type=command first message sets human”
+
+
+
+---
+
+🚨 Critical #2: Artifact path traversal
+
+User-controlled artifact_id touching filesystem paths is a straight disk-write primitive.
+
+Fix intent:
+
+Generate IDs server-side OR strictly validate user IDs
+
+Reject .., /, \, :, drive prefixes, absolute paths
+
+Ideally: ignore user ID entirely, store user “label” separately
+
+
+
+---
+
+⚠️ High #3: “sha256 signatures” are not signatures
+
+You have checksums, not adversarial tamper-proof signatures. That’s fine—just don’t call it signed unless you add an HMAC or external anchoring.
+
+Two choices:
+
+1. Non-adversarial integrity: rename docs to “checksummed”
+
+
+2. Adversarial tamper-evidence: use HMAC-SHA256 with a secret key (offline/env) + optional hash-chain
+
+
+
+Given your “truth hierarchy” vibe, HMAC is the clean minimum.
+
+
+---
+
+⚠️ High #4: Revert doesn’t delete newly created files
+
+Patch apply can leave new files behind even after “revert.” That undermines “one-cycle consent” as a guarantee.
+
+Fix intent:
+
+Track created files during patch apply and delete them on revert
+
+Or: use git (stash/apply/reset/clean) for true rollback
+
+
+
+---
+
+⚠️ High #5: Redaction removes variable names, not secret values
+
+That’s a leak vector into Codex transcripts.
+
+Fix intent:
+
+Redact by pattern + known secret values
+
+Don’t ship file snippets that match token|key|secret|password lines unless masked
+
+
+
+---
+
+⚠️ High #6: Multiple server entrypoints with inconsistent security
+
+This is a documentation + risk trap: “we’re secure” applies to one entrypoint, while others accept plaintext / heuristic agent detection.
+
+Fix intent:
+
+Either consolidate to one “blessed” entrypoint
+
+Or put big “INSECURE / DEV ONLY” banners and disable in deployment
+
+
+
+---
+
+The single “Hardening Update” you should push first (Replit/Codex paste)
+
+Copy/paste this as the next build request:
+
+# UPDATE REQUEST: Security Hardening Patch (must match audit)
+
+Goal: Make repo claims true in the default entrypoint, with minimal diff.
+Non-goals: refactors, Neo4j, World Growth Budget, feature work.
+
+### MUST FIX (in order)
+1) Auth gate:
+- Default role must NOT be "human"
+- Remove "type=command as first message => human" path
+- Require explicit join/auth handshake before commands
+- If no auth: only allow /help and /auth (or equivalent)
+
+2) Artifact ID sanitization:
+- Do NOT use user-supplied artifact_id in filesystem paths
+- Generate IDs server-side (recommended), store user label separately
+- If you must accept: allow only regex ^[a-zA-Z0-9._-]{1,80}$ and reject everything else
+
+3) Evidence integrity terminology:
+- If no adversarial integrity, rename docs from "signed" to "checksummed"
+- OR implement HMAC-SHA256:
+  - EVIDENCE_HMAC_KEY from env
+  - log entry includes {payload, sha256, hmac}
+  - verify checks hmac (sha256 alone is not "signature")
+
+4) Patch revert completeness:
+- Track created files during apply
+- On revert, delete created files + restore backups
+- Add a test that proves created file is removed after revert
+
+5) Secret redaction:
+- Redact secret VALUES, not only env var NAMES
+- Implement: replace occurrences of any env values for keys matching /(TOKEN|KEY|SECRET|PASSWORD)/i
+- Add tests: given env secret value in a snippet, it must be removed
+
+6) Entrypoint clarity:
+- Identify the ONE blessed server entrypoint for production
+- Add explicit warnings and/or disable insecure servers by default
+- Update docs to reference only the blessed entrypoint
+
+### Acceptance
+- pytest orchestrator/tests passes
+- new tests added for (1)(2)(4)(5)
+- docs updated to match reality (checksummed vs signed)
+- no behavior regressions for authorized clients
+
+That’s the patch set that makes the project trustable.
+
+
+---
+
+How this connects to World Growth Budget 🧭
+
+World Growth Budget is awesome, but it’s a mutation feature. If auth + filesystem write controls aren’t hard, then “growth” becomes a remote code/data vandalism vector.
+
+Once the above is landed, Growth Budget becomes safe because:
+
+only authenticated clients can trigger proposals/apply
+
+artifact intake can’t escape evidence/
+
+event logs become meaningful integrity records (HMAC if you choose)
+
+
+
+---
+
+Quick reality filter on the audit’s “sha256 signatures” point
+
+sha256(payload) = checksum (detects accidental corruption, not attackers)
+
+HMAC(secret, payload) = signature-like integrity (detects tampering without the key)
+
+
+If your threat model includes “untrusted network users,” you want HMAC.
+
+
+---
+
+SBVS Footer
+
+SBVS: Spec—hardening update request | Build—auth+sanitize+revert+redact | Verify—new tests + pytest | Ship—push to Replit/GitHub
+Reality: Known—two critical holes are real | Likely—minimal diff fixes will hold claims | Risk—multiple entrypoints keep reintroducing insecurity
+Next (≤30m): 1) Paste the hardening update into Replit/Codex 2) Run pytest suite 3) Confirm only one blessed entrypoint is deployed
+DoD: Auth required before commands + artifact paths safe + revert deletes new files + secrets redacted + docs match reality

@@ -1,0 +1,178 @@
+# HARRIS WILDLANDS — UPDATE: World Growth Budget v0.1
+Status: Implementable patch set
+Goal: The world grows slowly and audibly under governance.
+Non-goals: Neo4j, LangChain, autonomous free mutation, refactors.
+
+## Core rule
+Bruce/autopilot may PROPOSE up to N changes per day/session, but NOTHING mutates unless:
+PLAN → (/build on) → OFFER → (/consent yes) → APPLY(1 cycle) → VERIFY → LOG
+
+## Definition: "Growth Budget"
+A budget is a small quota of allowed growth actions over a time window.
+
+Example default (configurable):
+- WINDOW: per-day (local server date)
+- BUDGET: 2 changes/day
+- Each change = exactly one "GrowthOp" applied (room OR npc OR item OR quest-hook)
+
+## Required outcomes (acceptance)
+1) `/growth status` shows remaining budget, window, last applied id
+2) `/growth propose` creates an OFFER (does not mutate world)
+3) OFFER is logged to append-only JSONL (evidence)
+4) `/consent yes` + one-cycle build applies exactly ONE GrowthOp
+5) Applying a GrowthOp decrements budget (atomic)
+6) `/growth history 10` prints last N offers/applies from JSONL
+7) Smoke test: server loads, and these commands work without crash
+
+## Minimal integration points
+- Hook into the existing governance choke point:
+  - If your repo already has ModeState / consent cycle logic, reuse it.
+  - If not, implement minimal state in orchestrator/mode_state.py (but keep changes small).
+- Persist budget state in a tiny JSON file (or alongside existing persistence).
+- Persist offers/applies in JSONL flight recorder (append-only).
+
+---
+
+# Files to add
+
+## 1) orchestrator/growth_budget.py
+Responsibilities:
+- track remaining budget within a window
+- load/save state (json)
+- atomic consume on apply
+
+Data model (example):
+{
+  "window_kind": "day",
+  "window_key": "2026-02-09",
+  "budget_total": 2,
+  "budget_used": 1,
+  "last_apply_id": "evt_..."
+}
+
+Expose:
+- get_window_key(now) -> str
+- status(now) -> dict
+- can_consume(now) -> bool
+- consume(now, apply_id) -> None (raises if none left)
+- reset_if_new_window(now) -> None
+
+## 2) orchestrator/growth_offer.py
+Responsibilities:
+- represent a single proposed change
+- validate it is SMALL and safe
+- apply it to world state ONLY when authorized
+
+Offer schema (MUST be JSON-serializable):
+{
+  "offer_id": "off_...",
+  "created_at": "...iso...",
+  "kind": "room|npc|item|quest",
+  "title": "Short human-readable",
+  "summary": "1-3 lines",
+  "ops": [
+    {
+      "op": "ADD_ROOM|EXPAND_ROOM|ADD_NPC|TWEAK_NPC|ADD_ITEM|ADD_QUEST_HOOK",
+      "params": {...small...}
+    }
+  ],
+  "will_write_evidence": ["events.jsonl"],
+  "will_not_touch": ["persistence schema", "auth", "network", "files outside world/"],
+  "risk_notes": "optional"
+}
+
+Expose:
+- propose(world, context) -> GrowthOffer
+  - must not mutate
+  - must keep ops length == 1 (one change per apply)
+- apply_offer(world, offer) -> ApplyResult
+  - mutates world in-memory
+  - world persistence save happens in existing save flow
+
+## 3) orchestrator/flight_recorder.py (or reuse existing)
+Append-only JSONL writer.
+Events:
+- growth.offer.created
+- growth.offer.rejected (validation)
+- growth.apply.started
+- growth.apply.succeeded
+- growth.apply.failed
+
+Each event includes:
+- event_id, ts, actor ("bruce"|"operator"|"autopilot"), mode, window_key, offer_id/apply_id
+
+## 4) config/growth.json (new)
+Defaults:
+{
+  "window_kind": "day",
+  "budget_total": 2,
+  "autopilot_can_propose": true,
+  "autopilot_can_apply": false
+}
+
+## 5) docs/GROWTH_BUDGET.md (new)
+Explain:
+- what budget is
+- command surface
+- governance guarantees
+- how to tune budget_total
+
+---
+
+# Command surface (must be implemented)
+
+## /growth status
+Print:
+- window key
+- remaining / total
+- last_apply_id
+
+## /growth propose
+- creates offer (does not mutate)
+- stores offer as "last_offer" in ModeState (or equivalent)
+- logs growth.offer.created
+- prints a short Offer Card
+
+Offer Card format:
+OFFER: <offer_id> [<kind>]
+Title: ...
+Summary: ...
+Op: <op> <params summary>
+Budget remaining if applied: X/Y
+Next: /build on → /consent yes (applies ONE op)
+
+## /growth history [N]
+Reads last N growth.* events from JSONL and prints compact.
+
+---
+
+# Apply rules (the sacred part)
+- Only apply if:
+  - a last_offer exists
+  - build cycle is armed and consented for this cycle
+  - budget.can_consume(now) is true
+- Apply exactly ONE op from last_offer
+- On success:
+  - budget.consume(now, apply_id)
+  - log growth.apply.succeeded
+  - clear last_offer
+- On failure:
+  - log growth.apply.failed with error
+  - do not consume budget
+
+---
+
+# Smoke test (add a tiny script or pytest)
+- start server
+- run:
+  - /growth status
+  - /growth propose (expect offer)
+  - /build on
+  - /consent yes
+  - verify budget decremented and offer cleared
+
+Deliverable:
+- all code added
+- no refactors
+- no breaking existing commands
+- make changes minimal-diff

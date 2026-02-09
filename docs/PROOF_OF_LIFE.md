@@ -20,8 +20,8 @@ All evidence files live under a single directory:
 
 ```
 07_HARRIS_WILDLANDS/evidence/
-├── heartbeat.jsonl          # Bruce heartbeat snapshots (sha256-signed)
-├── bruce_activity.jsonl     # Per-action Bruce activity log (sha256-signed)
+├── heartbeat.jsonl          # Bruce heartbeat snapshots (sha256-checksummed)
+├── bruce_activity.jsonl     # Per-action Bruce activity log (sha256-checksummed)
 ├── bruce_memory.jsonl       # Bruce sayings + player chat
 ├── event_log.jsonl          # Build event log
 └── bot_audit.jsonl          # Bot command audit trail (not yet populated — no bots have connected)
@@ -182,7 +182,7 @@ feat: Bruce observability — heartbeat + activity logging
 
 - 15-min heartbeat (BRUCE_HEARTBEAT_MINUTES env var, default 15)
 - Per-action activity log (look/move/say/spawn_attempt)
-- sha256-signed JSONL entries for tamper evidence
+- sha256-checksummed JSONL entries for tamper evidence
 - dev commands: heartbeat, bruce tail, logsizes
 - Safety preamble added to Section 12 of Freeze spec
 - 13 new tests (79 total, all passing)

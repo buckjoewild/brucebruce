@@ -6,7 +6,7 @@
 - **World**: 10 rooms, NPCs, Bruce autopilot steward
 - **Build System**: PLAN/BUILD/CONSENT governance loop with orchestrator
 - **AI Player Framework**: External bot clients with token-based auth
-- **Evidence System**: Append-only JSONL files with sha256 signatures
+- **Evidence System**: Append-only JSONL files with sha256 checksums (HMAC-signed when EVIDENCE_HMAC_KEY is set)
 - **Artifact Intake**: Structured witnessing of external artifacts (text, JSON, diffs, notes)
 
 ## Threat Model (Plain Language)
@@ -18,7 +18,7 @@
 | Bot runs privileged commands | `authorize()` choke point blocks `/build`, `/consent`, `create`, `spawn`, `bruce`, `dev buildstub` |
 | Shell injection via AI test commands | Test commands whitelisted; `shell=False` enforced in subprocess |
 | Build without consent | Armed + consented + BUILD mode required; arming expires after 300 seconds |
-| Evidence tampering | sha256 signatures on every JSONL entry; `dev verify` command checks integrity |
+| Evidence tampering | sha256 checksums (HMAC-signed when EVIDENCE_HMAC_KEY is set) on every JSONL entry; `dev verify` command checks integrity |
 | Duplicate player names | Server rejects connection if name already in use |
 | Concurrent state corruption | `asyncio.Lock` protects world mutations (player/room/npc changes) |
 | Log files grow unbounded | Rotation at 5MB; degraded flag on write failure |

@@ -10,7 +10,7 @@ import os
 from orchestrator.bot_audit import RateLimiter, BotAuditLogger
 
 DENIED_BOT_COMMANDS = {
-    "/build", "/consent", "create", "spawn", "bruce",
+    "/build", "/consent", "create", "spawn", "bruce", "/growth",
 }
 DENIED_BOT_SUBCOMMANDS = {"dev buildstub"}
 

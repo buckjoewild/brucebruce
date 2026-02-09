@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
-Harris Wildlands MUD — Unified Web Server
-Serves terminal HTML + WebSocket MUD on port 5000
+Harris Wildlands MUD Server — BLESSED PRODUCTION ENTRYPOINT
+
+This is the ONLY authorized server entrypoint for production deployment.
+Run: python server.py
+Port: 5000 (configurable via PORT env var)
+
+WARNING: Do not use any other server script for production.
+All authentication, authorization, and security controls are implemented here.
 """
 import asyncio
 import json
@@ -22,6 +28,9 @@ from orchestrator.bot_audit import BotAuditLogger
 from orchestrator.bot_security import authorize, check_bot_interlock, DENIED_BOT_COMMANDS, DENIED_BOT_SUBCOMMANDS
 from orchestrator.heartbeat import HeartbeatLogger, ActivityLogger, get_evidence_sizes, HEARTBEAT_INTERVAL_MINUTES, verify_jsonl_hashes
 from orchestrator.artifacts import intake as artifact_intake, load_artifact, link_artifacts, annotate_artifact, ensure_dirs as ensure_artifact_dirs
+from orchestrator.growth_budget import GrowthBudget
+from orchestrator.growth_offer import propose as growth_propose, apply_offer as growth_apply_offer, GrowthOffer
+from orchestrator.flight_recorder import FlightRecorder
 
 import websockets
 from websockets.http11 import Response
@@ -112,11 +121,11 @@ class NPC:
 
 
 class Player:
-    def __init__(self, name: str, role: str = "human"):
+    def __init__(self, name: str, role: str = "guest"):
         self.name = name
         self.room_id = "spawn"
         self.inventory: List[str] = []
-        self.role = role  # "human" or "bot" — assigned server-side only
+        self.role = role  # "guest", "human", or "bot" — assigned server-side only
         self.websocket = None
         self.explored_rooms: Set[str] = set()
 
@@ -143,6 +152,11 @@ class MUDWorld:
         self.heartbeat_logger = HeartbeatLogger(str(EVIDENCE_DIR))
         self.activity_logger = ActivityLogger(str(EVIDENCE_DIR))
         self.world_lock = asyncio.Lock()
+        growth_config_path = str(PROJECT_ROOT / "07_HARRIS_WILDLANDS" / "config" / "growth.json")
+        growth_state_path = str(EVIDENCE_DIR / "growth_state.json")
+        self.growth_budget = GrowthBudget(growth_state_path, growth_config_path)
+        self.flight_recorder = FlightRecorder(str(EVIDENCE_DIR))
+        self.pending_growth_offer: Optional[GrowthOffer] = None
         if not self.load_world():
             self.init_world()
 
@@ -230,7 +244,9 @@ class MUDWorld:
         cmd = parts[0].lower()
         args = parts[1:]
 
-        if cmd == "bruce":
+        if cmd == "/growth":
+            return await self.handle_growth_command(player, args)
+        elif cmd == "bruce":
             return await self.handle_bruce_command(player, args)
         elif cmd == "dev":
             return await self.handle_dev_command(player, args)
@@ -255,6 +271,139 @@ class MUDWorld:
             return await self.cmd_status(player)
         else:
             return f"Unknown command: '{cmd}'. Type 'help' for available commands."
+
+    async def handle_growth_command(self, player: Player, args: List[str]) -> str:
+        if player.role not in ("human", "npc"):
+            return "Permission denied: only human players can use growth commands."
+        if not args:
+            return "Growth commands: /growth status, /growth propose, /growth apply, /growth history [n]"
+
+        sub = args[0].lower()
+
+        if sub == "status":
+            status = self.growth_budget.status()
+            lines = [
+                "GROWTH BUDGET STATUS",
+                f"  Window: {status['window_kind']} ({status['window_key']})",
+                f"  Budget: {status['budget_remaining']}/{status['budget_total']} remaining",
+                f"  Used this window: {status['budget_used']}",
+            ]
+            if status["last_apply_id"]:
+                lines.append(f"  Last apply: {status['last_apply_id']}")
+            if self.pending_growth_offer:
+                lines.append(f"  Pending offer: {self.pending_growth_offer.offer_id} ({self.pending_growth_offer.title})")
+            else:
+                lines.append("  No pending offer. Use /growth propose to create one.")
+            return "\n".join(lines)
+
+        elif sub == "propose":
+            if not self.growth_budget.can_consume():
+                return "Growth budget exhausted for this window. Try again tomorrow."
+            if self.pending_growth_offer:
+                return (
+                    f"An offer is already pending: {self.pending_growth_offer.offer_id}\n"
+                    f"  {self.pending_growth_offer.title}: {self.pending_growth_offer.summary}\n"
+                    "Use /growth apply to enter the consent cycle, or /growth reject to clear it."
+                )
+            offer = growth_propose(self)
+            self.pending_growth_offer = offer
+            status = self.growth_budget.status()
+            self.flight_recorder.record(
+                "growth.offer.created",
+                actor=player.name,
+                window_key=status["window_key"],
+                offer_id=offer.offer_id,
+                detail=offer.to_dict(),
+            )
+            return offer.to_card(status["budget_remaining"], status["budget_total"])
+
+        elif sub == "reject":
+            if not self.pending_growth_offer:
+                return "No pending offer to reject."
+            offer_id = self.pending_growth_offer.offer_id
+            status = self.growth_budget.status()
+            self.flight_recorder.record(
+                "growth.offer.rejected",
+                actor=player.name,
+                window_key=status["window_key"],
+                offer_id=offer_id,
+            )
+            self.pending_growth_offer = None
+            return f"Offer {offer_id} rejected. Use /growth propose to get a new one."
+
+        elif sub == "apply":
+            if not self.pending_growth_offer:
+                return "No pending offer. Use /growth propose first."
+            if not self.growth_budget.can_consume():
+                return "Growth budget exhausted for this window."
+            state = self.mode_manager.get_state(player.name)
+            if not state.can_build():
+                return (
+                    f"Growth apply requires governance consent.\n"
+                    f"Offer: {self.pending_growth_offer.offer_id} — {self.pending_growth_offer.title}\n"
+                    f"Next steps: /build on -> /consent yes -> /growth apply"
+                )
+            offer = self.pending_growth_offer
+            status = self.growth_budget.status()
+            self.flight_recorder.record(
+                "growth.apply.started",
+                actor=player.name,
+                window_key=status["window_key"],
+                offer_id=offer.offer_id,
+            )
+            async with self.world_lock:
+                result = growth_apply_offer(
+                    self, offer,
+                    room_factory=Room,
+                    npc_factory=NPC,
+                )
+            state.consume_build_cycle()
+            if result.get("success"):
+                self.growth_budget.consume(offer.offer_id)
+                self.flight_recorder.record(
+                    "growth.apply.succeeded",
+                    actor=player.name,
+                    window_key=status["window_key"],
+                    offer_id=offer.offer_id,
+                    detail=result,
+                )
+                self.pending_growth_offer = None
+                new_status = self.growth_budget.status()
+                return (
+                    f"GROWTH APPLIED: {result['message']}\n"
+                    f"Budget remaining: {new_status['budget_remaining']}/{new_status['budget_total']}"
+                )
+            else:
+                self.flight_recorder.record(
+                    "growth.apply.failed",
+                    actor=player.name,
+                    window_key=status["window_key"],
+                    offer_id=offer.offer_id,
+                    detail={"error": result.get("error", "unknown")},
+                )
+                return f"GROWTH FAILED: {result.get('error', 'unknown error')}"
+
+        elif sub == "history":
+            n = 10
+            if len(args) >= 2:
+                try:
+                    n = int(args[1])
+                except ValueError:
+                    pass
+            events = self.flight_recorder.tail(n)
+            if not events:
+                return "No growth events yet."
+            lines = [f"Last {len(events)} growth event(s):"]
+            for e in events:
+                lines.append(
+                    f"  [{e.get('ts', '?')}] {e.get('event_type', '?')}"
+                    f" offer={e.get('offer_id', '-')}"
+                    f" actor={e.get('actor', '?')}"
+                )
+            return "\n".join(lines)
+
+        else:
+            return "Growth commands: /growth status, /growth propose, /growth apply, /growth reject, /growth history [n]"
 
     async def handle_bruce_command(self, player: Player, args: List[str]) -> str:
         if player.role not in ("human", "npc"):
@@ -604,6 +753,14 @@ bruce intake <type> <source> [id] <content> - Submit artifact
 bruce inspect <id>    - View archived artifact
 bruce link <a> <b> [note] - Link two artifacts
 bruce annotate <id> <text> - Annotate an artifact
+
+World Growth (human only):
+------------------
+/growth status     - Show budget and pending offer
+/growth propose    - Generate a growth proposal
+/growth apply      - Apply pending offer (requires consent)
+/growth reject     - Clear pending offer
+/growth history [n] - View recent growth events
         """
 
     async def cmd_status(self, player: Player) -> str:
@@ -716,12 +873,6 @@ class MUDServer:
                     return
                 role = "human"
 
-            elif msg_type == "command":
-                name = data.get("command", "").strip()
-                if not name:
-                    name = "Wanderer"
-                role = "human"
-
             else:
                 await websocket.send(json.dumps({
                     "type": "error",
@@ -766,6 +917,14 @@ class MUDServer:
                     msg_data = json.loads(message)
                     command = msg_data.get("command", "").strip()
                     if command:
+                        if player.role == "guest":
+                            cmd_word = command.split()[0].lower() if command.split() else ""
+                            if cmd_word not in ("help", "quit", "look"):
+                                await websocket.send(json.dumps({
+                                    "type": "error",
+                                    "text": "You must join first. Send /join YourName",
+                                }))
+                                continue
                         result = await self.world.handle_command(player, command)
                         if result:
                             await websocket.send(json.dumps({

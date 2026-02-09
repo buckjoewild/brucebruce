@@ -77,7 +77,7 @@ All evidence lives under `07_HARRIS_WILDLANDS/evidence/artifacts/`:
 
 | Path | Contents |
 |------|----------|
-| `intake.jsonl` | Append-only log of all intake events, links, and annotations (sha256-signed) |
+| `intake.jsonl` | Append-only log of all intake events, links, and annotations (sha256-checksummed) |
 | `archive/<id>.json` | Full content of accepted artifacts |
 | `quarantine/<id>.json` | Full content of quarantined artifacts (failed validation) |
 
