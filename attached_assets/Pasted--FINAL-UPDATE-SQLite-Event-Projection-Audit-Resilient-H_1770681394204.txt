@@ -1,0 +1,209 @@
+# FINAL UPDATE — SQLite Event Projection + Audit-Resilient Hardening (Additive Only)
+Status: READY TO IMPLEMENT
+Priority: INTEGRATION + RELIABILITY
+Non-goals: Neo4j, refactors, changing game mechanics, loosening governance
+
+## Why this update exists
+We already have a governed persistent world with append-only JSONL evidence.
+Next step is *integration* without destabilizing the core: project the truth stream into SQLite for fast queries, dashboards, exports, and “what changed since last time” summaries.
+
+This update must be **audit-resilient**:
+- No narrated success
+- Only reproducible commands + tests + diffs
+- Preserve the sacred choke point: PLAN → CONSENT → APPLY(ONE) → VERIFY → LOG
+
+---
+
+# 0) Reality-first constraints (Trey audit mindset)
+We will treat these as hard requirements:
+
+A) **No new remote write primitives**
+- The SQLite projector is READ-ONLY with respect to world state.
+- It MUST NOT accept user-provided file paths or SQL inputs from network clients.
+- It only reads known JSONL logs from configured allowlist paths.
+
+B) **No “claims inflation”**
+- If logs are checksummed, call them checksummed.
+- If HMAC exists, call it tamper-evident.
+- Docs must match code.
+
+C) **No silent failure**
+- Ingest failures MUST log a clear local error (stdout + optional local logfile).
+- Ingest failures MUST NOT crash the server process.
+
+D) **No mutation gate bypass**
+- The projector is a separate tool. It does not touch /build, /consent, growth apply, or patching.
+
+---
+
+# 1) How this can go wrong (and how we prevent it)
+
+## 1.1 Schema drift (different event shapes)
+Failure mode:
+- Different JSONL files use different keys: type vs kind, ts vs timestamp, etc.
+- Queries break or ingestion drops events.
+
+Mitigation:
+- Projector must be tolerant:
+  - kind = obj.kind OR obj.type OR "unknown"
+  - ts = obj.ts OR obj.timestamp OR NULL (store raw regardless)
+  - payload stored as JSON string if dict/list else NULL
+- Store raw_json always.
+- Add schema_version support forward-looking:
+  - If event has schema_version, store it in payload or add a column later.
+
+## 1.2 Log rotation / truncation
+Failure mode:
+- JSONL rotates or truncates; projector “seeks past” new file and misses events.
+- Or duplicates events.
+
+Mitigation:
+- Track ingest_state per log: last_size + last_mtime.
+- If file shrinks or mtime goes backward: reset ingestion for that log.
+- De-dup safety:
+  - Store sha256(raw_json) + (log_path,line_no). Use UNIQUE constraint if needed later.
+
+## 1.3 Replit filesystem persistence surprises
+Failure mode:
+- DB path not persistent; loses history on restart.
+
+Mitigation:
+- Store DB at: evidence/derived/events.db (in-repo persistent storage).
+- On startup, projector runs and rehydrates derived view from JSONL (truth source).
+
+## 1.4 Performance / file size growth
+Failure mode:
+- JSONL grows large; ingestion becomes slow; DB grows.
+
+Mitigation:
+- Incremental ingestion by byte offset; only new lines ingested each run.
+- Add optional vacuum/maintenance doc, but do NOT run vacuum automatically.
+- Keep indexes minimal: ts, kind, offer_id/apply_id.
+
+## 1.5 Injection / “user controls SQL” risk
+Failure mode:
+- Someone adds a server endpoint where users submit SQL.
+
+Mitigation:
+- Do NOT add any network-exposed SQL query endpoint.
+- Queries live in docs/scripts only.
+- If we ever add a “/events” command, it must only run predefined queries (no freeform SQL).
+
+## 1.6 Event integrity overstatement (audit déjà vu)
+Failure mode:
+- We claim “signed,” but only have sha256 checksums.
+
+Mitigation:
+- Use precise language in docs:
+  - “checksum” unless HMAC is implemented
+- Optional future: HMAC key to create tamper-evident logs
+
+## 1.7 Mode confusion / accidental mutation
+Failure mode:
+- Someone accidentally wires projector into build flow or growth apply.
+
+Mitigation:
+- No calls from projector into orchestrator mutation modules.
+- Projector lives under tools/ and imports only stdlib.
+- Unit tests assert projector does not import server modules.
+
+---
+
+# 2) Deliverable: SQLite projection (read model)
+
+## 2.1 Add file: tools/project_events_to_sqlite.py
+- Python stdlib only (sqlite3/json/hashlib/os)
+- Input logs must be provided as explicit allowlist arguments: --log PATH
+- Output DB: --db evidence/derived/events.db
+- Maintains ingest_state for incremental ingestion
+
+## 2.2 DB schema
+Tables:
+- ingest_state(log_path, last_size, last_mtime)
+- events(
+    id, event_id, ts, kind, actor, role, mode,
+    offer_id, apply_id, window_key,
+    payload_json, raw_json, sha256,
+    log_path, line_no
+  )
+Indexes:
+- ts, kind, offer_id, apply_id, (log_path,line_no)
+
+## 2.3 Run command
+python tools/project_events_to_sqlite.py \
+  --db evidence/derived/events.db \
+  --log evidence/event_log.jsonl \
+  --log evidence/growth_events.jsonl
+
+---
+
+# 3) Killer Queries (docs + optional helper)
+
+## 3.1 Add doc: docs/QUERIES_SQLITE.md
+Must include these 5 queries (update LIKE patterns to match actual kinds):
+1) What changed since timestamp
+2) Growth story: offers/applies/fails
+3) Security-ish events: deny/auth/unauth/rate
+4) Hot rooms (requires payload room_id)
+5) Growth budget compliance by window_key
+
+Optional: tools/query_sqlite.py that runs one named query (predefined only)
+
+---
+
+# 4) Integration cadence (safe)
+Choose ONE approach:
+
+A) Boot-time projection only (safest)
+- Replit start script runs projector, then starts server.
+
+B) Interval projection (still safe)
+- A local scheduler thread runs projector every 5–10 min.
+- Must catch exceptions and continue; must not block game loop.
+
+DO NOT expose SQL to clients.
+
+---
+
+# 5) Tests (minimal but real)
+
+## 5.1 Add tests: tools/tests/test_sqlite_projection.py (or similar)
+Tests should:
+- Create temp JSONL with known events (2–3 lines)
+- Run projector into temp db
+- Assert inserted row count matches
+- Assert schema exists and raw_json stored
+- Assert re-run is incremental (no duplicate inserts)
+- Assert truncate/rotate reset works (simulate shrink)
+
+## 5.2 Repo-wide checks
+- python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests -q must remain green
+- Add projector tests to test suite if practical; otherwise keep separate but runnable
+
+---
+
+# 6) Evidence & documentation truthfulness
+Update docs to state:
+- JSONL logs are append-only
+- SQLite DB is a derived projection (not truth source)
+- Checksums are checksums unless HMAC exists
+- No network SQL endpoint exists
+
+---
+
+# 7) Acceptance Criteria (must all pass)
+1) Projector runs on Replit without crashing server.
+2) DB file is created at evidence/derived/events.db and persists.
+3) Ingestion is incremental (2nd run inserts 0 if no new lines).
+4) All 5 queries run and return plausible outputs (even if some return 0 rows initially).
+5) No changes to build/growth mutation gates.
+6) Tests pass; diffs are clean; commit message includes this feature.
+
+---
+
+# 8) “Audit-proof” verification commands (must be run and pasted into PR/notes)
+git rev-parse --short HEAD
+git diff --stat origin/main...HEAD
+python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests -q
+python tools/project_events_to_sqlite.py --db evidence/derived/events.db --log evidence/event_log.jsonl --log evidence/growth_events.jsonl
+sqlite3 evidence/derived/events.db "select kind,count(*) from events group by kind order by count(*) desc limit 10;"
