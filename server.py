@@ -729,7 +729,7 @@ spawn <name>   - Spawn NPC
 inventory      - Check inventory
 who            - List players
 help           - Show this help
-status         - Show world status
+status         - Show world status + event pulse
 
 Build System:
 ------------------
@@ -765,7 +765,8 @@ World Growth (human only):
 
     async def cmd_status(self, player: Player) -> str:
         state = self.mode_manager.get_state(player.name)
-        return f"""
+        event_summary = self._sqlite_event_summary()
+        base = f"""
 World Status:
 -------------
 Rooms: {len(self.rooms)}
@@ -774,7 +775,34 @@ Players Online: {len(self.players)}
 Your Location: {self.rooms[player.room_id].name}
 Explored: {len(player.explored_rooms)} rooms
 Build Mode: {state.status()}
-        """
+"""
+        if event_summary:
+            base += f"\n{event_summary}"
+        return base
+
+    def _sqlite_event_summary(self) -> str:
+        db_path = EVIDENCE_DIR / "derived" / "events.db"
+        if not db_path.exists():
+            return ""
+        try:
+            import sqlite3
+            conn = sqlite3.connect(str(db_path))
+            total = conn.execute("SELECT COUNT(*) FROM events").fetchone()[0]
+            growth_offers = conn.execute(
+                "SELECT COUNT(*) FROM events WHERE kind = 'growth.offer.created'"
+            ).fetchone()[0]
+            growth_applies = conn.execute(
+                "SELECT COUNT(*) FROM events WHERE kind = 'growth.apply.succeeded'"
+            ).fetchone()[0]
+            conn.close()
+            return (
+                f"Event Pulse:\n"
+                f"  Total events logged: {total}\n"
+                f"  Growth offers: {growth_offers}\n"
+                f"  Growth applies: {growth_applies}"
+            )
+        except Exception:
+            return ""
 
     def opposite_dir(self, direction: str) -> str:
         opposites = {

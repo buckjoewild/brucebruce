@@ -27,7 +27,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python server.py"
+args = "python tools/project_events_to_sqlite.py --db 07_HARRIS_WILDLANDS/evidence/derived/events.db --log 07_HARRIS_WILDLANDS/evidence/event_log.jsonl --log 07_HARRIS_WILDLANDS/evidence/growth_events.jsonl --log 07_HARRIS_WILDLANDS/evidence/heartbeat.jsonl --log 07_HARRIS_WILDLANDS/evidence/bruce_activity.jsonl --log 07_HARRIS_WILDLANDS/evidence/bruce_memory.jsonl -v && python server.py"
 waitForPort = 5000
 
 [[ports]]
