@@ -1,0 +1,134 @@
+🏴‍☠️ We’re steering the ship, Captain: **protect invariants, integrate deliberately, ship small.** ☠️⚙️
+
+This **SQLite Projector** idea is genuinely high-leverage (read-only intelligence layer), *but*—same rule as before: what you pasted is **a narrated success report**, not evidence. The good news: this one is easy to verify with hard, boring commands.
+
+Below is the **“prove it’s real” checklist** that turns that whole story into fact. 👇
+
+---
+
+## A. Prove the projector exists + is stdlib-only
+
+From repo root:
+
+```bash
+ls -la tools/project_events_to_sqlite.py tools/query_sqlite.py
+python -c "import ast,sys; p='tools/project_events_to_sqlite.py'; ast.parse(open(p,'r',encoding='utf-8').read()); print('parse ok')"
+python -c "import pkgutil; import sys; sys.path.insert(0,'.'); import tools.project_events_to_sqlite as m; print('import ok')"
+```
+
+If it imports `server` or anything in `07_HARRIS_WILDLANDS`, that’s a fail (should be pure tools).
+
+---
+
+## B. Prove it’s incremental + rotation-safe
+
+Run twice, compare outputs:
+
+```bash
+python tools/project_events_to_sqlite.py --help
+python tools/project_events_to_sqlite.py
+python tools/project_events_to_sqlite.py
+```
+
+Second run should clearly report **0 new** (or equivalent “no changes”).
+
+To test truncation/rotation detection (cheap but effective):
+
+* temporarily copy one JSONL to a temp path, truncate it, point the projector at that temp evidence dir (however your script supports it), confirm it resets offsets.
+
+---
+
+## C. Prove the DB is where you claim + actually populated
+
+No sqlite3 CLI? Use Python (good):
+
+```bash
+python - <<'PY'
+import sqlite3, os
+db="07_HARRIS_WILDLANDS/evidence/derived/events.db"
+print("db exists:", os.path.exists(db), "size:", os.path.getsize(db) if os.path.exists(db) else None)
+con=sqlite3.connect(db)
+cur=con.cursor()
+cur.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY 1")
+print("tables:", [r[0] for r in cur.fetchall()])
+for q in [
+  ("events", "SELECT COUNT(*) FROM events"),
+]:
+  try:
+    cur.execute(q[1])
+    print(q[0], cur.fetchone()[0])
+  except Exception as e:
+    print(q[0], "query failed:", e)
+con.close()
+PY
+```
+
+This turns “12,027 events” into an actual number on disk.
+
+---
+
+## D. Prove the **query runner** is locked down (no freeform SQL)
+
+You want *named queries only*. Verify the CLI refuses arbitrary SQL:
+
+```bash
+python tools/query_sqlite.py --help
+python tools/query_sqlite.py recent
+python tools/query_sqlite.py "SELECT * FROM events" || echo "freeform blocked (good)"
+```
+
+If it accepts raw SQL, it’s a policy hole.
+
+---
+
+## E. Prove `/status` is read-only and wired correctly
+
+Two checks:
+
+1. **Code grep**: ensure the `/status` path does not call any mutation methods.
+
+```bash
+rg -n "def cmd_status|/status|sqlite_event_summary|Event Pulse" -S 07_HARRIS_WILDLANDS/server.py
+```
+
+2. **Behavior test**: run `/status` twice and confirm it doesn’t change anything (no new events besides the command itself, no growth offers/applies).
+
+---
+
+## F. Tests: show the delta is real
+
+Run exactly what matters:
+
+```bash
+python -m pytest 07_HARRIS_WILDLANDS/orchestrator/tests -q
+python -m pytest tools/tests -q
+python -m pytest -q
+```
+
+If you truly have “166 tests,” you’ll see it here.
+
+---
+
+## G. GitHub + publish (the part you asked for)
+
+I **can’t** push or publish for you, but you can do it safely in 60 seconds:
+
+```bash
+git status
+git diff --stat
+git add -A
+git commit -m "Add SQLite event projector + locked query tool + /status event pulse (read-only) + tests"
+git push origin main
+```
+
+Then publish from Replit using your normal deployment flow—*but only after* the above checks pass.
+
+---
+
+## Reality check 🧪
+
+* **Known:** SQLite projector is the right move to make “truth you can query” without touching mutation gates.
+* **Likely:** The only real gotcha is **paths/working-directory** (DB location) and “silent except” blocks masking errors.
+* **Risk:** “Narrated completion” slips back in. Keep demanding command output + diffs.
+
+If you run the commands above and paste the outputs, we can treat this as **Observed** instead of **Claimed**, and then you’ll genuinely have that “little bit magical” layer: *the world grows + you can interrogate its history like a forensic wizard.* 🧙‍♂️📜
