@@ -1,0 +1,119 @@
+Nice. That’s the *right* posture: **Observed > narrated.** 🧾✅
+Given what you reported, the SQLite projector layer is **credible** and (importantly) **non-mutating**.
+
+Now, two practical things remain:
+
+1. **Make “full pytest -q” green** (so future you doesn’t step on a rake).
+2. **Get the GitHub push unblocked** (without weakening your security posture).
+
+---
+
+## 1) Fix the pre-existing `smoke_test.py` landmine (minimal + honest) 🧨
+
+You said `05_EXPORT/BRUCE_BRUCE__CODEX/smoke_test.py` calls `sys.exit(1)` on missing module, breaking full-repo pytest. That’s exactly the kind of “export junk” that slowly poisons CI.
+
+### Best minimal fix (choose one)
+
+#### Option A: Mark it as not-a-test (zero behavior change)
+
+Rename file so pytest ignores it:
+
+* `smoke_test.py` → `smoke_check.py` (or `smoke_test_manual.py`)
+
+This is clean if it’s not meant to be part of automated tests.
+
+#### Option B: Add a pytest skip guard (keeps it as a test file)
+
+At top of the file:
+
+```python
+import pytest
+pytest.skip("Export smoke test is not part of automated suite", allow_module_level=True)
+```
+
+#### Option C: Convert hard-fail into a skip (best practice if it *is* a test)
+
+If it depends on optional modules:
+
+```python
+import pytest
+
+mod = pytest.importorskip("some_module_name")
+# proceed
+```
+
+**DoD:** `python -m pytest -q` passes from repo root. No excuses, no footnotes.
+
+---
+
+## 2) GitHub push blocked by expired auth token 🔑
+
+You’re right: I can’t push for you. But you can fix this in ~2 minutes.
+
+### If you’re using Replit’s Git panel
+
+* Open **Version Control** (Git icon) → **Reconnect** / **Authorize GitHub**
+* Confirm it’s the correct account (`buckjoewild`)
+* Push the pending commits
+
+### If you want to bypass the UI (CLI inside Replit shell)
+
+This tends to be more deterministic:
+
+```bash
+git remote -v
+git status
+git log -3 --oneline
+```
+
+Then re-auth using one of these:
+
+#### Recommended: GitHub CLI (if available)
+
+```bash
+gh auth login
+git push origin main
+```
+
+#### Or: swap remote to SSH (if you have keys set up)
+
+```bash
+git remote set-url origin git@github.com:buckjoewild/brucebruce.git
+git push origin main
+```
+
+If SSH isn’t set up, stick with `gh auth login` or the Replit UI.
+
+**DoD:** `git push origin main` succeeds and the GitHub commit SHA matches local `git rev-parse HEAD`.
+
+---
+
+## 3) Publish / Deploy sanity check (don’t ship the wrong entrypoint) 🚦
+
+Before publishing, verify the **blessed entrypoint** is what Replit runs:
+
+* Confirm the workflow/command runs:
+
+  1. projector (incremental)
+  2. then the secure server entrypoint
+
+**DoD:** A fresh unauth client cannot run commands; `/status` shows Event Pulse; growth still requires consent cycle.
+
+---
+
+## Tiny “release note” you should add to `replit.md` or docs 📌
+
+One line that prevents future confusion:
+
+> “SQLite projector is read-only, stdlib-only, and does not import server/orchestrator modules; it converts allowlisted JSONL into queryable `events.db` and powers `/status` Event Pulse.”
+
+Also: call checksums **checksums** unless you actually implemented HMAC.
+
+---
+
+### 3 Next Actions + DoD
+
+1. Patch/rename `05_EXPORT/.../smoke_test.py` so repo-root pytest passes
+2. Re-auth GitHub (Replit Git panel or `gh auth login`) and push
+3. Publish with verified secure entrypoint + projector-first workflow
+   DoD: `python -m pytest -q` green + `git push` succeeds + deployed `/status` shows Event Pulse under auth gate
